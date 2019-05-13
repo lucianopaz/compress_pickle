@@ -5,7 +5,6 @@ compress_pickle
 A thin wrapper of standard pickle with standard compression libraries
 """
 import os
-import sys
 import warnings
 import pickle
 
