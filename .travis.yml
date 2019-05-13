@@ -21,7 +21,6 @@ script:
   - pytest -v compress_pickle/tests/ --cov=compress_pickle/ --html=testing-report.html --self-contained-html;
 
 env:
-  - PYTHON_VERSION=3.5
   - PYTHON_VERSION=3.6
   - PYTHON_VERSION=3.7
 
