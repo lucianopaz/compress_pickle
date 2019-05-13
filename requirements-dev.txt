@@ -1,0 +1,7 @@
+pytest
+pytest-cov
+pytest-html
+pylint
+black
+sphinx-autobuild==0.7.1
+sphinx>=1.5.5
