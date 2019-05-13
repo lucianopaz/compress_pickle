@@ -265,16 +265,10 @@ def dump(
     if arch is not None:
         with arch:
             with file:
-                if sys.version_info.major < 3:
-                    pickle.dump(obj, file, protocol=protocol)
-                else:
-                    pickle.dump(obj, file, protocol=protocol, fix_imports=fix_imports)
+                pickle.dump(obj, file, protocol=protocol, fix_imports=fix_imports)
     else:
         with file:
-            if sys.version_info.major < 3:
-                pickle.dump(obj, file, protocol=protocol)
-            else:
-                pickle.dump(obj, file, protocol=protocol, fix_imports=fix_imports)
+            pickle.dump(obj, file, protocol=protocol, fix_imports=fix_imports)
 
 
 def load(
