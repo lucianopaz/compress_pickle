@@ -1,22 +1,32 @@
 language: python
+sudo: required
 
+cache:
+  directories:
+    - $HOME/miniconda3
 
-python:
-  - '3.8'
-  - '3.7'
-  - '3.6'
-  - '3.5'
-  - '3.4'
-  - '2.7'
-
+before_install:
+  - . ./scripts/install_miniconda.sh
+  - sh -e /etc/init.d/xvfb start
+  - export DISPLAY=":99.0"
 
 install:
-    pip install --upgrade pip;
-    pip install -r requirements-dev.txt;
-    pip install -e .;
-
+  - . ./scripts/create_testenv.sh
+  - pip install coveralls
+  - conda list && pip freeze
 
 script:
-    black --check compress_pickle;
-    pylint compress_pickle;
-    pytest -v compress_pickle/tests/ --cov=compress_pickle/ --html=testing-report.html --self-contained-html;
+  - black --check compress_pickle;
+  - pylint compress_pickle;
+  - pytest -v compress_pickle/tests/ --cov=compress_pickle/ --html=testing-report.html --self-contained-html;
+
+env:
+  - PYTHON_VERSION=2.7
+  - PYTHON_VERSION=3.4
+  - PYTHON_VERSION=3.5
+  - PYTHON_VERSION=3.6
+  - PYTHON_VERSION=3.7
+  - PYTHON_VERSION=3.8
+
+after_success:
+  - coveralls
