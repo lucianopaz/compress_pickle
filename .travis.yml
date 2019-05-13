@@ -11,10 +11,12 @@ python:
 
 
 install:
-    pip install --upgrade pip
-    pip install -r requirements-dev.txt
-    pip install -e .
+    pip install --upgrade pip;
+    pip install -r requirements-dev.txt;
+    pip install -e .;
 
 
 script:
-    pytest -v compress_pickle/tests/ --cov=compress_pickle/ --html=testing-report.html --self-contained-html
+    black --check compress_pickle;
+    pylint compress_pickle;
+    pytest -v compress_pickle/tests/ --cov=compress_pickle/ --html=testing-report.html --self-contained-html;
