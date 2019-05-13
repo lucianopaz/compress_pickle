@@ -34,8 +34,6 @@ then
     source activate ${ENVNAME}
 fi
 pip install --upgrade pip
+pip install -r requirements.txt
 pip install -r requirements-dev.txt
-
-if [ -z ${NO_SETUP} ]; then
-    python setup.py build_ext --inplace
-fi
+pip install -e .
