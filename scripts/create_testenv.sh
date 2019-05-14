@@ -36,7 +36,8 @@ fi
 pip install --upgrade pip
 pip install -r requirements.txt
 
-if [ ! -z ${TEST_STYLE} ] then
+if [ ! -z ${TEST_STYLE} ]
+then
     pip install -r requirements-dev.txt
 fi
 
