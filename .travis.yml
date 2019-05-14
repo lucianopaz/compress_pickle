@@ -16,11 +16,7 @@ install:
   - conda list && pip freeze
 
 script:
-  - if [ ! -z ${TEST_STYLE} ]
-    then
-      make check;
-    fi
-  - make test
+  - . ./scripts/run_tests.sh
 
 env:
   - PYTHON_VERSION=2.7
