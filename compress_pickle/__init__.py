@@ -1,3 +1,4 @@
+from __future__ import absolute_import, unicode_literals
 from .compress_pickle import (
     get_known_compressions,
     get_default_compression_mapping,
