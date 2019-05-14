@@ -4,15 +4,10 @@ compress_pickle
 
 A thin wrapper of standard pickle with standard compression libraries
 """
-from __future__ import unicode_literals, absolute_import
 import os
 import sys
 import warnings
-
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
+import pickle
 
 
 __all__ = [
@@ -274,22 +269,14 @@ def dump(
     if arch is not None:
         with arch:
             if sys.version_info < (3, 6):
-                if sys.version_info.major < 3:
-                    buff = pickle.dumps(obj, protocol=protocol)
-                else:
-                    buff = pickle.dumps(
-                        obj, protocol=protocol, fix_imports=fix_imports
-                    )
+                buff = pickle.dumps(obj, protocol=protocol, fix_imports=fix_imports)
                 arch.writestr(arcname, buff)
             else:
                 with file:
                     pickle.dump(obj, file, protocol=protocol, fix_imports=fix_imports)
     else:
         with file:
-            if sys.version_info.major < 3:
-                pickle.dump(obj, file, protocol=protocol)
-            else:
-                pickle.dump(obj, file, protocol=protocol, fix_imports=fix_imports)
+            pickle.dump(obj, file, protocol=protocol, fix_imports=fix_imports)
 
 
 def load(
@@ -381,18 +368,12 @@ def load(
     if arch is not None:
         with arch:
             with file:
-                if sys.version_info.major < 3:
-                    output = pickle.load(file)
-                else:
-                    output = pickle.load(
-                        file, encoding=encoding, errors=errors, fix_imports=fix_imports
-                    )
-    else:
-        with file:
-            if sys.version_info.major < 3:
-                output = pickle.load(file)
-            else:
                 output = pickle.load(
                     file, encoding=encoding, errors=errors, fix_imports=fix_imports
                 )
+    else:
+        with file:
+            output = pickle.load(
+                file, encoding=encoding, errors=errors, fix_imports=fix_imports
+            )
     return output

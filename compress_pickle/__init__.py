@@ -1,4 +1,3 @@
-from __future__ import absolute_import, unicode_literals
 from .compress_pickle import (
     get_known_compressions,
     get_default_compression_mapping,
@@ -11,4 +10,4 @@ from .compress_pickle import (
 )
 
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"

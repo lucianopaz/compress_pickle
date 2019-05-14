@@ -19,7 +19,6 @@ script:
   - . ./scripts/run_tests.sh
 
 env:
-  - PYTHON_VERSION=2.7
   - PYTHON_VERSION=3.5
   - PYTHON_VERSION=3.6 TEST_STYLE="True"
   - PYTHON_VERSION=3.7 TEST_STYLE="True"

@@ -9,11 +9,7 @@ if conda --version > /dev/null 2>&1; then
 
 PYTHON_VERSION=${PYTHON_VERSION:-3.6} # if no python specified, use 3.6
 
-if [ ${PYTHON_VERSION} == "2.7" ]; then
-  INSTALL_FOLDER="$HOME/miniconda2"
-else
-  INSTALL_FOLDER="$HOME/miniconda3"
-fi
+INSTALL_FOLDER="$HOME/miniconda3"
 
 
 if [ ! -d $INSTALL_FOLDER ] || [ ! -e $INSTALL_FOLDER/bin/conda ]; then
@@ -27,11 +23,7 @@ if [ ! -d $INSTALL_FOLDER ] || [ ! -e $INSTALL_FOLDER/bin/conda ]; then
 
   echo "Downloading miniconda for $URL_OS"
   DOWNLOAD_PATH="miniconda.sh"
-  if [ ${PYTHON_VERSION} == "2.7" ]; then
-    wget http://repo.continuum.io/miniconda/Miniconda-latest-$URL_OS-x86_64.sh -O ${DOWNLOAD_PATH};
-  else
-    wget http://repo.continuum.io/miniconda/Miniconda3-latest-$URL_OS-x86_64.sh -O ${DOWNLOAD_PATH};
-  fi
+  wget http://repo.continuum.io/miniconda/Miniconda3-latest-$URL_OS-x86_64.sh -O ${DOWNLOAD_PATH};
 
   echo "Installing miniconda for python-$PYTHON_VERSION to $INSTALL_FOLDER"
   # install miniconda to home folder
