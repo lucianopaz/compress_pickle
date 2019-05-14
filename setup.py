@@ -14,7 +14,7 @@ NAME = "compress_pickle"
 DESCRIPTION = "Standard pickle, wrapped with standard compression libraries"
 AUTHOR = "Luciano Paz"
 AUTHOR_EMAIL = "luciano.paz.neuro@gmail.com"
-URL = ("https://github.com/lucianopaz/compress_pickle",)
+URL = "https://github.com/lucianopaz/compress_pickle"
 
 
 def get_requirements():
