@@ -16,7 +16,7 @@ install:
   - conda list && pip freeze
 
 script:
-  - if [ -z ${TEST_STYLE} ] && make check
+  - [[ ! -z ${TEST_STYLE} ]] && make check
   - make test
 
 env:
