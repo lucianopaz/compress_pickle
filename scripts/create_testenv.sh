@@ -39,6 +39,8 @@ pip install -r requirements.txt
 if [ ! -z ${TEST_STYLE} ]
 then
     pip install -r requirements-dev.txt
+else
+    pip install pytest pytest-cov pytest-html
 fi
 
 pip install -e .
