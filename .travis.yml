@@ -16,14 +16,17 @@ install:
   - conda list && pip freeze
 
 script:
-  - black --check compress_pickle;
-  - pylint compress_pickle;
-  - pytest -v compress_pickle/tests/ --cov=compress_pickle/ --html=testing-report.html --self-contained-html;
+  - if [ -z ${TEST_STYLE} ] && make check
+  - make test
 
 env:
-  - PYTHON_VERSION=3.5
-  - PYTHON_VERSION=3.6
-  - PYTHON_VERSION=3.7
+  - PYTHON_VERSION=3.0
+  - PYTHON_VERSION=3.1
+  - PYTHON_VERSION=3.2
+  - PYTHON_VERSION=3.3
+  - PYTHON_VERSION=3.4
+  - PYTHON_VERSION=3.6 TEST_STYLE="True"
+  - PYTHON_VERSION=3.7 TEST_STYLE="True"
 
 after_success:
   - coveralls
