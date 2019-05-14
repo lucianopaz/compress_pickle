@@ -191,7 +191,7 @@ def dump(
     fix_imports=True,
     unhandled_extensions="raise",
     set_default_extension=True,
-    **kwargs,
+    **kwargs
 ):
     """Dump the contents of an object to disk, to the supplied path, using a
     given compression protocol.
@@ -266,13 +266,23 @@ def dump(
         import zipfile
 
         arch = zipfile.ZipFile(path, mode=mode, **kwargs)
-        file = arch.open(path, mode=mode)
+        if sys.version_info < (3, 6):
+            arcname = os.path.basename(path)
+            arch.write(path, arcname=arcname)
+        else:
+            file = arch.open(path, mode=mode)
     if arch is not None:
         with arch:
-            with file:
+            if sys.version_info < (3, 6):
                 if sys.version_info.major < 3:
-                    pickle.dump(obj, file, protocol=protocol)
+                    buff = pickle.dumps(obj, protocol=protocol)
                 else:
+                    buff = pickle.dumps(
+                        obj, protocol=protocol, fix_imports=fix_imports
+                    )
+                arch.writestr(arcname, buff)
+            else:
+                with file:
                     pickle.dump(obj, file, protocol=protocol, fix_imports=fix_imports)
     else:
         with file:
@@ -291,7 +301,7 @@ def load(
     errors="strict",
     set_default_extension=True,
     unhandled_extensions="raise",
-    **kwargs,
+    **kwargs
 ):
     """Load an object from a file stored in disk, given compression protocol.
     For example, if `gzip` compression is specified, the file buffer is opened
