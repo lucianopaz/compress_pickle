@@ -1,14 +1,14 @@
 import codecs
 import re
-from pathlib import Path
+from os import path
 
 from setuptools import setup, find_packages
 
 
-PROJECT_ROOT = Path(__file__).resolve().parent
-REQUIREMENTS_FILE = PROJECT_ROOT / "requirements.txt"
-README_FILE = PROJECT_ROOT / "README.md"
-VERSION_FILE = PROJECT_ROOT / "compress_pickle" / "__init__.py"
+PROJECT_ROOT = path.dirname(path.abspath(__file__))
+REQUIREMENTS_FILE = path.join(PROJECT_ROOT, "requirements.txt")
+README_FILE = path.join(PROJECT_ROOT, "README.md")
+VERSION_FILE = path.join(PROJECT_ROOT, "compress_pickle", "__init__.py")
 
 NAME = "compress_pickle"
 DESCRIPTION = "Standard pickle, wrapped with standard compression libraries"
