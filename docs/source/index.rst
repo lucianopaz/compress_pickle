@@ -101,7 +101,7 @@ To compress the saved data, we can supply a different known extension, or specif
     >>> obj2["key2"] == obj["key2"]
     True
 
-We can check that the compressed files actually take up less disk space with standard ``os.path.get_size``.
+We can check that the compressed files actually take up less disk space with standard ``os.path.getsize``.
 
 .. code-block:: python
 
