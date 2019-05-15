@@ -1,0 +1,248 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>API Reference &#8212; compress_pickle 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to compress_pickle’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-compress_pickle.compress_pickle"></span><p>compress_pickle</p>
+<p>A thin wrapper of standard pickle with standard compression libraries</p>
+<dl class="function">
+<dt id="compress_pickle.compress_pickle.get_known_compressions">
+<code class="descclassname">compress_pickle.compress_pickle.</code><code class="descname">get_known_compressions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/compress_pickle/compress_pickle.html#get_known_compressions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.get_known_compressions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of known compression protocols</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="compress_pickle.compress_pickle.get_default_compression_mapping">
+<code class="descclassname">compress_pickle.compress_pickle.</code><code class="descname">get_default_compression_mapping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/compress_pickle/compress_pickle.html#get_default_compression_mapping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.get_default_compression_mapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a mapping from known compression protocols to the default filename
+extensions</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="compress_pickle.compress_pickle.get_compression_write_mode">
+<code class="descclassname">compress_pickle.compress_pickle.</code><code class="descname">get_compression_write_mode</code><span class="sig-paren">(</span><em>compression</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/compress_pickle/compress_pickle.html#get_compression_write_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.get_compression_write_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the compression’s default mode for openning the file buffer for
+writing.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="compress_pickle.compress_pickle.get_compression_read_mode">
+<code class="descclassname">compress_pickle.compress_pickle.</code><code class="descname">get_compression_read_mode</code><span class="sig-paren">(</span><em>compression</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/compress_pickle/compress_pickle.html#get_compression_read_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.get_compression_read_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the compression’s default mode for openning the file buffer for
+reading.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="compress_pickle.compress_pickle.set_default_extensions">
+<code class="descclassname">compress_pickle.compress_pickle.</code><code class="descname">set_default_extensions</code><span class="sig-paren">(</span><em>filename</em>, <em>compression=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/compress_pickle/compress_pickle.html#set_default_extensions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.set_default_extensions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the filename’s extension to the default that corresponds to
+a given compression protocol. If the filename already has a known extension
+(a default extension of a known compression protocol) it is removed
+beforehand.</p>
+<dl class="docutils">
+<dt>filename: str</dt>
+<dd>The filename to which to set the default extension</dd>
+<dt>compression: None or str (optional)</dt>
+<dd>A compression protocol. To see the known compression protocolos, use
+<cite>get_known_compressions</cite></dd>
+</dl>
+<p>The filename with the extension set to the default given by the compression
+protocol.</p>
+<p>To see the mapping between known compression protocols and filename
+extensions, call the function <cite>get_default_compression_mapping</cite>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="compress_pickle.compress_pickle.infer_compression_from_filename">
+<code class="descclassname">compress_pickle.compress_pickle.</code><code class="descname">infer_compression_from_filename</code><span class="sig-paren">(</span><em>filename</em>, <em>unhandled_extensions='raise'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/compress_pickle/compress_pickle.html#infer_compression_from_filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.infer_compression_from_filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Infer the compression protocol by the filename’s extension. This
+looks-up the default compression -&gt; extension mapping given by
+<cite>get_default_compression_mapping</cite>.</p>
+<dl class="docutils">
+<dt>filename: str</dt>
+<dd>The filename for which to infer the compression protocol</dd>
+<dt>unhandled_extensions: str (optional)</dt>
+<dd>Specify what to do if the extension is not understood. Can be
+‘ignore’ (do nothing), ‘warn’ (issue warning) or ‘raise’ (raise a
+ValueError).</dd>
+</dl>
+<p>The inferred compression protocol’s string</p>
+<p>To see the mapping between known compression protocols and filename
+extensions, call the function <cite>get_default_compression_mapping</cite>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="compress_pickle.compress_pickle.dump">
+<code class="descclassname">compress_pickle.compress_pickle.</code><code class="descname">dump</code><span class="sig-paren">(</span><em>obj</em>, <em>path</em>, <em>compression='infer'</em>, <em>mode=None</em>, <em>protocol=-1</em>, <em>fix_imports=True</em>, <em>unhandled_extensions='raise'</em>, <em>set_default_extension=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/compress_pickle/compress_pickle.html#dump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump the contents of an object to disk, to the supplied path, using a
+given compression protocol.
+For example, if <cite>gzip</cite> compression is specified, the file buffer is opened
+as <cite>gzip.open</cite> and the desired content is dumped into the buffer using
+a normal <cite>pickle.dump</cite> call.</p>
+<dl class="docutils">
+<dt>obj: any type</dt>
+<dd>The object that will be saved to disk</dd>
+<dt>path: str</dt>
+<dd>The path to the file to which to dump <cite>obj</cite></dd>
+<dt>compression: None or str (optional)</dt>
+<dd>The compression protocol to use. By default, the compression is
+inferred from the path’s extension. To see available compression
+protocols refer to <cite>get_known_compressions</cite>.</dd>
+<dt>mode: None or str (optional)</dt>
+<dd>Mode with which to open the file buffer. The default changes according
+to the compression protocol. Refer to <cite>get_compression_write_mode</cite> to
+see the defaults.</dd>
+<dt>protocol: int (optional)</dt>
+<dd>Pickle protocol to use</dd>
+<dt>fix_imports: Bool (optional)</dt>
+<dd>If <cite>fix_imports</cite> is <cite>True</cite> and <cite>protocol</cite> is less than 3, pickle will
+try to map the new Python 3 names to the old module names used
+in Python 2, so that the pickle data stream is readable with Python 2.</dd>
+<dt>set_default_extension: Bool (optional)</dt>
+<dd>If <cite>True</cite>, the default extension given the provided compression
+protocol is set to the supplied <cite>path</cite>. Refer to
+<cite>set_default_extensions</cite> for more information.</dd>
+<dt>unhandled_extensions: str (optional)</dt>
+<dd>Specify what to do if the extension is not understood when inferring
+the compression protocol from the provided path. Can be ‘ignore’ (use
+“.pkl”), ‘warn’ (issue warning and use “.pkl”) or ‘raise’ (raise a
+ValueError).</dd>
+<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs: (optional)</dt>
+<dd>Any other positional or keyword argument is passed to the compressed
+file opening protocol</dd>
+</dl>
+<p>None</p>
+<p>To see the mapping between known compression protocols and filename
+extensions, call the function <cite>get_default_compression_mapping</cite>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="compress_pickle.compress_pickle.load">
+<code class="descclassname">compress_pickle.compress_pickle.</code><code class="descname">load</code><span class="sig-paren">(</span><em>path</em>, <em>compression='infer'</em>, <em>mode=None</em>, <em>fix_imports=True</em>, <em>encoding='ASCII'</em>, <em>errors='strict'</em>, <em>set_default_extension=True</em>, <em>unhandled_extensions='raise'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/compress_pickle/compress_pickle.html#load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load an object from a file stored in disk, given compression protocol.
+For example, if <cite>gzip</cite> compression is specified, the file buffer is opened
+as <cite>gzip.open</cite> and the desired content is loaded from the open buffer using
+a normal <cite>pickle.load</cite> call.</p>
+<dl class="docutils">
+<dt>path: str</dt>
+<dd>The path to the file from which to load the <cite>obj</cite></dd>
+<dt>compression: None or str (optional)</dt>
+<dd>The compression protocol to use. By default, the compression is
+inferred from the path’s extension. To see available compression
+protocols refer to <cite>get_known_compressions</cite>.</dd>
+<dt>mode: None or str (optional)</dt>
+<dd>Mode with which to open the file buffer. The default changes according
+to the compression protocol. Refer to <cite>get_compression_read_mode</cite> to
+see the defaults.</dd>
+<dt>fix_imports: Bool (optional)</dt>
+<dd>If <cite>fix_imports</cite> is <cite>True</cite> and <cite>protocol</cite> is less than 3, pickle will
+try to map the new Python 3 names to the old module names used
+in Python 2, so that the pickle data stream is readable with Python 2.</dd>
+<dt>encoding: str (optional)</dt>
+<dd>Tells pickle how to decode 8-bit string instances pickled by Python 2.
+Refer to the standard <cite>pickle</cite> documentation for details.</dd>
+<dt>errors: str (optional)</dt>
+<dd>Tells pickle how to decode 8-bit string instances pickled by Python 2.
+Refer to the standard <cite>pickle</cite> documentation for details.</dd>
+<dt>set_default_extension: Bool (optional)</dt>
+<dd>If <cite>True</cite>, the default extension given the provided compression
+protocol is set to the supplied <cite>path</cite>. Refer to
+<cite>set_default_extensions</cite> for more information.</dd>
+<dt>unhandled_extensions: str (optional)</dt>
+<dd>Specify what to do if the extension is not understood when inferring
+the compression protocol from the provided path. Can be ‘ignore’ (use
+“.pkl”), ‘warn’ (issue warning and use “.pkl”) or ‘raise’ (raise a
+ValueError).</dd>
+<dt><a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs: (optional)</dt>
+<dd>Any other positional or keyword argument is passed to the compressed
+file opening protocol</dd>
+</dl>
+<p>The unpickled object.</p>
+<p>To see the mapping between known compression protocols and filename
+extensions, call the function <cite>get_default_compression_mapping</cite>.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to compress_pickle’s documentation!</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/api.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Luciano Paz.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/api.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

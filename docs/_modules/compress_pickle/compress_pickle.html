@@ -1,0 +1,456 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>compress_pickle.compress_pickle &#8212; compress_pickle 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for compress_pickle.compress_pickle</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">compress_pickle</span>
+
+<span class="sd">A thin wrapper of standard pickle with standard compression libraries</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;get_known_compressions&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;get_default_compression_mapping&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;get_compression_write_mode&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;get_compression_read_mode&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;set_default_extensions&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;infer_compression_from_filename&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dump&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;load&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="n">_DEFAULT_EXTENSION_MAP</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="kc">None</span><span class="p">:</span> <span class="s2">&quot;.pkl&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pickle&quot;</span><span class="p">:</span> <span class="s2">&quot;.pkl&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gzip&quot;</span><span class="p">:</span> <span class="s2">&quot;.gz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bz2&quot;</span><span class="p">:</span> <span class="s2">&quot;.bz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lzma&quot;</span><span class="p">:</span> <span class="s2">&quot;.lzma&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;zipfile&quot;</span><span class="p">:</span> <span class="s2">&quot;.zip&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">_DEFAULT_COMPRESSION_WRITE_MODES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="kc">None</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;wb+&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pickle&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;wb+&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gzip&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;wb&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bz2&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;wb&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lzma&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;wb&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;zipfile&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;w&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">_DEFAULT_COMPRESSION_READ_MODES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="kc">None</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;rb+&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pickle&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;rb+&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gzip&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;rb&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bz2&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;rb&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lzma&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;rb&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;zipfile&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;r&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="get_known_compressions"><a class="viewcode-back" href="../../api.html#compress_pickle.compress_pickle.get_known_compressions">[docs]</a><span class="k">def</span> <span class="nf">get_known_compressions</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Get a list of known compression protocols&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">_DEFAULT_EXTENSION_MAP</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_default_compression_mapping"><a class="viewcode-back" href="../../api.html#compress_pickle.compress_pickle.get_default_compression_mapping">[docs]</a><span class="k">def</span> <span class="nf">get_default_compression_mapping</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Get a mapping from known compression protocols to the default filename</span>
+<span class="sd">    extensions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_DEFAULT_EXTENSION_MAP</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="get_compression_write_mode"><a class="viewcode-back" href="../../api.html#compress_pickle.compress_pickle.get_compression_write_mode">[docs]</a><span class="k">def</span> <span class="nf">get_compression_write_mode</span><span class="p">(</span><span class="n">compression</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the compression&#39;s default mode for openning the file buffer for</span>
+<span class="sd">    writing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_DEFAULT_COMPRESSION_WRITE_MODES</span><span class="p">[</span><span class="n">compression</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Unknown compression </span><span class="si">{}</span><span class="s2">. Available values are: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">compression</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">_DEFAULT_COMPRESSION_WRITE_MODES</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_compression_read_mode"><a class="viewcode-back" href="../../api.html#compress_pickle.compress_pickle.get_compression_read_mode">[docs]</a><span class="k">def</span> <span class="nf">get_compression_read_mode</span><span class="p">(</span><span class="n">compression</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the compression&#39;s default mode for openning the file buffer for</span>
+<span class="sd">    reading.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_DEFAULT_COMPRESSION_READ_MODES</span><span class="p">[</span><span class="n">compression</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Unknown compression </span><span class="si">{}</span><span class="s2">. Available values are: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">compression</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">_DEFAULT_COMPRESSION_READ_MODES</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="set_default_extensions"><a class="viewcode-back" href="../../api.html#compress_pickle.compress_pickle.set_default_extensions">[docs]</a><span class="k">def</span> <span class="nf">set_default_extensions</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set the filename&#39;s extension to the default that corresponds to</span>
+<span class="sd">    a given compression protocol. If the filename already has a known extension</span>
+<span class="sd">    (a default extension of a known compression protocol) it is removed</span>
+<span class="sd">    beforehand.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename: str</span>
+<span class="sd">        The filename to which to set the default extension</span>
+<span class="sd">    compression: None or str (optional)</span>
+<span class="sd">        A compression protocol. To see the known compression protocolos, use</span>
+<span class="sd">        `get_known_compressions`</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    The filename with the extension set to the default given by the compression</span>
+<span class="sd">    protocol.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    To see the mapping between known compression protocols and filename</span>
+<span class="sd">    extensions, call the function `get_default_compression_mapping`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default_extension</span> <span class="o">=</span> <span class="n">_DEFAULT_EXTENSION_MAP</span><span class="p">[</span><span class="n">compression</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">default_extension</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">_DEFAULT_EXTENSION_MAP</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="n">default_extension</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">ext</span><span class="p">):</span>
+                <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span><span class="p">[:</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">ext</span><span class="p">))]</span>
+                <span class="k">break</span>
+        <span class="n">filename</span> <span class="o">+=</span> <span class="n">default_extension</span>
+    <span class="k">return</span> <span class="n">filename</span></div>
+
+
+<div class="viewcode-block" id="infer_compression_from_filename"><a class="viewcode-back" href="../../api.html#compress_pickle.compress_pickle.infer_compression_from_filename">[docs]</a><span class="k">def</span> <span class="nf">infer_compression_from_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">unhandled_extensions</span><span class="o">=</span><span class="s2">&quot;raise&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Infer the compression protocol by the filename&#39;s extension. This</span>
+<span class="sd">    looks-up the default compression -&gt; extension mapping given by</span>
+<span class="sd">    `get_default_compression_mapping`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename: str</span>
+<span class="sd">        The filename for which to infer the compression protocol</span>
+<span class="sd">    unhandled_extensions: str (optional)</span>
+<span class="sd">        Specify what to do if the extension is not understood. Can be</span>
+<span class="sd">        &#39;ignore&#39; (do nothing), &#39;warn&#39; (issue warning) or &#39;raise&#39; (raise a</span>
+<span class="sd">        ValueError).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    The inferred compression protocol&#39;s string</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    To see the mapping between known compression protocols and filename</span>
+<span class="sd">    extensions, call the function `get_default_compression_mapping`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">unhandled_extensions</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="s2">&quot;warn&quot;</span><span class="p">,</span> <span class="s2">&quot;raise&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Unknown &#39;unhandled_extensions&#39; value </span><span class="si">{}</span><span class="s2">. Allowed values are &quot;</span>
+            <span class="s2">&quot;&#39;ignore&#39;, &#39;warn&#39; or &#39;raise&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">unhandled_extensions</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="n">extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">compression</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">comp</span><span class="p">,</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">_DEFAULT_EXTENSION_MAP</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">comp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="n">extension</span><span class="p">:</span>
+            <span class="n">compression</span> <span class="o">=</span> <span class="n">comp</span>
+            <span class="k">break</span>
+    <span class="k">if</span> <span class="n">compression</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">extension</span> <span class="o">!=</span> <span class="s2">&quot;.pkl&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">unhandled_extensions</span> <span class="o">==</span> <span class="s2">&quot;raise&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Cannot infer compression protocol from filename </span><span class="si">{}</span><span class="s2"> &quot;</span>
+                <span class="s2">&quot;with extension </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">extension</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">unhandled_extensions</span> <span class="o">==</span> <span class="s2">&quot;warn&quot;</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Cannot infer compression protocol from filename </span><span class="si">{}</span><span class="s2"> &quot;</span>
+                <span class="s2">&quot;with extension </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">extension</span><span class="p">),</span>
+                <span class="n">category</span><span class="o">=</span><span class="ne">RuntimeWarning</span><span class="p">,</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="n">compression</span></div>
+
+
+<div class="viewcode-block" id="dump"><a class="viewcode-back" href="../../api.html#compress_pickle.compress_pickle.dump">[docs]</a><span class="k">def</span> <span class="nf">dump</span><span class="p">(</span>
+    <span class="n">obj</span><span class="p">,</span>
+    <span class="n">path</span><span class="p">,</span>
+    <span class="n">compression</span><span class="o">=</span><span class="s2">&quot;infer&quot;</span><span class="p">,</span>
+    <span class="n">mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">protocol</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">fix_imports</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">unhandled_extensions</span><span class="o">=</span><span class="s2">&quot;raise&quot;</span><span class="p">,</span>
+    <span class="n">set_default_extension</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dump the contents of an object to disk, to the supplied path, using a</span>
+<span class="sd">    given compression protocol.</span>
+<span class="sd">    For example, if `gzip` compression is specified, the file buffer is opened</span>
+<span class="sd">    as `gzip.open` and the desired content is dumped into the buffer using</span>
+<span class="sd">    a normal `pickle.dump` call.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    obj: any type</span>
+<span class="sd">        The object that will be saved to disk</span>
+<span class="sd">    path: str</span>
+<span class="sd">        The path to the file to which to dump `obj`</span>
+<span class="sd">    compression: None or str (optional)</span>
+<span class="sd">        The compression protocol to use. By default, the compression is</span>
+<span class="sd">        inferred from the path&#39;s extension. To see available compression</span>
+<span class="sd">        protocols refer to `get_known_compressions`.</span>
+<span class="sd">    mode: None or str (optional)</span>
+<span class="sd">        Mode with which to open the file buffer. The default changes according</span>
+<span class="sd">        to the compression protocol. Refer to `get_compression_write_mode` to</span>
+<span class="sd">        see the defaults.</span>
+<span class="sd">    protocol: int (optional)</span>
+<span class="sd">        Pickle protocol to use</span>
+<span class="sd">    fix_imports: Bool (optional)</span>
+<span class="sd">        If `fix_imports` is `True` and `protocol` is less than 3, pickle will</span>
+<span class="sd">        try to map the new Python 3 names to the old module names used</span>
+<span class="sd">        in Python 2, so that the pickle data stream is readable with Python 2.</span>
+<span class="sd">    set_default_extension: Bool (optional)</span>
+<span class="sd">        If `True`, the default extension given the provided compression</span>
+<span class="sd">        protocol is set to the supplied `path`. Refer to</span>
+<span class="sd">        `set_default_extensions` for more information.</span>
+<span class="sd">    unhandled_extensions: str (optional)</span>
+<span class="sd">        Specify what to do if the extension is not understood when inferring</span>
+<span class="sd">        the compression protocol from the provided path. Can be &#39;ignore&#39; (use</span>
+<span class="sd">        &quot;.pkl&quot;), &#39;warn&#39; (issue warning and use &quot;.pkl&quot;) or &#39;raise&#39; (raise a</span>
+<span class="sd">        ValueError).</span>
+<span class="sd">    **kwargs: (optional)</span>
+<span class="sd">        Any other positional or keyword argument is passed to the compressed</span>
+<span class="sd">        file opening protocol</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    To see the mapping between known compression protocols and filename</span>
+<span class="sd">    extensions, call the function `get_default_compression_mapping`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">compression</span> <span class="o">==</span> <span class="s2">&quot;infer&quot;</span><span class="p">:</span>
+        <span class="n">compression</span> <span class="o">=</span> <span class="n">infer_compression_from_filename</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">unhandled_extensions</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">set_default_extension</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">set_default_extensions</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="n">compression</span><span class="p">)</span>
+    <span class="n">arch</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">get_compression_write_mode</span><span class="p">(</span><span class="n">compression</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">compression</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">compression</span> <span class="o">==</span> <span class="s2">&quot;pickle&quot;</span><span class="p">:</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">compression</span> <span class="o">==</span> <span class="s2">&quot;gzip&quot;</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">gzip</span>
+
+        <span class="n">file</span> <span class="o">=</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">compression</span> <span class="o">==</span> <span class="s2">&quot;bz2&quot;</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">bz2</span>
+
+        <span class="n">file</span> <span class="o">=</span> <span class="n">bz2</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">compression</span> <span class="o">==</span> <span class="s2">&quot;lzma&quot;</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">lzma</span>
+
+        <span class="n">file</span> <span class="o">=</span> <span class="n">lzma</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">compression</span> <span class="o">==</span> <span class="s2">&quot;zipfile&quot;</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">zipfile</span>
+
+        <span class="n">arch</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+            <span class="n">arcname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="n">arch</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">arcname</span><span class="o">=</span><span class="n">arcname</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">arch</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">arch</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">arch</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+                <span class="n">buff</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">protocol</span><span class="p">,</span> <span class="n">fix_imports</span><span class="o">=</span><span class="n">fix_imports</span><span class="p">)</span>
+                <span class="n">arch</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="n">arcname</span><span class="p">,</span> <span class="n">buff</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">file</span><span class="p">:</span>
+                    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">protocol</span><span class="p">,</span> <span class="n">fix_imports</span><span class="o">=</span><span class="n">fix_imports</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">protocol</span><span class="p">,</span> <span class="n">fix_imports</span><span class="o">=</span><span class="n">fix_imports</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../api.html#compress_pickle.compress_pickle.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span>
+    <span class="n">path</span><span class="p">,</span>
+    <span class="n">compression</span><span class="o">=</span><span class="s2">&quot;infer&quot;</span><span class="p">,</span>
+    <span class="n">mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">fix_imports</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ASCII&quot;</span><span class="p">,</span>
+    <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;strict&quot;</span><span class="p">,</span>
+    <span class="n">set_default_extension</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">unhandled_extensions</span><span class="o">=</span><span class="s2">&quot;raise&quot;</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load an object from a file stored in disk, given compression protocol.</span>
+<span class="sd">    For example, if `gzip` compression is specified, the file buffer is opened</span>
+<span class="sd">    as `gzip.open` and the desired content is loaded from the open buffer using</span>
+<span class="sd">    a normal `pickle.load` call.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path: str</span>
+<span class="sd">        The path to the file from which to load the `obj`</span>
+<span class="sd">    compression: None or str (optional)</span>
+<span class="sd">        The compression protocol to use. By default, the compression is</span>
+<span class="sd">        inferred from the path&#39;s extension. To see available compression</span>
+<span class="sd">        protocols refer to `get_known_compressions`.</span>
+<span class="sd">    mode: None or str (optional)</span>
+<span class="sd">        Mode with which to open the file buffer. The default changes according</span>
+<span class="sd">        to the compression protocol. Refer to `get_compression_read_mode` to</span>
+<span class="sd">        see the defaults.</span>
+<span class="sd">    fix_imports: Bool (optional)</span>
+<span class="sd">        If `fix_imports` is `True` and `protocol` is less than 3, pickle will</span>
+<span class="sd">        try to map the new Python 3 names to the old module names used</span>
+<span class="sd">        in Python 2, so that the pickle data stream is readable with Python 2.</span>
+<span class="sd">    encoding: str (optional)</span>
+<span class="sd">        Tells pickle how to decode 8-bit string instances pickled by Python 2.</span>
+<span class="sd">        Refer to the standard `pickle` documentation for details.</span>
+<span class="sd">    errors: str (optional)</span>
+<span class="sd">        Tells pickle how to decode 8-bit string instances pickled by Python 2.</span>
+<span class="sd">        Refer to the standard `pickle` documentation for details.</span>
+<span class="sd">    set_default_extension: Bool (optional)</span>
+<span class="sd">        If `True`, the default extension given the provided compression</span>
+<span class="sd">        protocol is set to the supplied `path`. Refer to</span>
+<span class="sd">        `set_default_extensions` for more information.</span>
+<span class="sd">    unhandled_extensions: str (optional)</span>
+<span class="sd">        Specify what to do if the extension is not understood when inferring</span>
+<span class="sd">        the compression protocol from the provided path. Can be &#39;ignore&#39; (use</span>
+<span class="sd">        &quot;.pkl&quot;), &#39;warn&#39; (issue warning and use &quot;.pkl&quot;) or &#39;raise&#39; (raise a</span>
+<span class="sd">        ValueError).</span>
+<span class="sd">    **kwargs: (optional)</span>
+<span class="sd">        Any other positional or keyword argument is passed to the compressed</span>
+<span class="sd">        file opening protocol</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    The unpickled object.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    To see the mapping between known compression protocols and filename</span>
+<span class="sd">    extensions, call the function `get_default_compression_mapping`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">compression</span> <span class="o">==</span> <span class="s2">&quot;infer&quot;</span><span class="p">:</span>
+        <span class="n">compression</span> <span class="o">=</span> <span class="n">infer_compression_from_filename</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">unhandled_extensions</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">set_default_extension</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">set_default_extensions</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="n">compression</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">get_compression_read_mode</span><span class="p">(</span><span class="n">compression</span><span class="p">)</span>
+    <span class="n">arch</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">compression</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">compression</span> <span class="o">==</span> <span class="s2">&quot;pickle&quot;</span><span class="p">:</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">compression</span> <span class="o">==</span> <span class="s2">&quot;gzip&quot;</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">gzip</span>
+
+        <span class="n">file</span> <span class="o">=</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">compression</span> <span class="o">==</span> <span class="s2">&quot;bz2&quot;</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">bz2</span>
+
+        <span class="n">file</span> <span class="o">=</span> <span class="n">bz2</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">compression</span> <span class="o">==</span> <span class="s2">&quot;lzma&quot;</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">lzma</span>
+
+        <span class="n">file</span> <span class="o">=</span> <span class="n">lzma</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">compression</span> <span class="o">==</span> <span class="s2">&quot;zipfile&quot;</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">zipfile</span>
+
+        <span class="n">arch</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="n">arch</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">arch</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">arch</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+                    <span class="n">file</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="n">encoding</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="n">errors</span><span class="p">,</span> <span class="n">fix_imports</span><span class="o">=</span><span class="n">fix_imports</span>
+                <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+                <span class="n">file</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="n">encoding</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="n">errors</span><span class="p">,</span> <span class="n">fix_imports</span><span class="o">=</span><span class="n">fix_imports</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="n">output</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Luciano Paz.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
