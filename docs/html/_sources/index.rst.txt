@@ -25,7 +25,7 @@ Welcome to compress_pickle's documentation!
     :target: https://opensource.org/licenses/MIT
 
 
-The standard `pickle package <https://docs.python.org/3/library/pickle.html>`_ provides an excellent default tool for serializing arbitrary python objects and storing them to disk. Standard python also includes broad set of `data compression packages <https://docs.python.org/3/library/archiving.html>`_. ``compress_pickle`` provides an interface to the standard `pickle.dump` and `pickle.load` functions, but wraps them in order to direct the serialized data through one of the standard compression packages. This way you can seemlessly serialize data to disk in a compressed way.
+The standard `pickle package <https://docs.python.org/3/library/pickle.html>`_ provides an excellent default tool for serializing arbitrary python objects and storing them to disk. Standard python also includes broad set of `data compression packages <https://docs.python.org/3/library/archiving.html>`_. ``compress_pickle`` provides an interface to the standard ``pickle.dump`` and ``pickle.load`` functions, but wraps them in order to direct the serialized data through one of the standard compression packages. This way you can seemlessly serialize data to disk in a compressed way.
 
 ``compress_pickle`` is `built and tested on python >= 3.5 <https://travis-ci.org/lucianopaz/compress_pickle>`_
 
@@ -51,7 +51,7 @@ Installation
 
 .. code-block:: bash
 
-        pip install pymc3
+        pip install compress_pickle
 
 ``compress_pickle`` does not have external requirements, it only depends on standard python packages, and is platform independent.
 
@@ -101,7 +101,7 @@ To compress the saved data, we can supply a different known extension, or specif
     >>> obj2["key2"] == obj["key2"]
     True
 
-We can check that the compressed files actually take up less disk space with standard ``os.path.get_size``.
+We can check that the compressed files actually take up less disk space with standard ``os.path.getsize``.
 
 .. code-block:: python
 
