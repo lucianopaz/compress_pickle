@@ -6,7 +6,7 @@
 Welcome to compress_pickle's documentation!
 *******************************************
 
-    Standard python pickle, thinly wrapped with standard compression libraries
+    `Standard python pickle, thinly wrapped with standard compression libraries`
 
 
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
