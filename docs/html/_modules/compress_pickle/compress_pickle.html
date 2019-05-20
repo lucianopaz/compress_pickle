@@ -83,13 +83,25 @@
 
 
 <div class="viewcode-block" id="get_known_compressions"><a class="viewcode-back" href="../../api.html#compress_pickle.compress_pickle.get_known_compressions">[docs]</a><span class="k">def</span> <span class="nf">get_known_compressions</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Get a list of known compression protocols&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Get a list of known compression protocols</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    compressions: list</span>
+<span class="sd">        List of known compression protocol names.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">_DEFAULT_EXTENSION_MAP</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="get_default_compression_mapping"><a class="viewcode-back" href="../../api.html#compress_pickle.compress_pickle.get_default_compression_mapping">[docs]</a><span class="k">def</span> <span class="nf">get_default_compression_mapping</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Get a mapping from known compression protocols to the default filename</span>
-<span class="sd">    extensions</span>
+<span class="sd">    extensions.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    compression_map: dict</span>
+<span class="sd">        Dictionary that maps known compression protocol names to their default</span>
+<span class="sd">        file extension.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_DEFAULT_EXTENSION_MAP</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
 
@@ -97,6 +109,12 @@
 <div class="viewcode-block" id="get_compression_write_mode"><a class="viewcode-back" href="../../api.html#compress_pickle.compress_pickle.get_compression_write_mode">[docs]</a><span class="k">def</span> <span class="nf">get_compression_write_mode</span><span class="p">(</span><span class="n">compression</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get the compression&#39;s default mode for openning the file buffer for</span>
 <span class="sd">    writing.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    write_mode_map: dict</span>
+<span class="sd">        Dictionary that maps known compression protocol names to default write</span>
+<span class="sd">        mode used to open files for `dump`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">_DEFAULT_COMPRESSION_WRITE_MODES</span><span class="p">[</span><span class="n">compression</span><span class="p">]</span>
@@ -111,6 +129,12 @@
 <div class="viewcode-block" id="get_compression_read_mode"><a class="viewcode-back" href="../../api.html#compress_pickle.compress_pickle.get_compression_read_mode">[docs]</a><span class="k">def</span> <span class="nf">get_compression_read_mode</span><span class="p">(</span><span class="n">compression</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get the compression&#39;s default mode for openning the file buffer for</span>
 <span class="sd">    reading.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    read_mode_map: dict</span>
+<span class="sd">        Dictionary that maps known compression protocol names to default write</span>
+<span class="sd">        mode used to open files for `load`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">_DEFAULT_COMPRESSION_READ_MODES</span><span class="p">[</span><span class="n">compression</span><span class="p">]</span>

@@ -16,5 +16,9 @@ API Reference
     load
 
 
+**************
+Module members
+**************
+
 .. automodule:: compress_pickle.compress_pickle
     :members:

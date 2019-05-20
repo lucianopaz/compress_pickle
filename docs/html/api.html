@@ -42,7 +42,7 @@
 <td>Get a list of known compression protocols</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#compress_pickle.compress_pickle.get_default_compression_mapping" title="compress_pickle.compress_pickle.get_default_compression_mapping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_default_compression_mapping</span></code></a>()</td>
-<td>Get a mapping from known compression protocols to the default filename extensions</td>
+<td>Get a mapping from known compression protocols to the default filename extensions.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#compress_pickle.compress_pickle.get_compression_write_mode" title="compress_pickle.compress_pickle.get_compression_write_mode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_compression_write_mode</span></code></a>(compression)</td>
 <td>Get the compression’s default mode for openning the file buffer for writing.</td>
@@ -64,19 +64,43 @@
 </tr>
 </tbody>
 </table>
-<span class="target" id="module-compress_pickle.compress_pickle"></span><p>compress_pickle</p>
+</div>
+<div class="section" id="module-compress_pickle.compress_pickle">
+<span id="module-members"></span><h1>Module members<a class="headerlink" href="#module-compress_pickle.compress_pickle" title="Permalink to this headline">¶</a></h1>
+<p>compress_pickle</p>
 <p>A thin wrapper of standard pickle with standard compression libraries</p>
 <dl class="function">
 <dt id="compress_pickle.compress_pickle.get_known_compressions">
 <code class="descclassname">compress_pickle.compress_pickle.</code><code class="descname">get_known_compressions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/compress_pickle/compress_pickle.html#get_known_compressions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.get_known_compressions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a list of known compression protocols</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>compressions</strong> – List of known compression protocol names.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="compress_pickle.compress_pickle.get_default_compression_mapping">
 <code class="descclassname">compress_pickle.compress_pickle.</code><code class="descname">get_default_compression_mapping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/compress_pickle/compress_pickle.html#get_default_compression_mapping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.get_default_compression_mapping" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a mapping from known compression protocols to the default filename
-extensions</p>
+extensions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>compression_map</strong> – Dictionary that maps known compression protocol names to their default
+file extension.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -84,6 +108,17 @@ extensions</p>
 <code class="descclassname">compress_pickle.compress_pickle.</code><code class="descname">get_compression_write_mode</code><span class="sig-paren">(</span><em>compression</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/compress_pickle/compress_pickle.html#get_compression_write_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.get_compression_write_mode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the compression’s default mode for openning the file buffer for
 writing.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>write_mode_map</strong> – Dictionary that maps known compression protocol names to default write
+mode used to open files for <cite>dump</cite>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -91,6 +126,17 @@ writing.</p>
 <code class="descclassname">compress_pickle.compress_pickle.</code><code class="descname">get_compression_read_mode</code><span class="sig-paren">(</span><em>compression</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/compress_pickle/compress_pickle.html#get_compression_read_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.get_compression_read_mode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the compression’s default mode for openning the file buffer for
 reading.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>read_mode_map</strong> – Dictionary that maps known compression protocol names to default write
+mode used to open files for <cite>load</cite>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -258,7 +304,13 @@ extensions, call the function <cite>get_default_compression_mapping</cite>.</p>
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><div class="relations">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">API Reference</a></li>
+<li><a class="reference internal" href="#module-compress_pickle.compress_pickle">Module members</a></li>
+</ul>
+<div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>

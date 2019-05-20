@@ -51,13 +51,25 @@ _DEFAULT_COMPRESSION_READ_MODES = {
 
 
 def get_known_compressions():
-    """Get a list of known compression protocols"""
+    """Get a list of known compression protocols
+
+    Returns
+    -------
+    compressions: list
+        List of known compression protocol names.
+    """
     return [c for c in _DEFAULT_EXTENSION_MAP]
 
 
 def get_default_compression_mapping():
     """Get a mapping from known compression protocols to the default filename
-    extensions
+    extensions.
+
+    Returns
+    -------
+    compression_map: dict
+        Dictionary that maps known compression protocol names to their default
+        file extension.
     """
     return _DEFAULT_EXTENSION_MAP.copy()
 
@@ -65,6 +77,12 @@ def get_default_compression_mapping():
 def get_compression_write_mode(compression):
     """Get the compression's default mode for openning the file buffer for
     writing.
+
+    Returns
+    -------
+    write_mode_map: dict
+        Dictionary that maps known compression protocol names to default write
+        mode used to open files for `dump`.
     """
     try:
         return _DEFAULT_COMPRESSION_WRITE_MODES[compression]
@@ -79,6 +97,12 @@ def get_compression_write_mode(compression):
 def get_compression_read_mode(compression):
     """Get the compression's default mode for openning the file buffer for
     reading.
+
+    Returns
+    -------
+    read_mode_map: dict
+        Dictionary that maps known compression protocol names to default write
+        mode used to open files for `load`.
     """
     try:
         return _DEFAULT_COMPRESSION_READ_MODES[compression]
