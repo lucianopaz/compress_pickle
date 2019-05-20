@@ -2,10 +2,10 @@
 API Reference
 *************
 
+.. currentmodule:: compress_pickle.compress_pickle
 
 .. autosummary::
 
-    to_tuple
     get_known_compressions
     get_default_compression_mapping
     get_compression_write_mode

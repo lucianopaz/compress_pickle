@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>compress_pickle.compress_pickle &#8212; compress_pickle 1.0.0 documentation</title>
+    <title>compress_pickle.compress_pickle &#8212; compress_pickle 1.0.1 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -138,8 +138,9 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    The filename with the extension set to the default given by the compression</span>
-<span class="sd">    protocol.</span>
+<span class="sd">    filename: str</span>
+<span class="sd">        The filename with the extension set to the default given by the</span>
+<span class="sd">        compression protocol.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -174,7 +175,8 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    The inferred compression protocol&#39;s string</span>
+<span class="sd">    compression: str</span>
+<span class="sd">        The inferred compression protocol&#39;s string</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -220,7 +222,7 @@
     <span class="n">set_default_extension</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Dump the contents of an object to disk, to the supplied path, using a</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Dump the contents of an object to disk, to the supplied path, using a</span>
 <span class="sd">    given compression protocol.</span>
 <span class="sd">    For example, if `gzip` compression is specified, the file buffer is opened</span>
 <span class="sd">    as `gzip.open` and the desired content is dumped into the buffer using</span>
@@ -255,13 +257,9 @@
 <span class="sd">        the compression protocol from the provided path. Can be &#39;ignore&#39; (use</span>
 <span class="sd">        &quot;.pkl&quot;), &#39;warn&#39; (issue warning and use &quot;.pkl&quot;) or &#39;raise&#39; (raise a</span>
 <span class="sd">        ValueError).</span>
-<span class="sd">    **kwargs: (optional)</span>
-<span class="sd">        Any other positional or keyword argument is passed to the compressed</span>
-<span class="sd">        file opening protocol</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    None</span>
+<span class="sd">    kwargs:</span>
+<span class="sd">        Any extra keyword arguments are passed to the compressed file opening</span>
+<span class="sd">        protocol.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -322,7 +320,7 @@
     <span class="n">unhandled_extensions</span><span class="o">=</span><span class="s2">&quot;raise&quot;</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Load an object from a file stored in disk, given compression protocol.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Load an object from a file stored in disk, given compression protocol.</span>
 <span class="sd">    For example, if `gzip` compression is specified, the file buffer is opened</span>
 <span class="sd">    as `gzip.open` and the desired content is loaded from the open buffer using</span>
 <span class="sd">    a normal `pickle.load` call.</span>
@@ -358,13 +356,13 @@
 <span class="sd">        the compression protocol from the provided path. Can be &#39;ignore&#39; (use</span>
 <span class="sd">        &quot;.pkl&quot;), &#39;warn&#39; (issue warning and use &quot;.pkl&quot;) or &#39;raise&#39; (raise a</span>
 <span class="sd">        ValueError).</span>
-<span class="sd">    **kwargs: (optional)</span>
-<span class="sd">        Any other positional or keyword argument is passed to the compressed</span>
-<span class="sd">        file opening protocol</span>
+<span class="sd">    kwargs:</span>
+<span class="sd">        Any extra keyword arguments are passed to the compressed file opening</span>
+<span class="sd">        protocol.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    The unpickled object.</span>
+<span class="sd">    The unpickled object: (any)</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>

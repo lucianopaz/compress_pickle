@@ -106,8 +106,9 @@ def set_default_extensions(filename, compression=None):
 
     Returns
     -------
-    The filename with the extension set to the default given by the compression
-    protocol.
+    filename: str
+        The filename with the extension set to the default given by the
+        compression protocol.
 
     Notes
     -----
@@ -142,7 +143,8 @@ def infer_compression_from_filename(filename, unhandled_extensions="raise"):
 
     Returns
     -------
-    The inferred compression protocol's string
+    compression: str
+        The inferred compression protocol's string
 
     Notes
     -----
@@ -188,7 +190,7 @@ def dump(
     set_default_extension=True,
     **kwargs
 ):
-    """Dump the contents of an object to disk, to the supplied path, using a
+    r"""Dump the contents of an object to disk, to the supplied path, using a
     given compression protocol.
     For example, if `gzip` compression is specified, the file buffer is opened
     as `gzip.open` and the desired content is dumped into the buffer using
@@ -223,13 +225,9 @@ def dump(
         the compression protocol from the provided path. Can be 'ignore' (use
         ".pkl"), 'warn' (issue warning and use ".pkl") or 'raise' (raise a
         ValueError).
-    **kwargs: (optional)
-        Any other positional or keyword argument is passed to the compressed
-        file opening protocol
-
-    Returns
-    -------
-    None
+    kwargs:
+        Any extra keyword arguments are passed to the compressed file opening
+        protocol.
 
     Notes
     -----
@@ -290,7 +288,7 @@ def load(
     unhandled_extensions="raise",
     **kwargs
 ):
-    """Load an object from a file stored in disk, given compression protocol.
+    r"""Load an object from a file stored in disk, given compression protocol.
     For example, if `gzip` compression is specified, the file buffer is opened
     as `gzip.open` and the desired content is loaded from the open buffer using
     a normal `pickle.load` call.
@@ -326,13 +324,13 @@ def load(
         the compression protocol from the provided path. Can be 'ignore' (use
         ".pkl"), 'warn' (issue warning and use ".pkl") or 'raise' (raise a
         ValueError).
-    **kwargs: (optional)
-        Any other positional or keyword argument is passed to the compressed
-        file opening protocol
+    kwargs:
+        Any extra keyword arguments are passed to the compressed file opening
+        protocol.
 
     Returns
     -------
-    The unpickled object.
+    The unpickled object: (any)
 
     Notes
     -----

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>API Reference &#8212; compress_pickle 1.0.0 documentation</title>
+    <title>API Reference &#8212; compress_pickle 1.0.1 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -32,6 +32,38 @@
             
   <div class="section" id="api-reference">
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#compress_pickle.compress_pickle.get_known_compressions" title="compress_pickle.compress_pickle.get_known_compressions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_known_compressions</span></code></a>()</td>
+<td>Get a list of known compression protocols</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#compress_pickle.compress_pickle.get_default_compression_mapping" title="compress_pickle.compress_pickle.get_default_compression_mapping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_default_compression_mapping</span></code></a>()</td>
+<td>Get a mapping from known compression protocols to the default filename extensions</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#compress_pickle.compress_pickle.get_compression_write_mode" title="compress_pickle.compress_pickle.get_compression_write_mode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_compression_write_mode</span></code></a>(compression)</td>
+<td>Get the compression’s default mode for openning the file buffer for writing.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#compress_pickle.compress_pickle.get_compression_read_mode" title="compress_pickle.compress_pickle.get_compression_read_mode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_compression_read_mode</span></code></a>(compression)</td>
+<td>Get the compression’s default mode for openning the file buffer for reading.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#compress_pickle.compress_pickle.set_default_extensions" title="compress_pickle.compress_pickle.set_default_extensions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_extensions</span></code></a>(filename[,&nbsp;compression])</td>
+<td>Set the filename’s extension to the default that corresponds to a given compression protocol.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#compress_pickle.compress_pickle.infer_compression_from_filename" title="compress_pickle.compress_pickle.infer_compression_from_filename"><code class="xref py py-obj docutils literal notranslate"><span class="pre">infer_compression_from_filename</span></code></a>(filename[,&nbsp;…])</td>
+<td>Infer the compression protocol by the filename’s extension.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#compress_pickle.compress_pickle.dump" title="compress_pickle.compress_pickle.dump"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dump</span></code></a>(obj,&nbsp;path[,&nbsp;compression,&nbsp;mode,&nbsp;…])</td>
+<td>Dump the contents of an object to disk, to the supplied path, using a given compression protocol.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#compress_pickle.compress_pickle.load" title="compress_pickle.compress_pickle.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(path[,&nbsp;compression,&nbsp;mode,&nbsp;fix_imports,&nbsp;…])</td>
+<td>Load an object from a file stored in disk, given compression protocol.</td>
+</tr>
+</tbody>
+</table>
 <span class="target" id="module-compress_pickle.compress_pickle"></span><p>compress_pickle</p>
 <p>A thin wrapper of standard pickle with standard compression libraries</p>
 <dl class="function">
@@ -68,15 +100,27 @@ reading.</p>
 a given compression protocol. If the filename already has a known extension
 (a default extension of a known compression protocol) it is removed
 beforehand.</p>
-<dl class="docutils">
-<dt>filename: str</dt>
-<dd>The filename to which to set the default extension</dd>
-<dt>compression: None or str (optional)</dt>
-<dd>A compression protocol. To see the known compression protocolos, use
-<cite>get_known_compressions</cite></dd>
-</dl>
-<p>The filename with the extension set to the default given by the compression
-protocol.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> (<em>str</em>) – The filename to which to set the default extension</li>
+<li><strong>compression</strong> (<em>None</em><em> or </em><em>str</em><em> (</em><em>optional</em><em>)</em>) – A compression protocol. To see the known compression protocolos, use
+<cite>get_known_compressions</cite></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>filename</strong> – The filename with the extension set to the default given by the
+compression protocol.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
 <p>To see the mapping between known compression protocols and filename
 extensions, call the function <cite>get_default_compression_mapping</cite>.</p>
 </dd></dl>
@@ -87,15 +131,27 @@ extensions, call the function <cite>get_default_compression_mapping</cite>.</p>
 <dd><p>Infer the compression protocol by the filename’s extension. This
 looks-up the default compression -&gt; extension mapping given by
 <cite>get_default_compression_mapping</cite>.</p>
-<dl class="docutils">
-<dt>filename: str</dt>
-<dd>The filename for which to infer the compression protocol</dd>
-<dt>unhandled_extensions: str (optional)</dt>
-<dd>Specify what to do if the extension is not understood. Can be
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> (<em>str</em>) – The filename for which to infer the compression protocol</li>
+<li><strong>unhandled_extensions</strong> (<em>str</em><em> (</em><em>optional</em><em>)</em>) – Specify what to do if the extension is not understood. Can be
 ‘ignore’ (do nothing), ‘warn’ (issue warning) or ‘raise’ (raise a
-ValueError).</dd>
-</dl>
-<p>The inferred compression protocol’s string</p>
+ValueError).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>compression</strong> – The inferred compression protocol’s string</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
 <p>To see the mapping between known compression protocols and filename
 extensions, call the function <cite>get_default_compression_mapping</cite>.</p>
 </dd></dl>
@@ -108,39 +164,38 @@ given compression protocol.
 For example, if <cite>gzip</cite> compression is specified, the file buffer is opened
 as <cite>gzip.open</cite> and the desired content is dumped into the buffer using
 a normal <cite>pickle.dump</cite> call.</p>
-<dl class="docutils">
-<dt>obj: any type</dt>
-<dd>The object that will be saved to disk</dd>
-<dt>path: str</dt>
-<dd>The path to the file to which to dump <cite>obj</cite></dd>
-<dt>compression: None or str (optional)</dt>
-<dd>The compression protocol to use. By default, the compression is
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>obj</strong> (<em>any type</em>) – The object that will be saved to disk</li>
+<li><strong>path</strong> (<em>str</em>) – The path to the file to which to dump <cite>obj</cite></li>
+<li><strong>compression</strong> (<em>None</em><em> or </em><em>str</em><em> (</em><em>optional</em><em>)</em>) – The compression protocol to use. By default, the compression is
 inferred from the path’s extension. To see available compression
-protocols refer to <cite>get_known_compressions</cite>.</dd>
-<dt>mode: None or str (optional)</dt>
-<dd>Mode with which to open the file buffer. The default changes according
+protocols refer to <cite>get_known_compressions</cite>.</li>
+<li><strong>mode</strong> (<em>None</em><em> or </em><em>str</em><em> (</em><em>optional</em><em>)</em>) – Mode with which to open the file buffer. The default changes according
 to the compression protocol. Refer to <cite>get_compression_write_mode</cite> to
-see the defaults.</dd>
-<dt>protocol: int (optional)</dt>
-<dd>Pickle protocol to use</dd>
-<dt>fix_imports: Bool (optional)</dt>
-<dd>If <cite>fix_imports</cite> is <cite>True</cite> and <cite>protocol</cite> is less than 3, pickle will
+see the defaults.</li>
+<li><strong>protocol</strong> (<em>int</em><em> (</em><em>optional</em><em>)</em>) – Pickle protocol to use</li>
+<li><strong>fix_imports</strong> (<em>Bool</em><em> (</em><em>optional</em><em>)</em>) – If <cite>fix_imports</cite> is <cite>True</cite> and <cite>protocol</cite> is less than 3, pickle will
 try to map the new Python 3 names to the old module names used
-in Python 2, so that the pickle data stream is readable with Python 2.</dd>
-<dt>set_default_extension: Bool (optional)</dt>
-<dd>If <cite>True</cite>, the default extension given the provided compression
+in Python 2, so that the pickle data stream is readable with Python 2.</li>
+<li><strong>set_default_extension</strong> (<em>Bool</em><em> (</em><em>optional</em><em>)</em>) – If <cite>True</cite>, the default extension given the provided compression
 protocol is set to the supplied <cite>path</cite>. Refer to
-<cite>set_default_extensions</cite> for more information.</dd>
-<dt>unhandled_extensions: str (optional)</dt>
-<dd>Specify what to do if the extension is not understood when inferring
+<cite>set_default_extensions</cite> for more information.</li>
+<li><strong>unhandled_extensions</strong> (<em>str</em><em> (</em><em>optional</em><em>)</em>) – Specify what to do if the extension is not understood when inferring
 the compression protocol from the provided path. Can be ‘ignore’ (use
 “.pkl”), ‘warn’ (issue warning and use “.pkl”) or ‘raise’ (raise a
-ValueError).</dd>
-<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs: (optional)</dt>
-<dd>Any other positional or keyword argument is passed to the compressed
-file opening protocol</dd>
-</dl>
-<p>None</p>
+ValueError).</li>
+<li><strong>kwargs</strong> – Any extra keyword arguments are passed to the compressed file opening
+protocol.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
 <p>To see the mapping between known compression protocols and filename
 extensions, call the function <cite>get_default_compression_mapping</cite>.</p>
 </dd></dl>
@@ -152,41 +207,46 @@ extensions, call the function <cite>get_default_compression_mapping</cite>.</p>
 For example, if <cite>gzip</cite> compression is specified, the file buffer is opened
 as <cite>gzip.open</cite> and the desired content is loaded from the open buffer using
 a normal <cite>pickle.load</cite> call.</p>
-<dl class="docutils">
-<dt>path: str</dt>
-<dd>The path to the file from which to load the <cite>obj</cite></dd>
-<dt>compression: None or str (optional)</dt>
-<dd>The compression protocol to use. By default, the compression is
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>path</strong> (<em>str</em>) – The path to the file from which to load the <cite>obj</cite></li>
+<li><strong>compression</strong> (<em>None</em><em> or </em><em>str</em><em> (</em><em>optional</em><em>)</em>) – The compression protocol to use. By default, the compression is
 inferred from the path’s extension. To see available compression
-protocols refer to <cite>get_known_compressions</cite>.</dd>
-<dt>mode: None or str (optional)</dt>
-<dd>Mode with which to open the file buffer. The default changes according
+protocols refer to <cite>get_known_compressions</cite>.</li>
+<li><strong>mode</strong> (<em>None</em><em> or </em><em>str</em><em> (</em><em>optional</em><em>)</em>) – Mode with which to open the file buffer. The default changes according
 to the compression protocol. Refer to <cite>get_compression_read_mode</cite> to
-see the defaults.</dd>
-<dt>fix_imports: Bool (optional)</dt>
-<dd>If <cite>fix_imports</cite> is <cite>True</cite> and <cite>protocol</cite> is less than 3, pickle will
+see the defaults.</li>
+<li><strong>fix_imports</strong> (<em>Bool</em><em> (</em><em>optional</em><em>)</em>) – If <cite>fix_imports</cite> is <cite>True</cite> and <cite>protocol</cite> is less than 3, pickle will
 try to map the new Python 3 names to the old module names used
-in Python 2, so that the pickle data stream is readable with Python 2.</dd>
-<dt>encoding: str (optional)</dt>
-<dd>Tells pickle how to decode 8-bit string instances pickled by Python 2.
-Refer to the standard <cite>pickle</cite> documentation for details.</dd>
-<dt>errors: str (optional)</dt>
-<dd>Tells pickle how to decode 8-bit string instances pickled by Python 2.
-Refer to the standard <cite>pickle</cite> documentation for details.</dd>
-<dt>set_default_extension: Bool (optional)</dt>
-<dd>If <cite>True</cite>, the default extension given the provided compression
+in Python 2, so that the pickle data stream is readable with Python 2.</li>
+<li><strong>encoding</strong> (<em>str</em><em> (</em><em>optional</em><em>)</em>) – Tells pickle how to decode 8-bit string instances pickled by Python 2.
+Refer to the standard <cite>pickle</cite> documentation for details.</li>
+<li><strong>errors</strong> (<em>str</em><em> (</em><em>optional</em><em>)</em>) – Tells pickle how to decode 8-bit string instances pickled by Python 2.
+Refer to the standard <cite>pickle</cite> documentation for details.</li>
+<li><strong>set_default_extension</strong> (<em>Bool</em><em> (</em><em>optional</em><em>)</em>) – If <cite>True</cite>, the default extension given the provided compression
 protocol is set to the supplied <cite>path</cite>. Refer to
-<cite>set_default_extensions</cite> for more information.</dd>
-<dt>unhandled_extensions: str (optional)</dt>
-<dd>Specify what to do if the extension is not understood when inferring
+<cite>set_default_extensions</cite> for more information.</li>
+<li><strong>unhandled_extensions</strong> (<em>str</em><em> (</em><em>optional</em><em>)</em>) – Specify what to do if the extension is not understood when inferring
 the compression protocol from the provided path. Can be ‘ignore’ (use
 “.pkl”), ‘warn’ (issue warning and use “.pkl”) or ‘raise’ (raise a
-ValueError).</dd>
-<dt><a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs: (optional)</dt>
-<dd>Any other positional or keyword argument is passed to the compressed
-file opening protocol</dd>
-</dl>
-<p>The unpickled object.</p>
+ValueError).</li>
+<li><strong>kwargs</strong> – Any extra keyword arguments are passed to the compressed file opening
+protocol.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>The unpickled object</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(any)</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
 <p>To see the mapping between known compression protocols and filename
 extensions, call the function <cite>get_default_compression_mapping</cite>.</p>
 </dd></dl>
