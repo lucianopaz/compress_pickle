@@ -13,7 +13,7 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 # import os
-# import sys
+import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
 
@@ -23,10 +23,16 @@ project = 'compress_pickle'
 copyright = '2019, Luciano Paz'
 author = 'Luciano Paz'
 
-# The short X.Y version
-version = ''
-# The full version, including alpha/beta/rc tags
-release = '1.0.1'
+# The version info for the project you're documenting, acts as replacement for
+# |version| and |release|, also used in various other places throughout the
+# built documents.
+#
+import compress_pickle
+# The short X.Y version.
+version = '.'.join(compress_pickle.__version__.split('.', 2)[:2])
+# The full version, including alpha/beta/rc tags.
+release = compress_pickle.__version__
+
 
 
 # -- General configuration ---------------------------------------------------
@@ -40,7 +46,7 @@ release = '1.0.1'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.viewcode',
+    'sphinx.ext.linkcode',
     'sphinx.ext.githubpages',
     'sphinx.ext.napoleon',
     'sphinx.ext.autosummary',
@@ -161,3 +167,33 @@ texinfo_documents = [
 
 
 # -- Extension configuration -------------------------------------------------
+# Resolve function for the linkcode extension.
+def linkcode_resolve(domain, info):
+    def find_source():
+        # try to find the file and line number, based on code from numpy:
+        # https://github.com/numpy/numpy/blob/master/doc/source/conf.py#L286
+        obj = sys.modules[info['module']]
+        for part in info['fullname'].split('.'):
+            obj = getattr(obj, part)
+        import inspect
+        import os
+        fn = inspect.getsourcefile(obj)
+        fn = os.path.relpath(
+            fn,
+            start=os.path.dirname(compress_pickle.__file__)
+        )
+        source, lineno = inspect.getsourcelines(obj)
+        return fn, lineno, lineno + len(source) - 1
+
+    if domain != 'py' or not info['module']:
+        return None
+    try:
+        filename = 'compress_pickle/%s#L%d-L%d' % find_source()
+    except Exception:
+        filename = info['module'].replace('.', '/') + '.py'
+#    tag = 'master' if 'dev' in release else ('v' + release)
+    tag = 'master'
+    return (
+        "https://github.com/lucianopaz/compress_pickle/blob/{}/{}".
+        format(tag, filename)
+    )
