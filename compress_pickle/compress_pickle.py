@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-compress_pickle
-
-A thin wrapper of standard pickle with standard compression libraries
+A thin wrapper of standard ``pickle`` with standard compression libraries
 """
 import os
 import sys
@@ -82,7 +80,8 @@ def get_compression_write_mode(compression):
     -------
     write_mode_map: dict
         Dictionary that maps known compression protocol names to default write
-        mode used to open files for `dump`.
+        mode used to open files for
+        :func:`~compress_pickle.compress_pickle.dump`.
     """
     try:
         return _DEFAULT_COMPRESSION_WRITE_MODES[compression]
@@ -102,7 +101,8 @@ def get_compression_read_mode(compression):
     -------
     read_mode_map: dict
         Dictionary that maps known compression protocol names to default write
-        mode used to open files for `load`.
+        mode used to open files for
+        :func:`~compress_pickle.compress_pickle.load`.
     """
     try:
         return _DEFAULT_COMPRESSION_READ_MODES[compression]
@@ -126,7 +126,7 @@ def set_default_extensions(filename, compression=None):
         The filename to which to set the default extension
     compression: None or str (optional)
         A compression protocol. To see the known compression protocolos, use
-        `get_known_compressions`
+        :func:`~compress_pickle.compress_pickle.get_known_compressions`
 
     Returns
     -------
@@ -137,7 +137,9 @@ def set_default_extensions(filename, compression=None):
     Notes
     -----
     To see the mapping between known compression protocols and filename
-    extensions, call the function `get_default_compression_mapping`.
+    extensions, call the function
+    :func:`~compress_pickle.compress_pickle.get_default_compression_mapping`.
+
     """
     default_extension = _DEFAULT_EXTENSION_MAP[compression]
     if not filename.endswith(default_extension):
@@ -153,8 +155,8 @@ def set_default_extensions(filename, compression=None):
 
 def infer_compression_from_filename(filename, unhandled_extensions="raise"):
     """Infer the compression protocol by the filename's extension. This
-    looks-up the default compression -> extension mapping given by
-    `get_default_compression_mapping`.
+    looks-up the default compression to extension mapping given by
+    :func:`~compress_pickle.compress_pickle.get_default_compression_mapping`.
 
     Parameters
     ----------
@@ -162,7 +164,7 @@ def infer_compression_from_filename(filename, unhandled_extensions="raise"):
         The filename for which to infer the compression protocol
     unhandled_extensions: str (optional)
         Specify what to do if the extension is not understood. Can be
-        'ignore' (do nothing), 'warn' (issue warning) or 'raise' (raise a
+        "ignore" (do nothing), "warn" (issue warning) or "raise" (raise a
         ValueError).
 
     Returns
@@ -173,7 +175,9 @@ def infer_compression_from_filename(filename, unhandled_extensions="raise"):
     Notes
     -----
     To see the mapping between known compression protocols and filename
-    extensions, call the function `get_default_compression_mapping`.
+    extensions, call the function
+    :func:`~compress_pickle.compress_pickle.get_default_compression_mapping`.
+
     """
     if unhandled_extensions not in ["ignore", "warn", "raise"]:
         raise ValueError(
@@ -216,38 +220,41 @@ def dump(
 ):
     r"""Dump the contents of an object to disk, to the supplied path, using a
     given compression protocol.
-    For example, if `gzip` compression is specified, the file buffer is opened
-    as `gzip.open` and the desired content is dumped into the buffer using
-    a normal `pickle.dump` call.
+    For example, if ``gzip`` compression is specified, the file buffer is
+    opened as ``gzip.open`` and the desired content is dumped into the buffer
+    using a normal ``pickle.dump`` call.
 
     Parameters
     ----------
     obj: any type
         The object that will be saved to disk
     path: str
-        The path to the file to which to dump `obj`
+        The path to the file to which to dump ``obj``
     compression: None or str (optional)
         The compression protocol to use. By default, the compression is
         inferred from the path's extension. To see available compression
-        protocols refer to `get_known_compressions`.
+        protocols refer to
+        :func:`~compress_pickle.compress_pickle.get_known_compressions`.
     mode: None or str (optional)
         Mode with which to open the file buffer. The default changes according
-        to the compression protocol. Refer to `get_compression_write_mode` to
+        to the compression protocol. Refer to
+        :func:`~compress_pickle.compress_pickle.get_compression_write_mode` to
         see the defaults.
     protocol: int (optional)
         Pickle protocol to use
     fix_imports: Bool (optional)
-        If `fix_imports` is `True` and `protocol` is less than 3, pickle will
-        try to map the new Python 3 names to the old module names used
+        If ``fix_imports`` is ``True`` and ``protocol`` is less than 3, pickle
+        will try to map the new Python 3 names to the old module names used
         in Python 2, so that the pickle data stream is readable with Python 2.
     set_default_extension: Bool (optional)
-        If `True`, the default extension given the provided compression
-        protocol is set to the supplied `path`. Refer to
-        `set_default_extensions` for more information.
+        If ``True``, the default extension given the provided compression
+        protocol is set to the supplied ``path``. Refer to
+        :func:`~compress_pickle.compress_pickle.set_default_extensions` for
+        more information.
     unhandled_extensions: str (optional)
         Specify what to do if the extension is not understood when inferring
-        the compression protocol from the provided path. Can be 'ignore' (use
-        ".pkl"), 'warn' (issue warning and use ".pkl") or 'raise' (raise a
+        the compression protocol from the provided path. Can be "ignore" (use
+        ".pkl"), "warn" (issue warning and use ".pkl") or "raise" (raise a
         ValueError).
     kwargs:
         Any extra keyword arguments are passed to the compressed file opening
@@ -256,7 +263,8 @@ def dump(
     Notes
     -----
     To see the mapping between known compression protocols and filename
-    extensions, call the function `get_default_compression_mapping`.
+    extensions, call the function
+    :func:`~compress_pickle.compress_pickle.get_default_compression_mapping`.
     """
     if compression == "infer":
         compression = infer_compression_from_filename(path, unhandled_extensions)
@@ -313,40 +321,43 @@ def load(
     **kwargs
 ):
     r"""Load an object from a file stored in disk, given compression protocol.
-    For example, if `gzip` compression is specified, the file buffer is opened
-    as `gzip.open` and the desired content is loaded from the open buffer using
-    a normal `pickle.load` call.
+    For example, if ``gzip`` compression is specified, the file buffer is opened
+    as ``gzip.open`` and the desired content is loaded from the open buffer
+    using a normal ``pickle.load`` call.
 
     Parameters
     ----------
     path: str
-        The path to the file from which to load the `obj`
+        The path to the file from which to load the ``obj``
     compression: None or str (optional)
         The compression protocol to use. By default, the compression is
         inferred from the path's extension. To see available compression
-        protocols refer to `get_known_compressions`.
+        protocols refer to
+        :func:`~compress_pickle.compress_pickle.get_known_compressions`.
     mode: None or str (optional)
         Mode with which to open the file buffer. The default changes according
-        to the compression protocol. Refer to `get_compression_read_mode` to
+        to the compression protocol. Refer to
+        :func:`~compress_pickle.compress_pickle.get_compression_read_mode` to
         see the defaults.
     fix_imports: Bool (optional)
-        If `fix_imports` is `True` and `protocol` is less than 3, pickle will
-        try to map the new Python 3 names to the old module names used
+        If ``fix_imports`` is ``True`` and ``protocol`` is less than 3, pickle
+        will try to map the new Python 3 names to the old module names used
         in Python 2, so that the pickle data stream is readable with Python 2.
     encoding: str (optional)
         Tells pickle how to decode 8-bit string instances pickled by Python 2.
-        Refer to the standard `pickle` documentation for details.
+        Refer to the standard ``pickle`` documentation for details.
     errors: str (optional)
         Tells pickle how to decode 8-bit string instances pickled by Python 2.
-        Refer to the standard `pickle` documentation for details.
+        Refer to the standard ``pickle`` documentation for details.
     set_default_extension: Bool (optional)
         If `True`, the default extension given the provided compression
         protocol is set to the supplied `path`. Refer to
-        `set_default_extensions` for more information.
+        :func:`~compress_pickle.compress_pickle.set_default_extensions` for
+        more information.
     unhandled_extensions: str (optional)
         Specify what to do if the extension is not understood when inferring
-        the compression protocol from the provided path. Can be 'ignore' (use
-        ".pkl"), 'warn' (issue warning and use ".pkl") or 'raise' (raise a
+        the compression protocol from the provided path. Can be "ignore" (use
+        ".pkl"), "warn" (issue warning and use ".pkl") or "raise" (raise a
         ValueError).
     kwargs:
         Any extra keyword arguments are passed to the compressed file opening
@@ -359,7 +370,8 @@ def load(
     Notes
     -----
     To see the mapping between known compression protocols and filename
-    extensions, call the function `get_default_compression_mapping`.
+    extensions, call the function
+    :func:`~compress_pickle.compress_pickle.get_default_compression_mapping`.
     """
     if compression == "infer":
         compression = infer_compression_from_filename(path, unhandled_extensions)
