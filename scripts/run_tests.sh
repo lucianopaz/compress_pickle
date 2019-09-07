@@ -12,4 +12,9 @@ then
     printf "\033[1;34mPylint passes!\033[0m\n\n";
 fi
 
-pytest -v compress_pickle/tests/ --cov=compress_pickle/ --html=testing-report.html --self-contained-html
+IF [ ! -z ${TEST_DOCS} ]
+then
+    sphinx-build -nWT -b dummy . _build/html;
+else
+    pytest -v compress_pickle/tests/ --cov=compress_pickle/ --html=testing-report.html --self-contained-html;
+fi
