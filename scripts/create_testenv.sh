@@ -36,18 +36,7 @@ fi
 pip install --upgrade pip
 pip install -r requirements.txt
 
-if [ ! -z ${TEST_STYLE} ]
-then
-    DEVREQS="true"
-fi
-
-if [ ! -z ${TEST_DOCS} ]
-then
-    DEVREQS="true"
-fi
-
-
-if [ ! -z ${DEVREQS} ]
+if [ ! -z ${TEST_STYLE} ] || [ ! -z ${TEST_DOCS} ]
 then
     pip install -r requirements-dev.txt
 else

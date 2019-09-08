@@ -12,7 +12,7 @@ then
     printf "\033[1;34mPylint passes!\033[0m\n\n";
 fi
 
-IF [ ! -z ${TEST_DOCS} ]
+if [ ! -z ${TEST_DOCS} ]
 then
     sphinx-build -nWT -b dummy . _build/html;
 else

@@ -5,9 +5,6 @@ cache:
   directories:
     - $HOME/miniconda3
 
-services:
-  - xvfb
-
 before_install:
   - . ./scripts/install_miniconda.sh
 
