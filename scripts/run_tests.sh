@@ -14,8 +14,7 @@ fi
 
 if [ ! -z ${TEST_DOCS} ]
 then
-    cd docs/source;
-    sphinx-build -nWT -b dummy . _build/html;
+    sphinx-build -nWT -b dummy docs/source docs/_build/html;
 else
     pytest -v compress_pickle/tests/ --cov=compress_pickle/ --html=testing-report.html --self-contained-html;
 fi

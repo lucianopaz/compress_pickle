@@ -197,3 +197,16 @@ def linkcode_resolve(domain, info):
         "https://github.com/lucianopaz/compress_pickle/blob/{}/{}".
         format(tag, filename)
     )
+
+
+nitpick_ignore = [
+    ('py:class', 'list'),
+    ('py:class', 'dict'),
+    ('py:class', 'str'),
+    ('py:class', 'optional'),
+    ('py:class', 'any'),
+    ('py:class', 'any type'),
+    ('py:class', 'Bool'),
+    ('py:class', 'int'),
+    ('py:obj', 'None'),
+]
