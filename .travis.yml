@@ -21,6 +21,8 @@ jobs:
     - stage: deploy
       if: branch = master AND type = push AND env(PYTHON_VERSION) = 3.7 AND env(TEST_DOCS) IS present
       name: "Deploy documentation to github pages"
+      env:
+        - PYTHON_VERSION=3.7 TEST_DOCS="True"
       script: skip
       deploy:
         provider: pages
@@ -28,6 +30,11 @@ jobs:
         keep_history: true
         local_dir: docs/html
         target_branch: master
+
+stages:
+  - test
+  - deploy
+    if: branch = master AND type = push AND env(PYTHON_VERSION) = 3.7 AND env(TEST_DOCS) IS present
 
 env:
   - PYTHON_VERSION=3.5
