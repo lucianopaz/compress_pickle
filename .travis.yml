@@ -23,12 +23,12 @@ jobs:
       if: branch = master AND type = push AND env(PYTHON_VERSION) = 3.7 AND env(TEST_DOCS) IS present
       env:
         - PYTHON_VERSION=3.7 TEST_DOCS="True"
-      script: ./scripts/deploy_docs.sh
+      script:
+        - ./scripts/deploy_docs.sh
 
 stages:
   - test
-  - name: "deploy"
-    if: branch = master AND type = push AND env(PYTHON_VERSION) = 3.7 AND env(TEST_DOCS) IS present
+  - deploy
 
 env:
   - PYTHON_VERSION=3.5
