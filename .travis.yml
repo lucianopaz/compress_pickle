@@ -13,15 +13,27 @@ install:
   - pip install coveralls
   - conda list && pip freeze
 
-script:
-  - . ./scripts/run_tests.sh
+jobs:
+  include:
+    - stage: test
+      script:
+        - ./scripts/run_tests.sh
+    - stage: deploy
+      if: branch = master AND type = push AND env(PYTHON_VERSION) = 3.7 AND env(TEST_DOCS) IS present
+      name: "Deploy documentation to github pages"
+      script: skip
+      deploy:
+        provider: pages
+        github_token: $GITHUB_TOKEN
+        keep_history: true
+        local_dir: docs/html
+        target_branch: master
 
 env:
   - PYTHON_VERSION=3.5
   - PYTHON_VERSION=3.6 TEST_STYLE="True"
   - PYTHON_VERSION=3.7 TEST_STYLE="True"
   - PYTHON_VERSION=3.7 TEST_DOCS="True"
-
 
 after_success:
   - coveralls
