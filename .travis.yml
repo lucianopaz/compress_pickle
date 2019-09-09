@@ -15,12 +15,11 @@ install:
 
 jobs:
   include:
-    - stage: test
+    - stage: "Tests"
       script:
         - ./scripts/run_tests.sh
-    - stage: deploy
+    - stage: "Deploy"
       if: branch = master AND type = push AND env(PYTHON_VERSION) = 3.7 AND env(TEST_DOCS) IS present
-      name: "Deploy documentation to github pages"
       env:
         - PYTHON_VERSION=3.7 TEST_DOCS="True"
       script: skip
@@ -32,8 +31,8 @@ jobs:
         target_branch: master
 
 stages:
-  - test
-  - name: deploy
+  - Tests
+  - name: "Deploy"
     if: branch = master AND type = push AND env(PYTHON_VERSION) = 3.7 AND env(TEST_DOCS) IS present
 
 env:
