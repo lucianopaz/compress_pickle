@@ -5,3 +5,4 @@ pylint
 black
 sphinx-autobuild==0.7.1
 sphinx>=1.5.5
+cloud_sptheme

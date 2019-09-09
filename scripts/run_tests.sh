@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -ex # fail on first error, print commands
+set -e # fail on first error, print commands
 
 if [ ! -z ${TEST_STYLE} ]
 then
@@ -14,7 +14,7 @@ fi
 
 if [ ! -z ${TEST_DOCS} ]
 then
-    sphinx-build -nWT -b dummy docs/source docs/_build/html;
+    sphinx-build -nWT docs/source docs/html;
 else
     pytest -v compress_pickle/tests/ --cov=compress_pickle/ --html=testing-report.html --self-contained-html;
 fi

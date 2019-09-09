@@ -226,7 +226,7 @@ def dump(
 
     Parameters
     ----------
-    obj: any type
+    obj: any
         The object that will be saved to disk
     path: str
         The path to the file to which to dump ``obj``
@@ -242,11 +242,11 @@ def dump(
         see the defaults.
     protocol: int (optional)
         Pickle protocol to use
-    fix_imports: Bool (optional)
+    fix_imports: bool (optional)
         If ``fix_imports`` is ``True`` and ``protocol`` is less than 3, pickle
         will try to map the new Python 3 names to the old module names used
         in Python 2, so that the pickle data stream is readable with Python 2.
-    set_default_extension: Bool (optional)
+    set_default_extension: bool (optional)
         If ``True``, the default extension given the provided compression
         protocol is set to the supplied ``path``. Refer to
         :func:`~compress_pickle.compress_pickle.set_default_extensions` for
@@ -339,7 +339,7 @@ def load(
         to the compression protocol. Refer to
         :func:`~compress_pickle.compress_pickle.get_compression_read_mode` to
         see the defaults.
-    fix_imports: Bool (optional)
+    fix_imports: bool (optional)
         If ``fix_imports`` is ``True`` and ``protocol`` is less than 3, pickle
         will try to map the new Python 3 names to the old module names used
         in Python 2, so that the pickle data stream is readable with Python 2.
@@ -349,7 +349,7 @@ def load(
     errors: str (optional)
         Tells pickle how to decode 8-bit string instances pickled by Python 2.
         Refer to the standard ``pickle`` documentation for details.
-    set_default_extension: Bool (optional)
+    set_default_extension: bool (optional)
         If `True`, the default extension given the provided compression
         protocol is set to the supplied `path`. Refer to
         :func:`~compress_pickle.compress_pickle.set_default_extensions` for
@@ -365,7 +365,7 @@ def load(
 
     Returns
     -------
-    The unpickled object: (any)
+    The unpickled object: any
 
     Notes
     -----

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -ex # fail on first error, print commands
+set -e # fail on first error, print commands
 
 while test $# -gt 0
 do
