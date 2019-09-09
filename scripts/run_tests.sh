@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e # fail on first error, print commands
+set -ex # fail on first error, print commands
 
 if [ ! -z ${TEST_STYLE} ]
 then

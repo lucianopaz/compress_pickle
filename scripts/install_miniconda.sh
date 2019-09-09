@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e # fail on first error
+set -ex # fail on first error
 
 if conda --version > /dev/null 2>&1; then
    echo "conda appears to already be installed"
