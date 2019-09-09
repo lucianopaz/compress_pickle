@@ -1,37 +1,37 @@
 language: python
+
 sudo: required
 
 cache:
   directories:
-    - $HOME/miniconda3
+  - "$HOME/miniconda3"
 
 before_install:
-  - . ./scripts/install_miniconda.sh
+- ". ./scripts/install_miniconda.sh"
 
 install:
-  - . ./scripts/create_testenv.sh
-  - pip install coveralls
-  - conda list && pip freeze
+- ". ./scripts/create_testenv.sh"
+- pip install coveralls
+- conda list && pip freeze
 
 env:
+  global:
+  - secure: q4qyB8ndP9hjKNM9TO1qHyHEEB1tJQE8d06aruLOLiyMexfGZ5qsZ3YC/KcIhMuFspr5qY34ubnesBJwOyJ6Ja2tD2TtC/PDGBeD6t8u0t5OHuCCcSM1G6JZ9pyx1MoXfQBTfvcTKLdvvR6OTgfqct9NcE+OIY1f9zo96qFtLSxS6e1TCZlw4lJwkUsoEyJ8mvUG9qtBBla2CWz2w6p86kuS1oSeat3I5p5DhsAo4KApEykFXrQJu8TzUHqXafXyJuuuLGANif8I/uHMPMiHLqEg4MgS7RTXap3bZz1b8n+cKHKg8fjof76/VcTB4nQN53eKoB228Fyse8yDvejiIX0RW+nUNi+w7cnPgzVJNCxoCZ6mMTQvC1hrQD75ZLp0q4OwQrF9RufA7PUlxLO2VeKYa5iF51Gd/PimjqnM0zfKcqHlhMbfOZgXj6fYWC5tcYlqcGhocgnGK7Zh+bZA3/xp9ccBONIC3Z56xZnNPCqhkWLywHkDCbdhigDbmeYs+sj9dddVlgxxsWIluae3L0W4WUZ2F7CiekVZCKkpkCQpleEcoch9tvks01RFFudl3i8sUFNV9DIRkjhPurNL7r96JWNi3cYfZhXzHVeSi+waXz/ARx4Nx8FbLqGjijQwRuQ8wMxekUhNCv7VMQJQwp0BsqfjvhGZpas8nkrdQFY=
+  matrix:
   - PYTHON_VERSION=3.5
   - PYTHON_VERSION=3.6 TEST_STYLE="True"
   - PYTHON_VERSION=3.7 TEST_STYLE="True"
   - PYTHON_VERSION=3.7 TEST_DOCS="True"
-
-script: ./scripts/run_tests.sh
-
+script: "./scripts/run_tests.sh"
 stages:
-  - test
-  - deploy
-
+- test
+- deploy
 jobs:
   include:
-    - stage: deploy
-      name: "deploy"
-      if: branch = master AND type = push
-      env: PYTHON_VERSION=3.7 TEST_DOCS="True"
-      script: ./scripts/deploy_docs.sh
-
+  - stage: deploy
+    name: deploy
+    if: branch = master AND type = push
+    env: PYTHON_VERSION=3.7 TEST_DOCS="True"
+    script: "./scripts/deploy_docs.sh"
 after_success:
-  - coveralls
+- coveralls
