@@ -22,16 +22,29 @@ env:
   - PYTHON_VERSION=3.6 TEST_STYLE="True"
   - PYTHON_VERSION=3.7 TEST_STYLE="True"
   - PYTHON_VERSION=3.7 TEST_DOCS="True"
+
 script: "./scripts/run_tests.sh"
+
 stages:
 - test
 - deploy
+
 jobs:
   include:
   - stage: deploy
     name: deploy
     if: branch = master AND type = push
     env: PYTHON_VERSION=3.7 TEST_DOCS="True"
-    script: "./scripts/deploy_docs.sh"
+    local_dir: docs/html
+    script: skip
+    deploy:
+      provider: pages
+      skip_cleanup: true
+      github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+      keep_history: true
+      on:
+        branch: master
+
+
 after_success:
 - coveralls
