@@ -15,18 +15,19 @@ install:
 
 jobs:
   include:
-    - stage: "Tests"
+    - stage: test
       script:
         - ./scripts/run_tests.sh
-    - stage: "Deploy"
+    - stage: deploy
+      name: "deploy"
       if: branch = master AND type = push AND env(PYTHON_VERSION) = 3.7 AND env(TEST_DOCS) IS present
       env:
         - PYTHON_VERSION=3.7 TEST_DOCS="True"
       script: ./scripts/deploy_docs.sh
 
 stages:
-  - Tests
-  - name: "Deploy"
+  - test
+  - name: "deploy"
     if: branch = master AND type = push AND env(PYTHON_VERSION) = 3.7 AND env(TEST_DOCS) IS present
 
 env:
