@@ -33,7 +33,7 @@ jobs:
 
 stages:
   - test
-  - deploy
+  - name: deploy
     if: branch = master AND type = push AND env(PYTHON_VERSION) = 3.7 AND env(TEST_DOCS) IS present
 
 env:
