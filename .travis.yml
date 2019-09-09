@@ -30,8 +30,7 @@ jobs:
     - stage: deploy
       name: "deploy"
       if: branch = master AND type = push
-      env:
-        - PYTHON_VERSION=3.7 TEST_DOCS="True"
+      env: PYTHON_VERSION=3.7 TEST_DOCS="True"
       script: ./scripts/deploy_docs.sh
 
 after_success:
