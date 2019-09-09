@@ -21,17 +21,16 @@ jobs:
   include:
     - stage: test
       script: ./scripts/run_tests.sh
+      env:
+        - PYTHON_VERSION=3.5
+        - PYTHON_VERSION=3.6 TEST_STYLE="True"
+        - PYTHON_VERSION=3.7 TEST_STYLE="True"
+        - PYTHON_VERSION=3.7 TEST_DOCS="True"
     - stage: deploy
       name: "deploy"
       if: branch = master AND type = push AND env(PYTHON_VERSION) = 3.7 AND env(TEST_DOCS) IS present
       env: PYTHON_VERSION=3.7 TEST_DOCS="True"
       script: ./scripts/deploy_docs.sh
-
-env:
-  - PYTHON_VERSION=3.5
-  - PYTHON_VERSION=3.6 TEST_STYLE="True"
-  - PYTHON_VERSION=3.7 TEST_STYLE="True"
-  - PYTHON_VERSION=3.7 TEST_DOCS="True"
 
 after_success:
   - coveralls
