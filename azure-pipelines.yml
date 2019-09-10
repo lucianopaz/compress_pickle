@@ -75,9 +75,9 @@ steps:
   displayName: 'sphinx-build'
 
 - script: |
-    pip install pytest pytest-azurepipelines
     if [[ $(test.unittest) == "True" ]]
     then
+      pip install pytest pytest-azurepipelines pytest-cov
       python -m pytest -xv --cov compress_pickle --junitxml=junit/test-results.xml --cov-report xml --cov-report term --cov-report html .
     fi
   displayName: 'pytest'
