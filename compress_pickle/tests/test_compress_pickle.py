@@ -176,6 +176,11 @@ def test_dump_load(fixture_dump_load):
             assert loaded_message == message
         else:
             with pytest.raises(expected_fail):
-                dump(message, path, compression, set_default_extension=set_default_extension)
+                dump(
+                    message,
+                    path,
+                    compression,
+                    set_default_extension=set_default_extension,
+                )
             with pytest.raises(expected_fail):
                 load(path, compression, set_default_extension=set_default_extension)
