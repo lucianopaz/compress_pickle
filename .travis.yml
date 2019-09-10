@@ -23,16 +23,6 @@ script: ./scripts/run_tests.sh
 
 stages:
   - test
-  - deploy
-
-jobs:
-  include:
-    - stage: deploy
-      name: "deploy"
-      if: branch = master AND type = push
-      env:
-        - PYTHON_VERSION=3.7 TEST_DOCS="True"
-      script: ./scripts/deploy_docs.sh
 
 after_success:
   - coveralls
