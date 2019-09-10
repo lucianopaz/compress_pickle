@@ -16,9 +16,9 @@ install:
 
 env:
   matrix:
-  - PYTHON_VERSION=3.5
-  - PYTHON_VERSION=3.6 TEST_STYLE="True"
-  - PYTHON_VERSION=3.7 TEST_STYLE="True"
+  - PYTHON_VERSION=3.5 TEST_UNITTESTS="True"
+  - PYTHON_VERSION=3.6 TEST_UNITTESTS="True" TEST_STYLE="True"
+  - PYTHON_VERSION=3.7 TEST_UNITTESTS="True" TEST_STYLE="True"
   - PYTHON_VERSION=3.7 TEST_DOCS="True"
 
 script: "./scripts/run_tests.sh"
