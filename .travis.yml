@@ -1,28 +1,30 @@
 language: python
+
 sudo: required
 
 cache:
   directories:
-    - $HOME/miniconda3
+  - "$HOME/miniconda3"
 
 before_install:
-  - . ./scripts/install_miniconda.sh
+- ". ./scripts/install_miniconda.sh"
 
 install:
-  - . ./scripts/create_testenv.sh
-  - pip install coveralls
-  - conda list && pip freeze
+- ". ./scripts/create_testenv.sh"
+- pip install coveralls
+- conda list && pip freeze
 
 env:
+  matrix:
   - PYTHON_VERSION=3.5
   - PYTHON_VERSION=3.6 TEST_STYLE="True"
   - PYTHON_VERSION=3.7 TEST_STYLE="True"
   - PYTHON_VERSION=3.7 TEST_DOCS="True"
 
-script: ./scripts/run_tests.sh
+script: "./scripts/run_tests.sh"
 
 stages:
-  - test
+- test
 
 after_success:
-  - coveralls
+- coveralls
