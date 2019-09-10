@@ -2,7 +2,9 @@
 ### Standard python pickle, thinly wrapped with standard compression libraries
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+[![Build Status](https://dev.azure.com/lucianopazneuro/lucianopazneuro/_apis/build/status/lucianopaz.compress_pickle?branchName=master)](https://dev.azure.com/lucianopazneuro/lucianopazneuro/_build/latest?definitionId=1&branchName=master)
 [![Build Status](https://travis-ci.org/lucianopaz/compress_pickle.svg?branch=master)](https://travis-ci.org/lucianopaz/compress_pickle)
+![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/lucianopazneuro/compress_pickle/1)
 [![Coverage Status](https://coveralls.io/repos/github/lucianopaz/compress_pickle/badge.svg?branch=master)](https://coveralls.io/github/lucianopaz/compress_pickle?branch=master)
 [![PyPI](https://img.shields.io/pypi/v/compress_pickle.svg)](https://pypi.org/project/compress-pickle/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](https://opensource.org/licenses/MIT)

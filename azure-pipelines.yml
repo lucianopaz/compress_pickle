@@ -87,6 +87,7 @@ steps:
   inputs:
     testResultsFiles: "**/test-*.xml"
     testRunTitle: "Publish test results for Python $(python.version) and OS $(imageName)"
+    mergeTestResults: true
 
 - task: PublishCodeCoverageResults@1
   inputs:
