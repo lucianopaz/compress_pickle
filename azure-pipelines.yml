@@ -1,0 +1,95 @@
+trigger:
+- master
+
+strategy:
+  matrix:
+    Python35:
+      python.version: '3.5'
+      imageName: 'ubuntu-latest'
+      test.unittest: True
+      test.style: False
+      test.docs: False
+    Python36:
+      python.version: '3.6'
+      imageName: 'ubuntu-latest'
+      test.unittest: True
+      test.style: True
+      test.docs: False
+    Python37:
+      python.version: '3.7'
+      imageName: 'ubuntu-latest'
+      test.unittest: True
+      test.style: True
+      test.docs: True
+    Python37-Windows:
+      python.version: '3.7'
+      imageName: 'vs2017-win2016'
+      test.unittest: True
+      test.style: False
+      test.docs: False
+    Python37-MacOS:
+      python.version: '3.7'
+      imageName: 'macos-10.13'
+      test.unittest: True
+      test.style: False
+      test.docs: False
+
+pool:
+  vmImage: $(imageName)
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '$(python.version)'
+  displayName: 'Use Python $(python.version)'
+
+- script: |
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
+    if [[ $(test.style) = "True" ]] || [[ $(test.docs) = "True" ]]
+    then
+      python -m pip install -r requirements-dev.txt
+    fi
+    python -m pip install .
+  displayName: 'Install dependencies'
+
+- script: |
+    if [[ $(test.style) == "True" ]]
+    then
+      black --check compress_pickle;
+    fi
+  displayName: 'black'
+
+- script: |
+    if [[ $(test.style) == "True" ]]
+    then
+      pylint compress_pickle;
+    fi
+  displayName: 'pylint'
+
+- script: |
+    if [[ $(test.docs) == "True" ]]
+    then
+      sphinx-build -nWT docs/source docs/html;
+    fi
+  displayName: 'sphinx-build'
+
+- script: |
+    pip install pytest pytest-azurepipelines
+    if [[ $(test.unittest) == "True" ]]
+    then
+      python -m pytest -xv --cov compress_pickle --junitxml=junit/test-results.xml --cov-report xml --cov-report term --cov-report html .
+    fi
+  displayName: 'pytest'
+
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
+  inputs:
+    testResultsFiles: "**/test-*.xml"
+    testRunTitle: "Publish test results for Python $(python.version) and OS $(imageName)"
+
+- task: PublishCodeCoverageResults@1
+  inputs:
+    codeCoverageTool: Cobertura
+    summaryFileLocation: "$(System.DefaultWorkingDirectory)/**/coverage.xml"
+    reportDirectory: "$(System.DefaultWorkingDirectory)/**/htmlcov"
