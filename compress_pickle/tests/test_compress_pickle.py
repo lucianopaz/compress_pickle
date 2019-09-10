@@ -166,14 +166,16 @@ def test_dump_load(fixture_dump_load):
     message, path, compression, set_default_extension, expected_file, expected_fail = (
         fixture_dump_load
     )
-    if expected_fail is None:
-        dump(message, path, compression, set_default_extension=set_default_extension)
-        loaded_message = load(
-            path, compression, set_default_extension=set_default_extension
-        )
-        assert loaded_message == message
-    else:
-        with pytest.raises(expected_fail):
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", UserWarning)
+        if expected_fail is None:
             dump(message, path, compression, set_default_extension=set_default_extension)
-        with pytest.raises(expected_fail):
-            load(path, compression, set_default_extension=set_default_extension)
+            loaded_message = load(
+                path, compression, set_default_extension=set_default_extension
+            )
+            assert loaded_message == message
+        else:
+            with pytest.raises(expected_fail):
+                dump(message, path, compression, set_default_extension=set_default_extension)
+            with pytest.raises(expected_fail):
+                load(path, compression, set_default_extension=set_default_extension)
