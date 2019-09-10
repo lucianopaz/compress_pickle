@@ -43,7 +43,7 @@ steps:
     versionSpec: '$(python.version)'
   displayName: 'Use Python $(python.version)'
 
-- script: |
+- bash: |
     python -m pip install --upgrade pip
     pip install -r requirements.txt
     if [[ $(test.style) = "True" ]] || [[ $(test.docs) = "True" ]]
@@ -53,28 +53,28 @@ steps:
     python -m pip install .
   displayName: 'Install dependencies'
 
-- script: |
+- bash: |
     if [[ $(test.style) == "True" ]]
     then
       black --check compress_pickle;
     fi
   displayName: 'black'
 
-- script: |
+- bash: |
     if [[ $(test.style) == "True" ]]
     then
       pylint compress_pickle;
     fi
   displayName: 'pylint'
 
-- script: |
+- bash: |
     if [[ $(test.docs) == "True" ]]
     then
       sphinx-build -nWT docs/source docs/html;
     fi
   displayName: 'sphinx-build'
 
-- script: |
+- bash: |
     if [[ $(test.unittest) == "True" ]]
     then
       pip install pytest pytest-azurepipelines pytest-cov
