@@ -23,13 +23,13 @@ strategy:
       test.docs: True
     Python37-Windows:
       python.version: '3.7'
-      imageName: 'windows-latests'
+      imageName: 'windows-latest'
       test.unittest: True
       test.style: False
       test.docs: False
     Python37-MacOS:
       python.version: '3.7'
-      imageName: 'macos-latests'
+      imageName: 'macos-latest'
       test.unittest: True
       test.style: False
       test.docs: False
