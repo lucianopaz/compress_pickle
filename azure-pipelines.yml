@@ -109,18 +109,27 @@ stages:
       displayName: 'Build documentation'
       condition: succeeded()
 
+    - task: DownloadSecureFile@1
+      name: github_email
+      inputs:
+        secureFile: github_email
+      displayName: "Get user github email"
+      condition: succeeded()
+
     - script: |
-        git config --local user.name "Azure Pipelines"
-        git config --local user.email "azuredevops@microsoft.com"
+        git config --local user.name "lucianopaz"
+        cat github_email | xargs -t git config --local user.email
         git add docs/html
         git commit -m "Publishing GitHub Pages  ***NO_CI***"
       displayName: 'Commit built documentation'
+      condition: succeeded()
 
     - task: DownloadSecureFile@1
       name: deploy_key
       inputs:
         secureFile: compress_pickle_deploy_key
       displayName: "Get repository's deploy key"
+      condition: succeeded()
 
     - script: |
         mkdir ~/.ssh && mv $(deploy_key.secureFilePath) ~/.ssh/id_rsa
@@ -130,5 +139,7 @@ stages:
         git push origin HEAD:master
       displayName: 'Publish GitHub Pages'
       condition: |
-        and(not(eq(variables['Build.Reason'], 'PullRequest')),
-            eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+        and(succeeded(),
+            and(not(eq(variables['Build.Reason'], 'PullRequest')),
+                eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+            )
