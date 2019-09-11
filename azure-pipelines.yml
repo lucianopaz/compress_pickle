@@ -55,23 +55,23 @@ steps:
 
 - script: |
     black --check compress_pickle
-  condition: '${{test.style}}'
+  condition: variables.test.style
   displayName: 'black'
 
 - script: |
     pylint compress_pickle
-  condition: '${{test.style}}'
+  condition: variables.test.style
   displayName: 'pylint'
 
 - script: |
     sphinx-build -nWT docs/source docs/html
-  condition: '${{test.docs}}'
+  condition: variables.test.docs
   displayName: 'sphinx-build'
 
 - script: |
     pip install pytest pytest-azurepipelines pytest-cov
     python -m pytest -xv --cov compress_pickle --junitxml=junit/test-results.xml --cov-report xml --cov-report term --cov-report html .
-  condition: '${{test.unittest}}'
+  condition: variables.test.unittest
   displayName: 'pytest'
 
 - task: PublishTestResults@2
