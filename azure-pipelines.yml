@@ -118,7 +118,7 @@ stages:
 
     - script: |
         git config --local user.name "lucianopaz"
-        cat github_email | xargs -t git config --local user.email
+        cat $(github_email.secureFilePath) | xargs git config --local user.email
         git add docs/html
         git commit -m "Publishing GitHub Pages  ***NO_CI***"
       displayName: 'Commit built documentation'
