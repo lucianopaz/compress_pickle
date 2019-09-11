@@ -1,108 +1,110 @@
 trigger:
 - master
 
-strategy:
-  matrix:
-    Python35:
-      python.version: '3.5'
-      imageName: 'ubuntu-latest'
-      test.unittest: True
-    Python36:
-      python.version: '3.6'
-      imageName: 'ubuntu-latest'
-      test.unittest: True
-      test.style: True
-    Python37:
-      python.version: '3.7'
-      imageName: 'ubuntu-latest'
-      test.unittest: True
-      test.style: True
-      test.docs: True
-    Python37-Windows:
-      python.version: '3.7'
-      imageName: 'windows-latest'
-      test.unittest: True
-    Python37-MacOS:
-      python.version: '3.7'
-      imageName: 'macos-latest'
-      test.unittest: True
-
 stages:
 - stage: Testing
+  jobs:
+  - job: "run_tests"
+    strategy:
+      matrix:
+        Python35:
+          python.version: '3.5'
+          imageName: 'ubuntu-latest'
+          test.unittest: True
+        Python36:
+          python.version: '3.6'
+          imageName: 'ubuntu-latest'
+          test.unittest: True
+          test.style: True
+        Python37:
+          python.version: '3.7'
+          imageName: 'ubuntu-latest'
+          test.unittest: True
+          test.style: True
+          test.docs: True
+        Python37-Windows:
+          python.version: '3.7'
+          imageName: 'windows-latest'
+          test.unittest: True
+        Python37-MacOS:
+          python.version: '3.7'
+          imageName: 'macos-latest'
+          test.unittest: True
 
-  pool:
-    vmImage: $(imageName)
+    pool:
+      vmImage: $(imageName)
 
-  steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '$(python.version)'
-    displayName: 'Use Python $(python.version)'
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '$(python.version)'
+      displayName: 'Use Python $(python.version)'
 
-  - bash: |
-      python -m pip install --upgrade pip
-      pip install -r requirements.txt
-      if [[ $(test.style) = "True" ]] || [[ $(test.docs) = "True" ]]
-      then
-        python -m pip install -r requirements-dev.txt
-      fi
-      python -m pip install .
-    displayName: 'Install dependencies'
+    - bash: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        if [[ $(test.style) = "True" ]] || [[ $(test.docs) = "True" ]]
+        then
+          python -m pip install -r requirements-dev.txt
+        fi
+        python -m pip install .
+      displayName: 'Install dependencies'
 
-  - script: |
-      black --check compress_pickle
-    condition: variables['test.style']
-    displayName: 'black'
+    - script: |
+        black --check compress_pickle
+      condition: variables['test.style']
+      displayName: 'black'
 
-  - script: |
-      pylint compress_pickle
-    condition: variables['test.style']
-    displayName: 'pylint'
+    - script: |
+        pylint compress_pickle
+      condition: variables['test.style']
+      displayName: 'pylint'
 
-  - script: |
-      sphinx-build -nWT docs/source docs/html
-    condition: variables['test.docs']
-    displayName: 'sphinx-build'
+    - script: |
+        sphinx-build -nWT docs/source docs/html
+      condition: variables['test.docs']
+      displayName: 'sphinx-build'
 
-  - script: |
-      pip install pytest pytest-azurepipelines pytest-cov
-      python -m pytest -xv --cov compress_pickle --junitxml=junit/test-results.xml --cov-report xml --cov-report term --cov-report html .
-    condition: variables['test.unittest']
-    displayName: 'pytest'
+    - script: |
+        pip install pytest pytest-azurepipelines pytest-cov
+        python -m pytest -xv --cov compress_pickle --junitxml=junit/test-results.xml --cov-report xml --cov-report term --cov-report html .
+      condition: variables['test.unittest']
+      displayName: 'pytest'
 
-  - task: PublishTestResults@2
-    condition: succeededOrFailed()
-    inputs:
-      testResultsFiles: "**/test-*.xml"
-      testRunTitle: "Publish test results for Python $(python.version) and OS $(imageName)"
-      mergeTestResults: true
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testResultsFiles: "**/test-*.xml"
+        testRunTitle: "Publish test results for Python $(python.version) and OS $(imageName)"
+        mergeTestResults: true
 
-  - task: PublishCodeCoverageResults@1
-    inputs:
-      codeCoverageTool: Cobertura
-      summaryFileLocation: "$(System.DefaultWorkingDirectory)/**/coverage.xml"
-      reportDirectory: "$(System.DefaultWorkingDirectory)/**/htmlcov"
+    - task: PublishCodeCoverageResults@1
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: "$(System.DefaultWorkingDirectory)/**/coverage.xml"
+        reportDirectory: "$(System.DefaultWorkingDirectory)/**/htmlcov"
 
 - stage: Deployment
-  pool:
-    vmImage: 'ubuntu-latest'
+  jobs:
+  - job: deploy_documentation
+    pool:
+      vmImage: 'ubuntu-latest'
 
-  steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.7'
-    displayName: 'Use Python 3.7'
-    condition: and(eq(variables['python.version'], '3.7'), eq(variables['imageName'], 'ubuntu-latest'))
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.7'
+      displayName: 'Use Python 3.7'
 
-  - script: |
-      python -m pip install --upgrade pip
-      pip install -r requirements.txt
-      python -m pip install -r requirements-dev.txt
-      python -m pip install .
-    displayName: 'Install dependencies'
-    condition: succeeded()
+    - script: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        python -m pip install -r requirements-dev.txt
+        python -m pip install .
+      displayName: 'Install dependencies'
+      condition: succeeded()
 
-  - script: |
-      sphinx-build -nWT docs/source docs/html
-    displayName: 'Build documentation'
-    condition: succeeded()
+    - script: |
+        sphinx-build -nWT docs/source docs/html
+      displayName: 'Build documentation'
+      condition: succeeded()
