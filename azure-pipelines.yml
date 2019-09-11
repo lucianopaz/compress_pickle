@@ -1,33 +1,34 @@
 trigger:
 - master
 
+strategy:
+  matrix:
+    Python35:
+      python.version: '3.5'
+      imageName: 'ubuntu-latest'
+      test.unittest: True
+    Python36:
+      python.version: '3.6'
+      imageName: 'ubuntu-latest'
+      test.unittest: True
+      test.style: True
+    Python37:
+      python.version: '3.7'
+      imageName: 'ubuntu-latest'
+      test.unittest: True
+      test.style: True
+      test.docs: True
+    Python37-Windows:
+      python.version: '3.7'
+      imageName: 'windows-latest'
+      test.unittest: True
+    Python37-MacOS:
+      python.version: '3.7'
+      imageName: 'macos-latest'
+      test.unittest: True
+
 stages:
 - stage: Testing
-  strategy:
-    matrix:
-      Python35:
-        python.version: '3.5'
-        imageName: 'ubuntu-latest'
-        test.unittest: True
-      Python36:
-        python.version: '3.6'
-        imageName: 'ubuntu-latest'
-        test.unittest: True
-        test.style: True
-      Python37:
-        python.version: '3.7'
-        imageName: 'ubuntu-latest'
-        test.unittest: True
-        test.style: True
-        test.docs: True
-      Python37-Windows:
-        python.version: '3.7'
-        imageName: 'windows-latest'
-        test.unittest: True
-      Python37-MacOS:
-        python.version: '3.7'
-        imageName: 'macos-latest'
-        test.unittest: True
 
   pool:
     vmImage: $(imageName)
@@ -91,6 +92,7 @@ stages:
     inputs:
       versionSpec: '3.7'
     displayName: 'Use Python 3.7'
+    condition: and(eq(variables['python.version'], '3.7'), eq(variables['imageName'], 'ubuntu-latest'))
 
   - script: |
       python -m pip install --upgrade pip
@@ -98,7 +100,9 @@ stages:
       python -m pip install -r requirements-dev.txt
       python -m pip install .
     displayName: 'Install dependencies'
+    condition: succeeded()
 
   - script: |
       sphinx-build -nWT docs/source docs/html
     displayName: 'Build documentation'
+    condition: succeeded()
