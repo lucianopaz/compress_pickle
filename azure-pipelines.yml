@@ -108,3 +108,27 @@ stages:
         sphinx-build -nWT docs/source docs/html
       displayName: 'Build documentation'
       condition: succeeded()
+
+    - script: |
+        git config --local user.name "Azure Pipelines"
+        git config --local user.email "azuredevops@microsoft.com"
+        git add docs/html
+        git commit -m "Publishing GitHub Pages  ***NO_CI***"
+      displayName: 'Commit built documentation'
+
+    - task: DownloadSecureFile@1
+      name: deploy_key
+      inputs:
+        secureFile: compress_pickle_deploy_key
+      displayName: "Get repository's deploy key"
+
+    - script: |
+        mkdir ~/.ssh && mv $(deploy_key.secureFilePath) ~/.ssh/id_rsa
+        chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+        git remote set-url --push origin git@github.com:lucianopaz/compress_pickle.git
+        git push origin HEAD:master
+      displayName: 'Publish GitHub Pages'
+      condition: |
+        and(not(eq(variables['Build.Reason'], 'PullRequest')),
+            eq(variables['Build.SourceBranch'], 'refs/heads/master'))
