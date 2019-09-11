@@ -7,14 +7,11 @@ strategy:
       python.version: '3.5'
       imageName: 'ubuntu-latest'
       test.unittest: True
-      test.style: False
-      test.docs: False
     Python36:
       python.version: '3.6'
       imageName: 'ubuntu-latest'
       test.unittest: True
       test.style: True
-      test.docs: False
     Python37:
       python.version: '3.7'
       imageName: 'ubuntu-latest'
@@ -25,14 +22,10 @@ strategy:
       python.version: '3.7'
       imageName: 'windows-latest'
       test.unittest: True
-      test.style: False
-      test.docs: False
     Python37-MacOS:
       python.version: '3.7'
       imageName: 'macos-latest'
       test.unittest: True
-      test.style: False
-      test.docs: False
 
 pool:
   vmImage: $(imageName)
