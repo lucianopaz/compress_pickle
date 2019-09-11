@@ -53,17 +53,17 @@ steps:
     python -m pip install .
   displayName: 'Install dependencies'
 
-- scipt: |
+- script: |
     black --check compress_pickle
   condition: eq("$(test.style)", "True")
   displayName: 'black'
 
-- scipt: |
+- script: |
     pylint compress_pickle
   condition: eq("$(test.style)", "True")
   displayName: 'pylint'
 
-- scipt: |
+- script: |
     sphinx-build -nWT docs/source docs/html
   condition: eq("$(test.docs)", "True")
   displayName: 'sphinx-build'
