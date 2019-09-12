@@ -118,33 +118,6 @@ stages:
       displayName: 'Commit built documentation'
       condition: succeeded()
 
-    - task: InstallSSHKey@0
-      name: install_sshkey
-      inputs:
-        knownHostsEntry: "SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8 github.com"
-        sshPublichKey: $(sshpublicDeployKey)
-        sshKeySecureFile: $(deplot_key.secureFilePath)
-      displayName: "Install repository's deploy key"
-      condition: succeeded()
-
-    - script: |
-        git remote set-url --push origin git@github.com:lucianopaz/compress_pickle.git
-        git push origin HEAD:master
-      displayName: 'Publish GitHub Pages'
-      condition: |
-        and(succeeded(),
-            and(not(eq(variables['Build.Reason'], 'PullRequest')),
-                eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-            )
-
-    - script: |
-        git config --local user.name "lucianopaz"
-        git config --local user.email $(github_email)
-        git add docs/html
-        git commit -m "Publishing GitHub Pages  ***NO_CI***"
-      displayName: 'Commit built documentation'
-      condition: succeeded()
-
     - task: DownloadSecureFile@1
       name: deploy_key
       inputs:
@@ -157,7 +130,7 @@ stages:
       inputs:
         knownHostsEntry: "SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8 github.com"
         sshPublichKey: $(sshpublicDeployKey)
-        sshKeySecureFile: $(deplot_key.secureFilePath)
+        sshKeySecureFile: $(deploy_key.secureFilePath)
       displayName: "Install repository's deploy key"
       condition: succeeded()
 
