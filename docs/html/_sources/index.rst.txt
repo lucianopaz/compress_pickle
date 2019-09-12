@@ -8,9 +8,11 @@ Welcome to compress_pickle's documentation!
 
     `Standard python pickle, thinly wrapped with standard compression libraries`
 
-
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/python/black
+
+.. image:: https://dev.azure.com/lucianopazneuro/lucianopazneuro/_apis/build/status/lucianopaz.compress_pickle?branchName=master
+    :target: https://dev.azure.com/lucianopazneuro/lucianopazneuro/_build/latest?definitionId=1&branchName=master
 
 .. image:: https://travis-ci.org/lucianopaz/compress_pickle.svg?branch=master
     :target: https://travis-ci.org/lucianopaz/compress_pickle
