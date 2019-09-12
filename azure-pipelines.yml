@@ -121,7 +121,7 @@ stages:
     - task: InstallSSHKey@0
       name: install_sshkey
       inputs:
-        knownHostsEntry: "SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8 github.com"
+        knownHostsEntry: "github.com"
         sshPublicKey: $(sshpublicDeployKey)
         sshKeySecureFile: compress_pickle_deploy_key
       displayName: "Install repository's deploy key"
