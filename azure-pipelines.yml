@@ -122,7 +122,7 @@ stages:
       name: install_sshkey
       inputs:
         knownHostsEntry: "SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8 github.com"
-        sshPublichKey: $(sshpublicDeployKey)
+        sshPublicKey: $(sshpublicDeployKey)
         sshKeySecureFile: compress_pickle_deploy_key
       displayName: "Install repository's deploy key"
       condition: succeeded()
