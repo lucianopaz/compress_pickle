@@ -128,6 +128,12 @@ stages:
       condition: succeeded()
 
     - script: |
+        ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+      name: register_known_hosts
+      displayName: "Register github as known host"
+      condition: succeeded()
+
+    - script: |
         git remote set-url --push origin git@github.com:lucianopaz/compress_pickle.git
         git push origin HEAD:master
       displayName: 'Publish GitHub Pages'
