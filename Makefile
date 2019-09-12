@@ -1,4 +1,4 @@
-.PHONY: help format style black test lint check
+.PHONY: help format style black test lint check docs
 .DEFAULT_GOAL = help
 
 PYTHON = python
@@ -29,3 +29,5 @@ lint: format style  # Lint code using black and pylint.
 
 check: lint test  # Both lint and test code. Runs `make lint` followed by `make test`.
 
+docs:
+	cd docs/ && $(MAKE) -f Makefile html
