@@ -87,6 +87,11 @@ stages:
 - stage: Deployment
   jobs:
   - job: deploy_documentation
+    condition: |
+      and(succeeded(),
+          and(not(eq(variables['Build.Reason'], 'PullRequest')),
+              eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+         )
 
     pool:
       vmImage: 'ubuntu-latest'
