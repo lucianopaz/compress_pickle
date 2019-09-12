@@ -87,6 +87,7 @@ stages:
 - stage: Deployment
   jobs:
   - job: deploy_documentation
+
     pool:
       vmImage: 'ubuntu-latest'
 
@@ -109,16 +110,36 @@ stages:
       displayName: 'Build documentation'
       condition: succeeded()
 
-    - task: DownloadSecureFile@1
-      name: github_email
+    - script: |
+        git config --local user.name "lucianopaz"
+        git config --local user.email $(github_email)
+        git add docs/html
+        git commit -m "Publishing GitHub Pages  ***NO_CI***"
+      displayName: 'Commit built documentation'
+      condition: succeeded()
+
+    - task: InstallSSHKey@0
+      name: install_sshkey
       inputs:
-        secureFile: github_email
-      displayName: "Get user github email"
+        knownHostsEntry: "SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8 github.com"
+        sshPublichKey: $(sshpublicDeployKey)
+        sshKeySecureFile: $(deplot_key.secureFilePath)
+      displayName: "Install repository's deploy key"
       condition: succeeded()
 
     - script: |
+        git remote set-url --push origin git@github.com:lucianopaz/compress_pickle.git
+        git push origin HEAD:master
+      displayName: 'Publish GitHub Pages'
+      condition: |
+        and(succeeded(),
+            and(not(eq(variables['Build.Reason'], 'PullRequest')),
+                eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+            )
+
+    - script: |
         git config --local user.name "lucianopaz"
-        cat $(github_email.secureFilePath) | xargs git config --local user.email
+        git config --local user.email $(github_email)
         git add docs/html
         git commit -m "Publishing GitHub Pages  ***NO_CI***"
       displayName: 'Commit built documentation'
@@ -131,10 +152,16 @@ stages:
       displayName: "Get repository's deploy key"
       condition: succeeded()
 
+    - task: InstallSSHKey@0
+      name: install_sshkey
+      inputs:
+        knownHostsEntry: "SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8 github.com"
+        sshPublichKey: $(sshpublicDeployKey)
+        sshKeySecureFile: $(deplot_key.secureFilePath)
+      displayName: "Install repository's deploy key"
+      condition: succeeded()
+
     - script: |
-        mkdir ~/.ssh && mv $(deploy_key.secureFilePath) ~/.ssh/id_rsa
-        chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
         git remote set-url --push origin git@github.com:lucianopaz/compress_pickle.git
         git push origin HEAD:master
       displayName: 'Publish GitHub Pages'
