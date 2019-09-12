@@ -118,19 +118,12 @@ stages:
       displayName: 'Commit built documentation'
       condition: succeeded()
 
-    - task: DownloadSecureFile@1
-      name: deploy_key
-      inputs:
-        secureFile: compress_pickle_deploy_key
-      displayName: "Get repository's deploy key"
-      condition: succeeded()
-
     - task: InstallSSHKey@0
       name: install_sshkey
       inputs:
         knownHostsEntry: "SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8 github.com"
         sshPublichKey: $(sshpublicDeployKey)
-        sshKeySecureFile: $(deploy_key.secureFilePath)
+        sshKeySecureFile: compress_pickle_deploy_key
       displayName: "Install repository's deploy key"
       condition: succeeded()
 
