@@ -6,6 +6,7 @@
 [![Build Status](https://travis-ci.org/lucianopaz/compress_pickle.svg?branch=master)](https://travis-ci.org/lucianopaz/compress_pickle)
 ![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/lucianopazneuro/compress_pickle/1)
 [![Coverage Status](https://coveralls.io/repos/github/lucianopaz/compress_pickle/badge.svg?branch=master)](https://coveralls.io/github/lucianopaz/compress_pickle?branch=master)
+[![Coverage Status](https://codecov.io/gh/lucianopaz/compress_pickle/branch/master/graph/badge.svg)](https://codecov.io/gh/lucianopaz/compress_pickle)
 [![PyPI](https://img.shields.io/pypi/v/compress_pickle.svg)](https://pypi.org/project/compress-pickle/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 

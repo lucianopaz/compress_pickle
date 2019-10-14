@@ -12,6 +12,7 @@ before_install:
 install:
 - ". ./scripts/create_testenv.sh"
 - pip install coveralls
+- pip install codecov
 - conda list && pip freeze
 
 env:
@@ -28,3 +29,4 @@ stages:
 
 after_success:
 - coveralls
+- codecov

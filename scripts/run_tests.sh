@@ -19,5 +19,5 @@ fi
 
 if [ ! -z ${TEST_UNITTESTS} ] && [ ${TEST_UNITTESTS} = "True" ]
 then
-    pytest -v compress_pickle/tests/ --cov=compress_pickle/ --html=testing-report.html --self-contained-html;
+    pytest -v compress_pickle/tests/ --cov=compress_pickle/ --cov-report=xml --html=testing-report.html --self-contained-html
 fi
