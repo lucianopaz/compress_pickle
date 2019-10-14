@@ -17,6 +17,9 @@ Welcome to compress_pickle's documentation!
 .. image:: https://travis-ci.org/lucianopaz/compress_pickle.svg?branch=master
     :target: https://travis-ci.org/lucianopaz/compress_pickle
 
+.. image:: https://codecov.io/gh/lucianopaz/compress_pickle/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/lucianopaz/compress_pickle
+
 .. image:: https://coveralls.io/repos/github/lucianopaz/compress_pickle/badge.svg?branch=master
     :target: https://coveralls.io/github/lucianopaz/compress_pickle?branch=master
 
