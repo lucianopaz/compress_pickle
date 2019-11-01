@@ -65,9 +65,7 @@ def compressions_to_validate(request):
 
 
 @pytest.fixture(scope="module")
-def dump_load(
-    file, file_compressions, set_default_extension
-):
+def dump_load(file, file_compressions, set_default_extension):
     message = os.urandom(256)
     file = file.format(file_compressions)
     expected_fail = None

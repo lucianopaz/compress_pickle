@@ -4,6 +4,8 @@ from fixtures import COMPRESSION_NAMES
 from compress_pickle import (
     get_known_compressions,
     validate_compression,
+    preprocess_path,
+    open_compression_stream,
     get_default_compression_mapping,
     get_compression_write_mode,
     get_compression_read_mode,

@@ -2,12 +2,7 @@ import pytest
 import os
 import warnings
 from fixtures import COMPRESSION_NAMES
-from compress_pickle import (
-    dump,
-    dumps,
-    load,
-    loads,
-)
+from compress_pickle import dump, dumps, load, loads
 
 
 @pytest.mark.usefixtures("dump_load")
@@ -49,11 +44,7 @@ def test_dump_fails_on_unhandled_compression(wrong_compressions):
 @pytest.mark.usefixtures("wrong_compressions")
 def test_load_fails_on_unhandled_compression(wrong_compressions):
     with pytest.raises(ValueError):
-        load(
-            "test_path.pkl",
-            compression=wrong_compressions,
-            set_default_extension=False,
-        )
+        load("test_path.pkl", compression=wrong_compressions, set_default_extension=False)
 
 
 @pytest.mark.usefixtures("compressions")

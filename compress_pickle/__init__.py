@@ -1,9 +1,4 @@
-from .compress_pickle import (
-    dump,
-    load,
-    dumps,
-    loads,
-)
+from .compress_pickle import dump, load, dumps, loads
 from .utils import (
     get_known_compressions,
     validate_compression,

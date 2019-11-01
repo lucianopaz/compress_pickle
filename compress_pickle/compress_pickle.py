@@ -14,12 +14,7 @@ from .utils import (
 )
 
 
-__all__ = [
-    "dump",
-    "load",
-    "dumps",
-    "loads",
-]
+__all__ = ["dump", "load", "dumps", "loads"]
 
 
 def dump(
