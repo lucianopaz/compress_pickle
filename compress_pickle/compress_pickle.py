@@ -44,11 +44,11 @@ def dump(
         The compression protocol to use. By default, the compression is
         inferred from the path's extension. To see available compression
         protocols refer to
-        :func:`~compress_pickle.compress_pickle.get_known_compressions`.
+        :func:`~compress_pickle.utils.get_known_compressions`.
     mode: None or str (optional)
         Mode with which to open the file buffer. The default changes according
         to the compression protocol. Refer to
-        :func:`~compress_pickle.compress_pickle.get_compression_write_mode` to
+        :func:`~compress_pickle.utils.get_compression_write_mode` to
         see the defaults.
     protocol: int (optional)
         Pickle protocol to use
@@ -59,7 +59,7 @@ def dump(
     set_default_extension: bool (optional)
         If ``True``, the default extension given the provided compression
         protocol is set to the supplied ``path``. Refer to
-        :func:`~compress_pickle.compress_pickle.set_default_extensions` for
+        :func:`~compress_pickle.utils.set_default_extensions` for
         more information.
     unhandled_extensions: str (optional)
         Specify what to do if the extension is not understood when inferring
@@ -74,7 +74,7 @@ def dump(
     -----
     To see the mapping between known compression protocols and filename
     extensions, call the function
-    :func:`~compress_pickle.compress_pickle.get_default_compression_mapping`.
+    :func:`~compress_pickle.utils.get_default_compression_mapping`.
     """
     validate_compression(compression)
     path, compression, stream = preprocess_path(
@@ -124,7 +124,7 @@ def dumps(obj, compression=None, protocol=-1, fix_imports=True, **kwargs):
         The compression protocol to use. By default, the compression is
         inferred from the path's extension. To see available compression
         protocols refer to
-        :func:`~compress_pickle.compress_pickle.get_known_compressions(False)`.
+        :func:`~compress_pickle.utils.get_known_compressions`.
     protocol: int (optional)
         Pickle protocol to use
     fix_imports: bool (optional)
@@ -174,11 +174,11 @@ def load(
         The compression protocol to use. By default, the compression is
         inferred from the path's extension. To see available compression
         protocols refer to
-        :func:`~compress_pickle.compress_pickle.get_known_compressions`.
+        :func:`~compress_pickle.utils.get_known_compressions`.
     mode: None or str (optional)
         Mode with which to open the file buffer. The default changes according
         to the compression protocol. Refer to
-        :func:`~compress_pickle.compress_pickle.get_compression_read_mode` to
+        :func:`~compress_pickle.utils.get_compression_read_mode` to
         see the defaults.
     fix_imports: bool (optional)
         If ``fix_imports`` is ``True`` and ``protocol`` is less than 3, pickle
@@ -193,7 +193,7 @@ def load(
     set_default_extension: bool (optional)
         If `True`, the default extension given the provided compression
         protocol is set to the supplied `path`. Refer to
-        :func:`~compress_pickle.compress_pickle.set_default_extensions` for
+        :func:`~compress_pickle.utils.set_default_extensions` for
         more information.
     unhandled_extensions: str (optional)
         Specify what to do if the extension is not understood when inferring
@@ -212,7 +212,7 @@ def load(
     -----
     To see the mapping between known compression protocols and filename
     extensions, call the function
-    :func:`~compress_pickle.compress_pickle.get_default_compression_mapping`.
+    :func:`~compress_pickle.utils.get_default_compression_mapping`.
     """
     validate_compression(compression)
     path, compression, stream = preprocess_path(
@@ -263,12 +263,12 @@ def loads(
 
     Parameters
     ----------
-    data: str
+    data: bytes
         The bytes that contain the object to load from
     compression: None or str
         The compression protocol to use. To see available compression
         protocols refer to
-        :func:`~compress_pickle.compress_pickle.get_known_compressions`.
+        :func:`~compress_pickle.utils.get_known_compressions`.
     fix_imports: bool (optional)
         If ``fix_imports`` is ``True`` and ``protocol`` is less than 3, pickle
         will try to map the new Python 3 names to the old module names used

@@ -62,6 +62,19 @@ def get_known_compressions():
 
 
 def validate_compression(compression, infer_is_valid=True):
+    """Check if the supplied ``compression`` protocol is supported. If it is
+    not supported, a ``ValueError`` is raised.
+
+    Parameters
+    ----------
+    compression: str or None
+        A compression protocol. To see the known compression protocolos, use
+        :func:`~compress_pickle.utils.get_known_compressions`
+    infer_is_valid: bool
+        If ``True``, ``compression="infer"`` is considered a valid compression
+        protocol. If ``False``, it is not accepted as a valid compression
+        protocol.
+    """
     known_compressions = get_known_compressions()
     if infer_is_valid:
         known_compressions.append("infer")
@@ -78,9 +91,59 @@ def validate_compression(compression, infer_is_valid=True):
 
 
 def preprocess_path(
-    path, compression="infer", unhandled_extensions="raise", set_default_extension=True
+    path, compression="infer", set_default_extension=True, unhandled_extensions="raise"
 ):
+    """Process the supplied path to control if it is a path-like object (str,
+    bytes) or a file-like object (io.BytesIO or other types of streams). If it
+    is path-like, the compression can be inferred and the default extension can
+    be added.
+
+    Parameters
+    ----------
+    path: str, bytes, None or iostream
+        A path-like object (``str``, ``bytes``), a file-like object (we call it
+        iostream but it is defined by the ``io`` module, for example
+        ``io.BytesIO`` or other types of streams), or ``None``. If ``None``,
+        a new ``io.BytesIO`` instance is created and returned as ``stream``.
+    compression: str or None (optional)
+        A compression protocol. To see the known compression protocolos, use
+        :func:`~compress_pickle.utils.get_known_compressions`.
+    set_default_extension: bool (optional)
+        If ``True``, the default extension given the provided compression
+        protocol is set to the supplied ``path``. Refer to
+        :func:`~compress_pickle.utils.set_default_extensions` for
+        more information.
+    unhandled_extensions: str (optional)
+        Specify what to do if the extension is not understood when inferring
+        the compression protocol from the provided path-like object. Can be
+        "ignore" (use ".pkl"), "warn" (issue warning and use ".pkl") or
+        "raise" (raise a ``ValueError``).
+
+    Returns
+    -------
+    path: str or iostream
+        The ``path`` with the modified extension, if the input ``path`` was
+        path-like and ``set_default_extension=True``. If the input ``path`` was
+        file-like, the input ``path`` is returned without any changes. In any
+        other case, the input ``path`` is returned converted to a ``str``.
+    compression: str
+        The inferred compression protocol, if the input ``path`` was path-like
+        and ``compression="infer"``. In any other case, the input
+        ``compression`` is returned without a change.
+    stream: str or iostream
+        If the input ``path`` is path-like, the stream is the ``str``
+        representation of the input ``path``. If the input ``path`` is ``None``
+        a new ``io.BytesIO`` instance is returned. If the input ``path`` is 
+        file-like, it is retured as ``stream`` without changes.
+
+    Notes
+    -----
+    The compression protocol can be inferred only if ``path`` is path-like. If
+    ``compression="infer"`` and ``path`` is not path-like, a
+    ``NotImplementedError`` is raised.
+    """
     if isinstance(path, PATH_TYPES):
+        path = str(path)
         if compression == "infer":
             compression = infer_compression_from_filename(path, unhandled_extensions)
         if set_default_extension:
@@ -101,6 +164,42 @@ def preprocess_path(
 
 
 def open_compression_stream(path, compression, stream, mode, **kwargs):
+    """Open the file-like stream that will be used to ``pickle.dump`` and
+    ``pickle.load``. This stream is wraps a different class depending on the
+    compression protocol.
+
+    Parameters
+    ----------
+    path: str or iostream
+        The ``path`` output from :func:`~compress_pickle.utils.preprocess_path`.
+    compression: str or None
+        A supported compression protocol. To see the known compression
+        protocolos, use :func:`~compress_pickle.utils.get_known_compressions`.
+    stream: iostream
+        The ``stream`` output from
+        :func:`~compress_pickle.utils.preprocess_path`.
+    mode: str
+        Mode with which to open the file-like stream.
+
+    Returns
+    -------
+    io_stream: iostream
+        The wrapping file-like stream that can be used with ``pickle.dump`` and
+        ``pickle.load``
+    arch: None or iostream
+        If compression is ``"zipfile"``, ``arch`` is the ``ZipFile`` instance
+        and ``io_stream`` points to the file from which to read or write inside
+        the ``ZipFile`` archive.
+    arcname: str or None
+        Only used on python3.5 for compatiibility. Under python3.5, it is the
+        name of the file inside the ``ZipFile`` archive from which to read or
+        write. It is ``None`` on higher versions of python or when the
+        compression isn't ``"zipfile"``
+    must_close: bool
+        A boolean value that indicates whether the ``io_stream`` must be closed
+        by the calling function after reading/writing or not.
+
+    """
     arch = None
     arcname = None
     must_close = isinstance(path, PATH_TYPES)
@@ -231,7 +330,7 @@ def set_default_extensions(filename, compression=None):
         The filename to which to set the default extension
     compression: None or str (optional)
         A compression protocol. To see the known compression protocolos, use
-        :func:`~compress_pickle.compress_pickle.get_known_compressions`
+        :func:`~compress_pickle.utils.get_known_compressions`
 
     Returns
     -------
@@ -243,7 +342,7 @@ def set_default_extensions(filename, compression=None):
     -----
     To see the mapping between known compression protocols and filename
     extensions, call the function
-    :func:`~compress_pickle.compress_pickle.get_default_compression_mapping`.
+    :func:`~compress_pickle.utils.get_default_compression_mapping`.
 
     """
     default_extension = _DEFAULT_EXTENSION_MAP[compression]
@@ -261,7 +360,7 @@ def set_default_extensions(filename, compression=None):
 def infer_compression_from_filename(filename, unhandled_extensions="raise"):
     """Infer the compression protocol by the filename's extension. This
     looks-up the default compression to extension mapping given by
-    :func:`~compress_pickle.compress_pickle.get_default_compression_mapping`.
+    :func:`~compress_pickle.utils.get_default_compression_mapping`.
 
     Parameters
     ----------
@@ -281,7 +380,7 @@ def infer_compression_from_filename(filename, unhandled_extensions="raise"):
     -----
     To see the mapping between known compression protocols and filename
     extensions, call the function
-    :func:`~compress_pickle.compress_pickle.get_default_compression_mapping`.
+    :func:`~compress_pickle.utils.get_default_compression_mapping`.
 
     """
     if unhandled_extensions not in ["ignore", "warn", "raise"]:
