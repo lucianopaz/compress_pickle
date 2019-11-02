@@ -55,8 +55,7 @@ def test_dumps_loads(compressions):
 
 @pytest.mark.usefixtures("dump_vs_dumps")
 def test_dump_vs_dumps(dump_vs_dumps):
-    message = os.urandom(256)
-    path, compression = dump_vs_dumps
+    path, compression, message = dump_vs_dumps
     dump(message, path, compression=compression, set_default_extension=False)
     cmp1 = dumps(message, compression=compression)
     with open(path, "rb") as f:

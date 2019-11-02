@@ -19,6 +19,11 @@ UNHANDLED_EXTENSIONS = ["ignore", "warn", "raise"]
 FILE_COMPRESSIONS = [None, "pickle", "gzip", "bz2", "lzma", "zipfile", "infer"]
 
 
+@pytest.fixture(scope="function")
+def random_message():
+    return os.urandom(512)
+
+
 @pytest.fixture(scope="module", params=COMPRESSION_NAMES, ids=str)
 def compressions(request):
     return request.param
@@ -64,9 +69,9 @@ def compressions_to_validate(request):
     return compression, infer_is_valid, expected_fail
 
 
-@pytest.fixture(scope="module")
-def dump_load(file, file_compressions, set_default_extension):
-    message = os.urandom(256)
+@pytest.fixture(scope="function")
+def dump_load(file, random_message, file_compressions, set_default_extension):
+    message = random_message
     file = file.format(file_compressions)
     expected_fail = None
     if file_compressions == "infer":
@@ -93,8 +98,8 @@ def dump_load(file, file_compressions, set_default_extension):
         os.remove(expected_file)
 
 
-@pytest.fixture(scope="module")
-def dump_vs_dumps(compressions):
+@pytest.fixture(scope="function")
+def dump_vs_dumps(random_message, compressions):
     path = "test_dump_vs_dumps_{}".format(compressions)
-    yield (path, compressions)
+    yield (path, compressions, random_message)
     os.remove(path)

@@ -1,5 +1,6 @@
 import pytest
 from fixtures import (
+    random_message,
     compressions,
     wrong_compressions,
     file,
