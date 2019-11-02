@@ -26,7 +26,7 @@ def dump(
     fix_imports=True,
     unhandled_extensions="raise",
     set_default_extension=True,
-    **kwargs,
+    **kwargs
 ):
     r"""Dump the contents of an object to disk, to the supplied path, using a
     given compression protocol.
@@ -145,7 +145,7 @@ def dumps(obj, compression=None, protocol=-1, fix_imports=True, **kwargs):
         protocol=protocol,
         fix_imports=fix_imports,
         set_default_extension=False,
-        **kwargs,
+        **kwargs
     )
     return stream.getvalue()
 
@@ -159,7 +159,7 @@ def load(
     errors="strict",
     set_default_extension=True,
     unhandled_extensions="raise",
-    **kwargs,
+    **kwargs
 ):
     r"""Load an object from a file stored in disk, given compression protocol.
     For example, if ``gzip`` compression is specified, the file buffer is opened
@@ -256,7 +256,7 @@ def loads(
     errors="strict",
     set_default_extension=True,
     unhandled_extensions="raise",
-    **kwargs,
+    **kwargs
 ):
     r"""Load an object from an input stream, uncompressing the contents with
     the given a compression protocol.
@@ -300,5 +300,5 @@ def loads(
             fix_imports=fix_imports,
             encoding=encoding,
             errors=errors,
-            **kwargs,
+            **kwargs
         )
