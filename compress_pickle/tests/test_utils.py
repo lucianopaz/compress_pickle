@@ -121,10 +121,10 @@ def test_set_default_extensions(file, compressions):
     assert set_default_extensions(file, compressions).endswith(expected)
 
 
-@pytest.mark.usefixtures("fixture_preprocess_path")
-def test_preprocess_path(fixture_preprocess_path):
+@pytest.mark.usefixtures("preprocess_path_on_path_types")
+def test_preprocess_path_on_path_types(preprocess_path_on_path_types):
     path, compression, set_default_extension, mode, expected_path = (
-        fixture_preprocess_path
+        preprocess_path_on_path_types
     )
     stream, arch, arcname, must_close = preprocess_path(
         path=path,
@@ -140,3 +140,29 @@ def test_preprocess_path(fixture_preprocess_path):
     else:
         assert isinstance(arch, stream_class_map[compression])
         assert must_close
+
+
+@pytest.mark.usefixtures("preprocess_path_on_file_types")
+def test_preprocess_path_on_file_types(preprocess_path_on_file_types):
+    path, compression, mode, expected_fail = preprocess_path_on_file_types
+    if not expected_fail:
+        stream, arch, arcname, must_close = preprocess_path(
+            path=path,
+            mode=mode,
+            compression=compression,
+        )
+        if compression != "zipfile":
+            assert isinstance(stream, stream_class_map[compression])
+            assert arch is None
+            assert arcname is None
+            assert must_close if compression in ("gzip", "lzma") else not must_close
+        else:
+            assert isinstance(arch, stream_class_map[compression])
+            assert not must_close
+    else:
+        with pytest.raises(Exception):
+            stream, arch, arcname, must_close = preprocess_path(
+                path=path,
+                mode=mode,
+                compression=compression,
+            )

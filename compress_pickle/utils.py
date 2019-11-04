@@ -258,6 +258,7 @@ def open_compression_stream(path, compression, stream, mode, **kwargs):
         io_stream = bz2.open(stream, mode=mode, **kwargs)
     elif compression == "lzma":
         io_stream = lzma.open(stream, mode=mode, **kwargs)
+        must_close = True  # The wrapped stream isn't closed by LZMAFile
     elif compression == "zipfile":
         arch = zipfile.ZipFile(stream, mode=mode, **kwargs)
         if isinstance(path, PATH_TYPES):

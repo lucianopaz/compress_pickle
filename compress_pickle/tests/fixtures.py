@@ -1,5 +1,6 @@
 import pytest
 import os
+import io
 import codecs
 import itertools
 from compress_pickle import (
@@ -32,6 +33,7 @@ FILENAMES = [
 ]
 UNHANDLED_EXTENSIONS = ["ignore", "warn", "raise"]
 FILE_COMPRESSIONS = [None, "pickle", "gzip", "bz2", "lzma", "zipfile", "infer"]
+FILE_TYPES = [None, "file", io.BytesIO, io.BufferedWriter, io.BufferedReader]
 
 
 @pytest.fixture(scope="function")
@@ -74,6 +76,11 @@ def mode(request):
     return request.param
 
 
+@pytest.fixture(scope="module", params=FILE_TYPES, ids=str)
+def file_types(request):
+    return request.param
+
+
 @pytest.fixture(
     scope="module",
     params=itertools.product(FILE_COMPRESSIONS + UNHANDLED_COMPRESSIONS, [True, False]),
@@ -90,7 +97,7 @@ def compressions_to_validate(request):
 
 
 @pytest.fixture(scope="function")
-def fixture_preprocess_path(file, compressions, set_default_extension):
+def preprocess_path_on_path_types(file, compressions, set_default_extension):
     _file = _stringyfy_path(file).format(file_compressions)
     if isinstance(file, bytes):
         file = codecs.encode(_file, "utf-8")
@@ -102,6 +109,28 @@ def fixture_preprocess_path(file, compressions, set_default_extension):
     mode = get_compression_write_mode(compressions)
     yield file, compressions, set_default_extension, mode, expected_path
     os.remove(expected_path)
+
+
+@pytest.fixture(scope="function")
+def preprocess_path_on_file_types(file_types, compressions):
+    expected_fail = False
+    if file_types == "file":
+        path = open("test_blabla_stream", "wb")
+    elif file_types is not None:
+        if file_types in (io.BufferedWriter, io.BufferedReader):
+            path = file_types(io.BytesIO())
+        else:
+            path = file_types()
+    else:
+        path = file_types
+    mode = "write"
+    if file_types == io.BufferedReader:
+        mode = "read"
+        if compressions == "zipfile":
+            expected_fail = True
+    yield path, compressions, mode, expected_fail
+    if file_types == "file":
+        os.remove("test_blabla_stream")
 
 
 @pytest.fixture(scope="function")
