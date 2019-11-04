@@ -1,7 +1,15 @@
 import pytest
 import os
+import codecs
 import itertools
-from compress_pickle import set_default_extensions, infer_compression_from_filename
+from compress_pickle import (
+    set_default_extensions,
+    infer_compression_from_filename,
+    get_default_compression_mapping,
+    get_compression_read_mode,
+    get_compression_write_mode,
+)
+from compress_pickle.utils import _stringyfy_path
 
 
 COMPRESSION_NAMES = [None, "pickle", "gzip", "bz2", "lzma", "zipfile"]
@@ -14,6 +22,13 @@ FILENAMES = [
     "test_blabla_{}.lzma",
     "test_blabla_{}.zip",
     "test_blabla_{}.unknown",
+    b"test_blabla_{}",
+    b"test_blabla_{}.pkl",
+    b"test_blabla_{}.gz",
+    b"test_blabla_{}.bz",
+    b"test_blabla_{}.lzma",
+    b"test_blabla_{}.zip",
+    b"test_blabla_{}.unknown",
 ]
 UNHANDLED_EXTENSIONS = ["ignore", "warn", "raise"]
 FILE_COMPRESSIONS = [None, "pickle", "gzip", "bz2", "lzma", "zipfile", "infer"]
@@ -54,6 +69,11 @@ def file_compressions(request):
     return request.param
 
 
+@pytest.fixture(scope="module", params=["read", "write"], ids=str)
+def mode(request):
+    return request.param
+
+
 @pytest.fixture(
     scope="module",
     params=itertools.product(FILE_COMPRESSIONS + UNHANDLED_COMPRESSIONS, [True, False]),
@@ -70,9 +90,28 @@ def compressions_to_validate(request):
 
 
 @pytest.fixture(scope="function")
+def fixture_preprocess_path(file, compressions, set_default_extension):
+    _file = _stringyfy_path(file).format(file_compressions)
+    if isinstance(file, bytes):
+        file = codecs.encode(_file, "utf-8")
+    else:
+        file = _file
+    expected_path = _stringyfy_path(file).format(compressions)
+    if set_default_extension:
+        expected_path = set_default_extensions(expected_path, compression=compressions)
+    mode = get_compression_write_mode(compressions)
+    yield file, compressions, set_default_extension, mode, expected_path
+    os.remove(expected_path)
+
+
+@pytest.fixture(scope="function")
 def dump_load(file, random_message, file_compressions, set_default_extension):
     message = random_message
-    file = file.format(file_compressions)
+    _file = _stringyfy_path(file).format(file_compressions)
+    if isinstance(file, bytes):
+        file = codecs.encode(_file, "utf-8")
+    else:
+        file = _file
     expected_fail = None
     if file_compressions == "infer":
         inf_compress = infer_compression_from_filename(file, "ignore")
@@ -80,10 +119,11 @@ def dump_load(file, random_message, file_compressions, set_default_extension):
             expected_fail = ValueError
     else:
         inf_compress = file_compressions
-    if set_default_extension and expected_fail is None:
-        expected_file = set_default_extensions(file, inf_compress)
-    elif expected_fail is None:
-        expected_file = file
+    if expected_fail is None:
+        if set_default_extension:
+            expected_file = set_default_extensions(file, inf_compress)
+        else:
+            expected_file = file
     else:
         expected_file = None
     yield (

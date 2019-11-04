@@ -1,5 +1,6 @@
 import pytest
 import warnings
+import io
 from fixtures import COMPRESSION_NAMES
 from compress_pickle import (
     get_known_compressions,
@@ -12,6 +13,21 @@ from compress_pickle import (
     set_default_extensions,
     infer_compression_from_filename,
 )
+from compress_pickle.utils import _stringyfy_path
+from gzip import GzipFile
+from bz2 import BZ2File
+from lzma import LZMAFile
+from zipfile import ZipFile
+
+
+stream_class_map = {
+    None: io.IOBase,
+    "pickle": io.IOBase,
+    "gzip": GzipFile,
+    "bz2": BZ2File,
+    "lzma": LZMAFile,
+    "zipfile": ZipFile,
+}
 
 
 def test_known_compressions():
@@ -60,9 +76,10 @@ def test_read_modes_incorrect(wrong_compressions):
 
 @pytest.mark.usefixtures("file", "unhandled_extensions")
 def test_infer_compression_from_filename(file, unhandled_extensions):
+    _file = _stringyfy_path(file)
     with pytest.raises(ValueError):
         infer_compression_from_filename(file, unhandled_extensions=None)
-    if file.endswith("unknown") or "." not in file:
+    if _file.endswith("unknown") or "." not in _file:
         if unhandled_extensions == "raise":
             with pytest.raises(ValueError):
                 infer_compression_from_filename(
@@ -89,7 +106,7 @@ def test_infer_compression_from_filename(file, unhandled_extensions):
             "bz": "bz2",
             "lzma": "lzma",
             "zip": "zipfile",
-        }[file.split(".")[1]]
+        }[_file.split(".")[1]]
         assert (
             infer_compression_from_filename(
                 file, unhandled_extensions=unhandled_extensions
@@ -102,3 +119,24 @@ def test_infer_compression_from_filename(file, unhandled_extensions):
 def test_set_default_extensions(file, compressions):
     expected = get_default_compression_mapping()[compressions]
     assert set_default_extensions(file, compressions).endswith(expected)
+
+
+@pytest.mark.usefixtures("fixture_preprocess_path")
+def test_preprocess_path(fixture_preprocess_path):
+    path, compression, set_default_extension, mode, expected_path = (
+        fixture_preprocess_path
+    )
+    stream, arch, arcname, must_close = preprocess_path(
+        path=path,
+        mode=mode,
+        compression=compression,
+        set_default_extension=set_default_extension,
+    )
+    if compression != "zipfile":
+        assert isinstance(stream, stream_class_map[compression])
+        assert arch is None
+        assert arcname is None
+        assert must_close
+    else:
+        assert isinstance(arch, stream_class_map[compression])
+        assert must_close

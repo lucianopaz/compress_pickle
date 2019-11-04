@@ -77,17 +77,14 @@ def dump(
     :func:`~compress_pickle.utils.get_default_compression_mapping`.
     """
     validate_compression(compression)
-    path, compression, stream = preprocess_path(
+    if mode is None:
+        mode = "write"
+    io_stream, arch, arcname, must_close = preprocess_path(
         path,
+        mode,
         compression=compression,
         unhandled_extensions=unhandled_extensions,
         set_default_extension=set_default_extension,
-    )
-    if mode is None:
-        mode = get_compression_write_mode(compression)
-
-    io_stream, arch, arcname, must_close = open_compression_stream(
-        path, compression, stream, mode, **kwargs
     )
 
     if arch is not None:
@@ -98,13 +95,17 @@ def dump(
             else:
                 pickle.dump(obj, io_stream, protocol=protocol, fix_imports=fix_imports)
         finally:
+            if sys.version_info >= (3, 6):
+                io_stream.flush()
             if must_close:
-                io_stream.close()
+                if sys.version_info >= (3, 6):
+                    io_stream.close()
                 arch.close()
     else:
         try:
             pickle.dump(obj, io_stream, protocol=protocol, fix_imports=fix_imports)
         finally:
+            io_stream.flush()
             if must_close:
                 io_stream.close()
 
@@ -215,17 +216,14 @@ def load(
     :func:`~compress_pickle.utils.get_default_compression_mapping`.
     """
     validate_compression(compression)
-    path, compression, stream = preprocess_path(
+    if mode is None:
+        mode = "read"
+    io_stream, arch, arcname, must_close = preprocess_path(
         path,
+        mode,
         compression=compression,
         unhandled_extensions=unhandled_extensions,
         set_default_extension=set_default_extension,
-    )
-    if mode is None:
-        mode = get_compression_read_mode(compression)
-
-    io_stream, arch, arcname, must_close = open_compression_stream(
-        path, compression, stream, mode, **kwargs
     )
 
     if arch is not None:

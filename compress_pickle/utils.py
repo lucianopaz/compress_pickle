@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 import os
+import codecs
 import sys
 import warnings
 import io
+import gzip
+import bz2
+import lzma
+import zipfile
 
 
 __all__ = [
@@ -50,6 +55,22 @@ _DEFAULT_COMPRESSION_READ_MODES = {
 PATH_TYPES = (str, bytes)
 
 
+def _stringyfy_path(path):
+    """Convert a path that is a PATH_TYPES instance to a string.
+    If path is a ``string`` instance, it is returned as is.
+    If path is a ``bytes`` instance, it is decoded with utf8 codec
+
+    """
+    if not isinstance(path, PATH_TYPES):
+        raise TypeError(
+            "Cannot convert supplied path type to string. Supplied path: {}, "
+            "type: {}".format(path, type(path))
+        )
+    if isinstance(path, bytes):
+        path = codecs.decode(path, "utf-8")
+    return path
+
+
 def get_known_compressions():
     """Get a list of known compression protocols
 
@@ -91,12 +112,20 @@ def validate_compression(compression, infer_is_valid=True):
 
 
 def preprocess_path(
-    path, compression="infer", set_default_extension=True, unhandled_extensions="raise"
+    path,
+    mode,
+    compression="infer",
+    set_default_extension=True,
+    unhandled_extensions="raise",
+    **kwargs
 ):
     """Process the supplied path to control if it is a path-like object (str,
     bytes) or a file-like object (io.BytesIO or other types of streams). If it
     is path-like, the compression can be inferred and the default extension can
     be added.
+    Then open the file-like stream that will be used to ``pickle.dump`` and
+    ``pickle.load``. This stream wraps a different class depending on the
+    compression protocol.
 
     Parameters
     ----------
@@ -104,7 +133,13 @@ def preprocess_path(
         A path-like object (``str``, ``bytes``), a file-like object (we call it
         iostream but it is defined by the ``io`` module, for example
         ``io.BytesIO`` or other types of streams), or ``None``. If ``None``,
-        a new ``io.BytesIO`` instance is created and returned as ``stream``.
+        ``path`` is set to a new ``io.BytesIO`` instance.
+    mode: str
+        Mode with which to open the file-like stream. If "read", the default
+        read mode is automatically assigned from
+        :func:`~compress_pickle.utils.get_compression_read_mode`. If "write, the
+        default write mode is automatically assigned from
+        :func:`~compress_pickle.utils.get_compression_write_mode`.
     compression: str or None (optional)
         A compression protocol. To see the known compression protocolos, use
         :func:`~compress_pickle.utils.get_known_compressions`.
@@ -118,23 +153,27 @@ def preprocess_path(
         the compression protocol from the provided path-like object. Can be
         "ignore" (use ".pkl"), "warn" (issue warning and use ".pkl") or
         "raise" (raise a ``ValueError``).
+    kwargs:
+        Any extra keyword arguments are passed to the compressed file opening
+        protocol.
 
     Returns
     -------
-    path: str or iostream
-        The ``path`` with the modified extension, if the input ``path`` was
-        path-like and ``set_default_extension=True``. If the input ``path`` was
-        file-like, the input ``path`` is returned without any changes. In any
-        other case, the input ``path`` is returned converted to a ``str``.
-    compression: str
-        The inferred compression protocol, if the input ``path`` was path-like
-        and ``compression="infer"``. In any other case, the input
-        ``compression`` is returned without a change.
-    stream: str or iostream
-        If the input ``path`` is path-like, the stream is the ``str``
-        representation of the input ``path``. If the input ``path`` is ``None``
-        a new ``io.BytesIO`` instance is returned. If the input ``path`` is 
-        file-like, it is retured as ``stream`` without changes.
+    io_stream: iostream
+        The wrapping file-like stream that can be used with ``pickle.dump`` and
+        ``pickle.load``
+    arch: None or iostream
+        If compression is ``"zipfile"``, ``arch`` is the ``ZipFile`` instance
+        and ``io_stream`` points to the file from which to read or write inside
+        the ``ZipFile`` archive.
+    arcname: str or None
+        Only used on python3.5 for compatiibility. Under python3.5, it is the
+        name of the file inside the ``ZipFile`` archive from which to read or
+        write. It is ``None`` on higher versions of python or when the
+        compression isn't ``"zipfile"``
+    must_close: bool
+        A boolean value that indicates whether the ``io_stream`` must be closed
+        by the calling function after reading/writing or not.
 
     Notes
     -----
@@ -143,7 +182,7 @@ def preprocess_path(
     ``NotImplementedError`` is raised.
     """
     if isinstance(path, PATH_TYPES):
-        path = str(path)
+        path = _stringyfy_path(path)
         if compression == "infer":
             compression = infer_compression_from_filename(path, unhandled_extensions)
         if set_default_extension:
@@ -160,7 +199,13 @@ def preprocess_path(
                 "supplied path is an instance of {}. The supplied input path "
                 "is {}, and its type is {}.".format(PATH_TYPES, path, type(path))
             )
-    return path, compression, stream
+    if mode == "write":
+        mode = get_compression_write_mode(compression=compression)
+    elif mode == "read":
+        mode = get_compression_read_mode(compression=compression)
+    return open_compression_stream(
+        path=path, compression=compression, stream=stream, mode=mode, **kwargs
+    )
 
 
 def open_compression_stream(path, compression, stream, mode, **kwargs):
@@ -178,8 +223,6 @@ def open_compression_stream(path, compression, stream, mode, **kwargs):
     stream: iostream
         The ``stream`` output from
         :func:`~compress_pickle.utils.preprocess_path`.
-    mode: str
-        Mode with which to open the file-like stream.
 
     Returns
     -------
@@ -203,63 +246,35 @@ def open_compression_stream(path, compression, stream, mode, **kwargs):
     arch = None
     arcname = None
     must_close = isinstance(path, PATH_TYPES)
-    if must_close:
-        if compression is None or compression == "pickle":
+    if compression is None or compression == "pickle":
+        if must_close:
             io_stream = open(path, mode=mode)
-        elif compression == "gzip":
-            import gzip
-
-            io_stream = gzip.open(stream, mode=mode, **kwargs)
-        elif compression == "bz2":
-            import bz2
-
-            io_stream = bz2.open(stream, mode=mode, **kwargs)
-        elif compression == "lzma":
-            import lzma
-
-            io_stream = lzma.open(stream, mode=mode, **kwargs)
-        elif compression == "zipfile":
-            import zipfile
-
-            arch = zipfile.ZipFile(stream, mode=mode, **kwargs)
-            if isinstance(path, PATH_TYPES):
-                file_path = path
-            else:
-                file_path = "default"
-            if sys.version_info < (3, 6):
-                arcname = os.path.basename(file_path)
-                arch.write(file_path, arcname=arcname)
-            else:
-                io_stream = arch.open(file_path, mode=mode)
+        else:
+            io_stream = stream
+    elif compression == "gzip":
+        io_stream = gzip.open(stream, mode=mode, **kwargs)
+        must_close = True  # The wrapped stream isn't closed by GZipFile
+    elif compression == "bz2":
+        io_stream = bz2.open(stream, mode=mode, **kwargs)
+    elif compression == "lzma":
+        io_stream = lzma.open(stream, mode=mode, **kwargs)
+    elif compression == "zipfile":
+        arch = zipfile.ZipFile(stream, mode=mode, **kwargs)
+        if isinstance(path, PATH_TYPES):
+            file_path = path
+        else:
+            file_path = getattr(path, "name", "default")
+        if sys.version_info < (3, 6):
+            arcname = os.path.basename(file_path)
+            arch.write(file_path, arcname=arcname)
+        else:
+            io_stream = arch.open(file_path, mode=mode)
     else:
-        io_stream = stream
-        if compression == "gzip":
-            import gzip
-
-            io_stream = gzip.GzipFile(fileobj=stream, mode=mode, **kwargs)
-            must_close = True  # The wrapped stream isn't closed by GZipFile
-        elif compression == "bz2":
-            import bz2
-
-            io_stream = bz2.BZ2File(stream, mode=mode, **kwargs)
-        elif compression == "lzma":
-            import lzma
-
-            io_stream = lzma.LZMAFile(stream, mode=mode, **kwargs)
-            must_close = True  # The wrapped stream isn't closed by LZMAFile
-        elif compression == "zipfile":
-            import zipfile
-
-            arch = zipfile.ZipFile(stream, mode=mode, **kwargs)
-            if isinstance(path, PATH_TYPES):
-                file_path = path
-            else:
-                file_path = "default"
-            if sys.version_info < (3, 6):
-                arcname = os.path.basename(file_path)
-                arch.write(file_path, arcname=arcname)
-            else:
-                io_stream = arch.open(file_path, mode=mode)
+        raise ValueError(
+            "Unsupported compression {}. Supported values are {}".format(
+                compression, get_known_compressions()
+            )
+        )
     return io_stream, arch, arcname, must_close
 
 
@@ -345,6 +360,7 @@ def set_default_extensions(filename, compression=None):
     :func:`~compress_pickle.utils.get_default_compression_mapping`.
 
     """
+    filename = _stringyfy_path(filename)
     default_extension = _DEFAULT_EXTENSION_MAP[compression]
     if not filename.endswith(default_extension):
         for ext in _DEFAULT_EXTENSION_MAP.values():
@@ -383,6 +399,7 @@ def infer_compression_from_filename(filename, unhandled_extensions="raise"):
     :func:`~compress_pickle.utils.get_default_compression_mapping`.
 
     """
+    filename = _stringyfy_path(filename)
     if unhandled_extensions not in ["ignore", "warn", "raise"]:
         raise ValueError(
             "Unknown 'unhandled_extensions' value {}. Allowed values are "

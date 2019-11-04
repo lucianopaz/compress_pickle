@@ -2,7 +2,14 @@ import pytest
 import os
 import warnings
 from fixtures import COMPRESSION_NAMES
-from compress_pickle import dump, dumps, load, loads
+from compress_pickle import (
+    dump,
+    dumps,
+    load,
+    loads,
+    get_compression_read_mode,
+    get_compression_write_mode,
+)
 
 
 @pytest.mark.usefixtures("dump_load")
@@ -61,3 +68,26 @@ def test_dump_vs_dumps(dump_vs_dumps):
     with open(path, "rb") as f:
         cmp2 = f.read()
     assert cmp1 == cmp2
+
+
+@pytest.mark.usefixtures("dump_vs_dumps")
+def test_dump_load_on_filestreams(dump_vs_dumps):
+    path, compression, message = dump_vs_dumps
+    read_mode = "rb"  # get_compression_read_mode(compression)
+    write_mode = "wb"  # get_compression_write_mode(compression)
+    with open(path, write_mode) as f:
+        dump(message, f, compression=compression)
+    with open(path, read_mode) as f:
+        raw_content = f.read()
+        f.seek(0)
+        loaded_message = load(f, compression=compression)
+    assert loaded_message == message
+    os.remove(path)
+    dump(message, path, compression=compression, set_default_extension=False)
+    with open(path, read_mode) as f:
+        benchmark = f.read()
+    # zipfile compression stores the data in a zip archive. The archive then
+    # contains a file with the data. Said file's mtime will always be
+    # different between the two dump calls, so we skip the follwing assertion
+    if compression != "zipfile":
+        assert raw_content == benchmark
