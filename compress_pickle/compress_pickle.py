@@ -7,10 +7,10 @@ import pickle
 import io
 from .utils import (
     validate_compression,
-    preprocess_path,
-    open_compression_stream,
     get_compression_write_mode,
     get_compression_read_mode,
+    preprocess_path,
+    open_compression_stream,
 )
 
 

@@ -14,13 +14,13 @@ __all__ = [
     "PATH_TYPES",
     "get_known_compressions",
     "validate_compression",
-    "preprocess_path",
-    "open_compression_stream",
     "get_default_compression_mapping",
     "get_compression_write_mode",
     "get_compression_read_mode",
     "set_default_extensions",
     "infer_compression_from_filename",
+    "preprocess_path",
+    "open_compression_stream",
 ]
 
 
@@ -109,6 +109,156 @@ def validate_compression(compression, infer_is_valid=True):
                 compression, known_compressions
             )
         )
+
+
+def get_default_compression_mapping():
+    """Get a mapping from known compression protocols to the default filename
+    extensions.
+
+    Returns
+    -------
+    compression_map: dict
+        Dictionary that maps known compression protocol names to their default
+        file extension.
+    """
+    return _DEFAULT_EXTENSION_MAP.copy()
+
+
+def get_compression_write_mode(compression):
+    """Get the compression's default mode for openning the file buffer for
+    writing.
+
+    Returns
+    -------
+    write_mode_map: dict
+        Dictionary that maps known compression protocol names to default write
+        mode used to open files for
+        :func:`~compress_pickle.compress_pickle.dump`.
+    """
+    try:
+        return _DEFAULT_COMPRESSION_WRITE_MODES[compression]
+    except Exception:
+        raise ValueError(
+            "Unknown compression {}. Available values are: {}".format(
+                compression, list(_DEFAULT_COMPRESSION_WRITE_MODES.keys())
+            )
+        )
+
+
+def get_compression_read_mode(compression):
+    """Get the compression's default mode for openning the file buffer for
+    reading.
+
+    Returns
+    -------
+    read_mode_map: dict
+        Dictionary that maps known compression protocol names to default write
+        mode used to open files for
+        :func:`~compress_pickle.compress_pickle.load`.
+    """
+    try:
+        return _DEFAULT_COMPRESSION_READ_MODES[compression]
+    except Exception:
+        raise ValueError(
+            "Unknown compression {}. Available values are: {}".format(
+                compression, list(_DEFAULT_COMPRESSION_READ_MODES.keys())
+            )
+        )
+
+
+def set_default_extensions(filename, compression=None):
+    """Set the filename's extension to the default that corresponds to
+    a given compression protocol. If the filename already has a known extension
+    (a default extension of a known compression protocol) it is removed
+    beforehand.
+
+    Parameters
+    ----------
+    filename: str
+        The filename to which to set the default extension
+    compression: None or str (optional)
+        A compression protocol. To see the known compression protocolos, use
+        :func:`~compress_pickle.utils.get_known_compressions`
+
+    Returns
+    -------
+    filename: str
+        The filename with the extension set to the default given by the
+        compression protocol.
+
+    Notes
+    -----
+    To see the mapping between known compression protocols and filename
+    extensions, call the function
+    :func:`~compress_pickle.utils.get_default_compression_mapping`.
+
+    """
+    filename = _stringyfy_path(filename)
+    default_extension = _DEFAULT_EXTENSION_MAP[compression]
+    if not filename.endswith(default_extension):
+        for ext in _DEFAULT_EXTENSION_MAP.values():
+            if ext == default_extension:
+                continue
+            if filename.endswith(ext):
+                filename = filename[: (len(filename) - len(ext))]
+                break
+        filename += default_extension
+    return filename
+
+
+def infer_compression_from_filename(filename, unhandled_extensions="raise"):
+    """Infer the compression protocol by the filename's extension. This
+    looks-up the default compression to extension mapping given by
+    :func:`~compress_pickle.utils.get_default_compression_mapping`.
+
+    Parameters
+    ----------
+    filename: str
+        The filename for which to infer the compression protocol
+    unhandled_extensions: str (optional)
+        Specify what to do if the extension is not understood. Can be
+        "ignore" (do nothing), "warn" (issue warning) or "raise" (raise a
+        ValueError).
+
+    Returns
+    -------
+    compression: str
+        The inferred compression protocol's string
+
+    Notes
+    -----
+    To see the mapping between known compression protocols and filename
+    extensions, call the function
+    :func:`~compress_pickle.utils.get_default_compression_mapping`.
+
+    """
+    filename = _stringyfy_path(filename)
+    if unhandled_extensions not in ["ignore", "warn", "raise"]:
+        raise ValueError(
+            "Unknown 'unhandled_extensions' value {}. Allowed values are "
+            "'ignore', 'warn' or 'raise'".format(unhandled_extensions)
+        )
+    extension = os.path.splitext(filename)[1]
+    compression = None
+    for comp, ext in _DEFAULT_EXTENSION_MAP.items():
+        if comp is None:
+            continue
+        if ext == extension:
+            compression = comp
+            break
+    if compression is None and extension != ".pkl":
+        if unhandled_extensions == "raise":
+            raise ValueError(
+                "Cannot infer compression protocol from filename {} "
+                "with extension {}".format(filename, extension)
+            )
+        elif unhandled_extensions == "warn":
+            warnings.warn(
+                "Cannot infer compression protocol from filename {} "
+                "with extension {}".format(filename, extension),
+                category=RuntimeWarning,
+            )
+    return compression
 
 
 def preprocess_path(
@@ -295,153 +445,3 @@ def open_compression_stream(path, compression, stream, mode, arcname=None, **kwa
             )
         )
     return io_stream, arch, arcname, must_close
-
-
-def get_default_compression_mapping():
-    """Get a mapping from known compression protocols to the default filename
-    extensions.
-
-    Returns
-    -------
-    compression_map: dict
-        Dictionary that maps known compression protocol names to their default
-        file extension.
-    """
-    return _DEFAULT_EXTENSION_MAP.copy()
-
-
-def get_compression_write_mode(compression):
-    """Get the compression's default mode for openning the file buffer for
-    writing.
-
-    Returns
-    -------
-    write_mode_map: dict
-        Dictionary that maps known compression protocol names to default write
-        mode used to open files for
-        :func:`~compress_pickle.compress_pickle.dump`.
-    """
-    try:
-        return _DEFAULT_COMPRESSION_WRITE_MODES[compression]
-    except Exception:
-        raise ValueError(
-            "Unknown compression {}. Available values are: {}".format(
-                compression, list(_DEFAULT_COMPRESSION_WRITE_MODES.keys())
-            )
-        )
-
-
-def get_compression_read_mode(compression):
-    """Get the compression's default mode for openning the file buffer for
-    reading.
-
-    Returns
-    -------
-    read_mode_map: dict
-        Dictionary that maps known compression protocol names to default write
-        mode used to open files for
-        :func:`~compress_pickle.compress_pickle.load`.
-    """
-    try:
-        return _DEFAULT_COMPRESSION_READ_MODES[compression]
-    except Exception:
-        raise ValueError(
-            "Unknown compression {}. Available values are: {}".format(
-                compression, list(_DEFAULT_COMPRESSION_READ_MODES.keys())
-            )
-        )
-
-
-def set_default_extensions(filename, compression=None):
-    """Set the filename's extension to the default that corresponds to
-    a given compression protocol. If the filename already has a known extension
-    (a default extension of a known compression protocol) it is removed
-    beforehand.
-
-    Parameters
-    ----------
-    filename: str
-        The filename to which to set the default extension
-    compression: None or str (optional)
-        A compression protocol. To see the known compression protocolos, use
-        :func:`~compress_pickle.utils.get_known_compressions`
-
-    Returns
-    -------
-    filename: str
-        The filename with the extension set to the default given by the
-        compression protocol.
-
-    Notes
-    -----
-    To see the mapping between known compression protocols and filename
-    extensions, call the function
-    :func:`~compress_pickle.utils.get_default_compression_mapping`.
-
-    """
-    filename = _stringyfy_path(filename)
-    default_extension = _DEFAULT_EXTENSION_MAP[compression]
-    if not filename.endswith(default_extension):
-        for ext in _DEFAULT_EXTENSION_MAP.values():
-            if ext == default_extension:
-                continue
-            if filename.endswith(ext):
-                filename = filename[: (len(filename) - len(ext))]
-                break
-        filename += default_extension
-    return filename
-
-
-def infer_compression_from_filename(filename, unhandled_extensions="raise"):
-    """Infer the compression protocol by the filename's extension. This
-    looks-up the default compression to extension mapping given by
-    :func:`~compress_pickle.utils.get_default_compression_mapping`.
-
-    Parameters
-    ----------
-    filename: str
-        The filename for which to infer the compression protocol
-    unhandled_extensions: str (optional)
-        Specify what to do if the extension is not understood. Can be
-        "ignore" (do nothing), "warn" (issue warning) or "raise" (raise a
-        ValueError).
-
-    Returns
-    -------
-    compression: str
-        The inferred compression protocol's string
-
-    Notes
-    -----
-    To see the mapping between known compression protocols and filename
-    extensions, call the function
-    :func:`~compress_pickle.utils.get_default_compression_mapping`.
-
-    """
-    filename = _stringyfy_path(filename)
-    if unhandled_extensions not in ["ignore", "warn", "raise"]:
-        raise ValueError(
-            "Unknown 'unhandled_extensions' value {}. Allowed values are "
-            "'ignore', 'warn' or 'raise'".format(unhandled_extensions)
-        )
-    extension = os.path.splitext(filename)[1]
-    compression = None
-    for comp, ext in _DEFAULT_EXTENSION_MAP.items():
-        if comp is None:
-            continue
-        if ext == extension:
-            compression = comp
-            break
-    if compression is None and extension != ".pkl":
-        if unhandled_extensions == "raise":
-            raise ValueError(
-                "Cannot infer compression protocol from filename {} "
-                "with extension {}".format(filename, extension)
-            )
-        elif unhandled_extensions == "warn":
-            warnings.warn(
-                "Cannot infer compression protocol from filename {} "
-                "with extension {}".format(filename, extension),
-                category=RuntimeWarning,
-            )
-    return compression
