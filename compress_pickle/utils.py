@@ -117,6 +117,7 @@ def preprocess_path(
     compression="infer",
     set_default_extension=True,
     unhandled_extensions="raise",
+    arcname=None,
     **kwargs
 ):
     """Process the supplied path to control if it is a path-like object (str,
@@ -153,6 +154,13 @@ def preprocess_path(
         the compression protocol from the provided path-like object. Can be
         "ignore" (use ".pkl"), "warn" (issue warning and use ".pkl") or
         "raise" (raise a ``ValueError``).
+    arcname: None or str (optional)
+        Only necessary if ``compression="zipfile"``. It is the name of the file
+        contained in the zip archive which must be used.
+        If ``None``, the ``arcname`` is assumed to be ``path``'s basename (when
+        ``path`` is path-like), ``path.name`` (when ``path`` is file-like and
+        it has a name attribute) or "default" when ``path`` has no ``name``
+        attribute.
     kwargs:
         Any extra keyword arguments are passed to the compressed file opening
         protocol.
@@ -167,10 +175,10 @@ def preprocess_path(
         and ``io_stream`` points to the file from which to read or write inside
         the ``ZipFile`` archive.
     arcname: str or None
-        Only used on python3.5 for compatiibility. Under python3.5, it is the
+        Only used on python3.5 for compatibility. Under python3.5, it is the
         name of the file inside the ``ZipFile`` archive from which to read or
         write. It is ``None`` on higher versions of python or when the
-        compression isn't ``"zipfile"``
+        compression isn't ``"zipfile"``.
     must_close: bool
         A boolean value that indicates whether the ``io_stream`` must be closed
         by the calling function after reading/writing or not.
@@ -204,11 +212,11 @@ def preprocess_path(
     elif mode == "read":
         mode = get_compression_read_mode(compression=compression)
     return open_compression_stream(
-        path=path, compression=compression, stream=stream, mode=mode, **kwargs
+        path=path, compression=compression, stream=stream, mode=mode, arcname=arcname, **kwargs
     )
 
 
-def open_compression_stream(path, compression, stream, mode, **kwargs):
+def open_compression_stream(path, compression, stream, mode, arcname=None, **kwargs):
     """Open the file-like stream that will be used to ``pickle.dump`` and
     ``pickle.load``. This stream is wraps a different class depending on the
     compression protocol.
@@ -223,6 +231,13 @@ def open_compression_stream(path, compression, stream, mode, **kwargs):
     stream: iostream
         The ``stream`` output from
         :func:`~compress_pickle.utils.preprocess_path`.
+    arcname: None or str (optional)
+        Only necessary if ``compression="zipfile"``. It is the name of the file
+        contained in the zip archive which must be used.
+        If ``None``, the ``arcname`` is assumed to be ``path``'s basename (when
+        ``path`` is path-like), ``path.name`` (when ``path`` is file-like and
+        it has a name attribute) or "default" when ``path`` has no ``name``
+        attribute.
 
     Returns
     -------
@@ -234,17 +249,17 @@ def open_compression_stream(path, compression, stream, mode, **kwargs):
         and ``io_stream`` points to the file from which to read or write inside
         the ``ZipFile`` archive.
     arcname: str or None
-        Only used on python3.5 for compatiibility. Under python3.5, it is the
-        name of the file inside the ``ZipFile`` archive from which to read or
-        write. It is ``None`` on higher versions of python or when the
-        compression isn't ``"zipfile"``
+        Only used when ``compression="zipfile"``. It is the name of the file
+        inside the ``ZipFile`` archive from which to read or write. If an input
+        ``arcname`` is supplied and is different than ``None``, it is returned
+        here as is. Under other compression protocols, the inputed ``arcname``
+        is returned, whether it is ``None`` or not.
     must_close: bool
         A boolean value that indicates whether the ``io_stream`` must be closed
         by the calling function after reading/writing or not.
 
     """
     arch = None
-    arcname = None
     must_close = isinstance(path, PATH_TYPES)
     if compression is None or compression == "pickle":
         if must_close:
@@ -261,12 +276,15 @@ def open_compression_stream(path, compression, stream, mode, **kwargs):
         must_close = True  # The wrapped stream isn't closed by LZMAFile
     elif compression == "zipfile":
         arch = zipfile.ZipFile(stream, mode=mode, **kwargs)
-        if isinstance(path, PATH_TYPES):
-            file_path = path
+        if arcname is None:
+            if isinstance(path, PATH_TYPES):
+                file_path = os.path.basename(path)
+            else:
+                file_path = getattr(path, "name", "default")
+            arcname = file_path
         else:
-            file_path = getattr(path, "name", "default")
+            file_path = arcname
         if sys.version_info < (3, 6):
-            arcname = os.path.basename(file_path)
             arch.write(file_path, arcname=arcname)
         else:
             io_stream = arch.open(file_path, mode=mode)

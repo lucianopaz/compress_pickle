@@ -12,6 +12,23 @@ from compress_pickle import (
 )
 
 
+@pytest.mark.usefixtures("wrong_compressions")
+def test_dump_fails_on_unhandled_compression(wrong_compressions):
+    with pytest.raises(ValueError):
+        dump(
+            1,
+            "test_path.pkl",
+            compression=wrong_compressions,
+            set_default_extension=False,
+        )
+
+
+@pytest.mark.usefixtures("wrong_compressions")
+def test_load_fails_on_unhandled_compression(wrong_compressions):
+    with pytest.raises(ValueError):
+        load("test_path.pkl", compression=wrong_compressions, set_default_extension=False)
+
+
 @pytest.mark.usefixtures("dump_load")
 def test_dump_load(dump_load):
     message, path, compression, set_default_extension, expected_file, expected_fail = (
@@ -35,23 +52,6 @@ def test_dump_load(dump_load):
                 )
             with pytest.raises(expected_fail):
                 load(path, compression, set_default_extension=set_default_extension)
-
-
-@pytest.mark.usefixtures("wrong_compressions")
-def test_dump_fails_on_unhandled_compression(wrong_compressions):
-    with pytest.raises(ValueError):
-        dump(
-            1,
-            "test_path.pkl",
-            compression=wrong_compressions,
-            set_default_extension=False,
-        )
-
-
-@pytest.mark.usefixtures("wrong_compressions")
-def test_load_fails_on_unhandled_compression(wrong_compressions):
-    with pytest.raises(ValueError):
-        load("test_path.pkl", compression=wrong_compressions, set_default_extension=False)
 
 
 @pytest.mark.usefixtures("compressions")
@@ -91,3 +91,15 @@ def test_dump_load_on_filestreams(dump_vs_dumps):
     # different between the two dump calls, so we skip the follwing assertion
     if compression != "zipfile":
         assert raw_content == benchmark
+
+
+@pytest.mark.usefixtures("dump_vs_dumps")
+def test_load_vs_loads(dump_vs_dumps):
+    path, compression, message = dump_vs_dumps
+    dump(message, path, compression=compression, set_default_extension=False)
+    with open(path, "rb") as f:
+        data = f.read()
+    cmp1 = loads(data, compression=compression, arcname=os.path.basename(path))
+    cmp2 = load(path, compression=compression, set_default_extension=False)
+    assert cmp1 == cmp2
+    assert cmp1 == message

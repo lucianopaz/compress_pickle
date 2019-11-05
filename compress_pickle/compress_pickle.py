@@ -158,6 +158,7 @@ def load(
     fix_imports=True,
     encoding="ASCII",
     errors="strict",
+    arcname=None,
     set_default_extension=True,
     unhandled_extensions="raise",
     **kwargs
@@ -191,6 +192,12 @@ def load(
     errors: str (optional)
         Tells pickle how to decode 8-bit string instances pickled by Python 2.
         Refer to the standard ``pickle`` documentation for details.
+    arcname: None or str (optional)
+        Only necessary if ``compression="zipfile"``. It is the name of the file
+        contained in the zip archive which must be read and decompressed.
+        If ``None``, the ``arcname`` is assumed to be ``path`` (when ``path``
+        is path-like), ``path.name`` (when ``path`` is file-like and it has a
+        name attribute) or "default" when ``path`` has no ``name`` attribute.
     set_default_extension: bool (optional)
         If `True`, the default extension given the provided compression
         protocol is set to the supplied `path`. Refer to
@@ -224,6 +231,7 @@ def load(
         compression=compression,
         unhandled_extensions=unhandled_extensions,
         set_default_extension=set_default_extension,
+        arcname=arcname,
     )
 
     if arch is not None:
@@ -252,8 +260,7 @@ def loads(
     fix_imports=True,
     encoding="ASCII",
     errors="strict",
-    set_default_extension=True,
-    unhandled_extensions="raise",
+    arcname=None,
     **kwargs
 ):
     r"""Load an object from an input stream, uncompressing the contents with
@@ -277,6 +284,10 @@ def loads(
     errors: str (optional)
         Tells pickle how to decode 8-bit string instances pickled by Python 2.
         Refer to the standard ``pickle`` documentation for details.
+    arcname: None or str (optional)
+        Only necessary if ``compression="zipfile"``. It is the name of the file
+        contained in the zip archive which must be read and decompressed.
+        If ``None``, the ``arcname`` is assumed to be "default".
     kwargs:
         Any extra keyword arguments are passed to the compressed file opening
         protocol.
@@ -298,5 +309,7 @@ def loads(
             fix_imports=fix_imports,
             encoding=encoding,
             errors=errors,
+            set_default_extension=False,
+            arcname=arcname,
             **kwargs
         )
