@@ -147,9 +147,7 @@ def test_preprocess_path_on_file_types(preprocess_path_on_file_types):
     path, compression, mode, expected_fail = preprocess_path_on_file_types
     if not expected_fail:
         stream, arch, arcname, must_close = preprocess_path(
-            path=path,
-            mode=mode,
-            compression=compression,
+            path=path, mode=mode, compression=compression
         )
         if compression != "zipfile":
             assert isinstance(stream, stream_class_map[compression])
@@ -162,7 +160,5 @@ def test_preprocess_path_on_file_types(preprocess_path_on_file_types):
     else:
         with pytest.raises(Exception):
             stream, arch, arcname, must_close = preprocess_path(
-                path=path,
-                mode=mode,
-                compression=compression,
+                path=path, mode=mode, compression=compression
             )

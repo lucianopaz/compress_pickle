@@ -2,6 +2,7 @@ import pytest
 import os
 import warnings
 from fixtures import COMPRESSION_NAMES
+import zipfile
 from compress_pickle import (
     dump,
     dumps,
@@ -29,6 +30,21 @@ def test_load_fails_on_unhandled_compression(wrong_compressions):
         load("test_path.pkl", compression=wrong_compressions, set_default_extension=False)
 
 
+@pytest.mark.usefixtures("simple_dump_and_remove")
+def test_dump_compresses(simple_dump_and_remove):
+    path, compression, message = simple_dump_and_remove
+    kwargs = dict()
+    if compression == "zipfile":
+        kwargs = dict(zipfile_compression=zipfile.ZIP_DEFLATED)
+    dump(message, path, compression=compression, set_default_extension=False, **kwargs)
+    with open(path, "rb") as f:
+        compressed_message = f.read()
+    if compression in (None, "pickle"):
+        assert len(compressed_message) > len(message)
+    else:
+        assert len(compressed_message) < len(message)
+
+
 @pytest.mark.usefixtures("dump_load")
 def test_dump_load(dump_load):
     message, path, compression, set_default_extension, expected_file, expected_fail = (
@@ -54,15 +70,15 @@ def test_dump_load(dump_load):
                 load(path, compression, set_default_extension=set_default_extension)
 
 
-@pytest.mark.usefixtures("compressions")
-def test_dumps_loads(compressions):
-    message = os.urandom(256)
+@pytest.mark.usefixtures("random_message", "compressions")
+def test_dumps_loads(random_message, compressions):
+    message = random_message
     assert loads(dumps(message, compressions), compressions) == message
 
 
-@pytest.mark.usefixtures("dump_vs_dumps")
-def test_dump_vs_dumps(dump_vs_dumps):
-    path, compression, message = dump_vs_dumps
+@pytest.mark.usefixtures("simple_dump_and_remove")
+def test_dump_vs_dumps(simple_dump_and_remove):
+    path, compression, message = simple_dump_and_remove
     dump(message, path, compression=compression, set_default_extension=False)
     cmp1 = dumps(message, compression=compression)
     with open(path, "rb") as f:
@@ -70,9 +86,9 @@ def test_dump_vs_dumps(dump_vs_dumps):
     assert cmp1 == cmp2
 
 
-@pytest.mark.usefixtures("dump_vs_dumps")
-def test_dump_load_on_filestreams(dump_vs_dumps):
-    path, compression, message = dump_vs_dumps
+@pytest.mark.usefixtures("simple_dump_and_remove")
+def test_dump_load_on_filestreams(simple_dump_and_remove):
+    path, compression, message = simple_dump_and_remove
     read_mode = "rb"  # get_compression_read_mode(compression)
     write_mode = "wb"  # get_compression_write_mode(compression)
     with open(path, write_mode) as f:
@@ -93,9 +109,9 @@ def test_dump_load_on_filestreams(dump_vs_dumps):
         assert raw_content == benchmark
 
 
-@pytest.mark.usefixtures("dump_vs_dumps")
-def test_load_vs_loads(dump_vs_dumps):
-    path, compression, message = dump_vs_dumps
+@pytest.mark.usefixtures("simple_dump_and_remove")
+def test_load_vs_loads(simple_dump_and_remove):
+    path, compression, message = simple_dump_and_remove
     dump(message, path, compression=compression, set_default_extension=False)
     with open(path, "rb") as f:
         data = f.read()

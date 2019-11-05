@@ -38,7 +38,17 @@ FILE_TYPES = [None, "file", io.BytesIO, io.BufferedWriter, io.BufferedReader]
 
 @pytest.fixture(scope="function")
 def random_message():
-    return os.urandom(512)
+    message = (
+        b"I am the hidden bytes message and I will be dumped with pickle "
+        + b"and compressed with standard libraries. I am very long just to "
+        + b"ensure that my compressed form takes up less bytes than my "
+        + b"uncompressed representation. I will end with 8 random bytes to "
+        + b"randomize the message between function calls. I will also include "
+        + b"a big redundancy string to ensure a smaller compressed size: "
+        + b"a" * 50
+        + os.urandom(8)
+    )
+    return message
 
 
 @pytest.fixture(scope="module", params=COMPRESSION_NAMES, ids=str)
@@ -168,7 +178,7 @@ def dump_load(file, random_message, file_compressions, set_default_extension):
 
 
 @pytest.fixture(scope="function")
-def dump_vs_dumps(random_message, compressions):
+def simple_dump_and_remove(random_message, compressions):
     path = "test_dump_vs_dumps_{}".format(compressions)
     yield (path, compressions, random_message)
     os.remove(path)

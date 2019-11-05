@@ -313,7 +313,8 @@ def preprocess_path(
         attribute.
     kwargs:
         Any extra keyword arguments are passed to the compressed file opening
-        protocol.
+        protocol. The only exception is the ``compression`` kwarg of the
+        ``zipfile`` protocol. This kwarg is called ``zipfile_compression``.
 
     Returns
     -------
@@ -362,7 +363,12 @@ def preprocess_path(
     elif mode == "read":
         mode = get_compression_read_mode(compression=compression)
     return open_compression_stream(
-        path=path, compression=compression, stream=stream, mode=mode, arcname=arcname, **kwargs
+        path=path,
+        compression=compression,
+        stream=stream,
+        mode=mode,
+        arcname=arcname,
+        **kwargs
     )
 
 
@@ -388,6 +394,10 @@ def open_compression_stream(path, compression, stream, mode, arcname=None, **kwa
         ``path`` is path-like), ``path.name`` (when ``path`` is file-like and
         it has a name attribute) or "default" when ``path`` has no ``name``
         attribute.
+    kwargs:
+        Any extra keyword arguments are passed to the compressed file opening
+        protocol. The only exception is the ``compression`` kwarg of the
+        ``zipfile`` protocol. This kwarg is called ``zipfile_compression``.
 
     Returns
     -------
@@ -411,6 +421,8 @@ def open_compression_stream(path, compression, stream, mode, arcname=None, **kwa
     """
     arch = None
     must_close = isinstance(path, PATH_TYPES)
+    if "zipfile_compression" in kwargs:
+        kwargs["compression"] = kwargs.pop("zipfile_compression")
     if compression is None or compression == "pickle":
         if must_close:
             io_stream = open(path, mode=mode)

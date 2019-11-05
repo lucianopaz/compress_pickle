@@ -68,7 +68,8 @@ def dump(
         ValueError).
     kwargs:
         Any extra keyword arguments are passed to the compressed file opening
-        protocol.
+        protocol. The only exception is the ``compression`` kwarg of the
+        ``zipfile`` protocol. This kwarg is called ``zipfile_compression``.
 
     Notes
     -----
@@ -85,6 +86,7 @@ def dump(
         compression=compression,
         unhandled_extensions=unhandled_extensions,
         set_default_extension=set_default_extension,
+        **kwargs
     )
 
     if arch is not None:
@@ -134,7 +136,8 @@ def dumps(obj, compression=None, protocol=-1, fix_imports=True, **kwargs):
         in Python 2, so that the pickle data stream is readable with Python 2.
     kwargs:
         Any extra keyword arguments are passed to the compressed file opening
-        protocol.
+        protocol. The only exception is the ``compression`` kwarg of the
+        ``zipfile`` protocol. This kwarg is called ``zipfile_compression``.
 
     """
     compression = validate_compression(compression, infer_is_valid=False)
@@ -210,7 +213,8 @@ def load(
         ValueError).
     kwargs:
         Any extra keyword arguments are passed to the compressed file opening
-        protocol.
+        protocol. The only exception is the ``compression`` kwarg of the
+        ``zipfile`` protocol. This kwarg is called ``zipfile_compression``.
 
     Returns
     -------
@@ -232,6 +236,7 @@ def load(
         unhandled_extensions=unhandled_extensions,
         set_default_extension=set_default_extension,
         arcname=arcname,
+        **kwargs
     )
 
     if arch is not None:
@@ -290,7 +295,8 @@ def loads(
         If ``None``, the ``arcname`` is assumed to be "default".
     kwargs:
         Any extra keyword arguments are passed to the compressed file opening
-        protocol.
+        protocol. The only exception is the ``compression`` kwarg of the
+        ``zipfile`` protocol. This kwarg is called ``zipfile_compression``.
 
     Returns
     -------

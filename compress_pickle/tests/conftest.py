@@ -13,5 +13,5 @@ from fixtures import (
     preprocess_path_on_path_types,
     preprocess_path_on_file_types,
     dump_load,
-    dump_vs_dumps,
+    simple_dump_and_remove,
 )
