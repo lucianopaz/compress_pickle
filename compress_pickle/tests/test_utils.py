@@ -123,9 +123,13 @@ def test_set_default_extensions(file, compressions):
 
 @pytest.mark.usefixtures("preprocess_path_on_path_types")
 def test_preprocess_path_on_path_types(preprocess_path_on_path_types):
-    path, compression, set_default_extension, mode, expected_path = (
-        preprocess_path_on_path_types
-    )
+    (
+        path,
+        compression,
+        set_default_extension,
+        mode,
+        expected_path,
+    ) = preprocess_path_on_path_types
     stream, arch, arcname, must_close = preprocess_path(
         path=path,
         mode=mode,

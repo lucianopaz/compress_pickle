@@ -49,9 +49,14 @@ def test_dump_compresses(simple_dump_and_remove):
 
 @pytest.mark.usefixtures("dump_load")
 def test_dump_load(dump_load):
-    message, path, compression, set_default_extension, expected_file, expected_fail = (
-        dump_load
-    )
+    (
+        message,
+        path,
+        compression,
+        set_default_extension,
+        expected_file,
+        expected_fail,
+    ) = dump_load
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", UserWarning)
         if expected_fail is None:
