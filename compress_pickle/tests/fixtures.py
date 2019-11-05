@@ -108,7 +108,7 @@ def compressions_to_validate(request):
 
 @pytest.fixture(scope="function")
 def preprocess_path_on_path_types(file, compressions, set_default_extension):
-    _file = _stringyfy_path(file).format(file_compressions)
+    _file = _stringyfy_path(file).format(compressions)
     if isinstance(file, bytes):
         file = codecs.encode(_file, "utf-8")
     else:
