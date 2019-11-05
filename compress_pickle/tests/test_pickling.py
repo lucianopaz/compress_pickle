@@ -27,7 +27,9 @@ def test_dump_fails_on_unhandled_compression(wrong_compressions):
 @pytest.mark.usefixtures("wrong_compressions")
 def test_load_fails_on_unhandled_compression(wrong_compressions):
     with pytest.raises(ValueError):
-        load("test_path.pkl", compression=wrong_compressions, set_default_extension=False)
+        load(
+            "test_path.pkl", compression=wrong_compressions, set_default_extension=False
+        )
 
 
 @pytest.mark.usefixtures("simple_dump_and_remove")
@@ -53,7 +55,9 @@ def test_dump_load(dump_load):
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", UserWarning)
         if expected_fail is None:
-            dump(message, path, compression, set_default_extension=set_default_extension)
+            dump(
+                message, path, compression, set_default_extension=set_default_extension
+            )
             loaded_message = load(
                 path, compression, set_default_extension=set_default_extension
             )
