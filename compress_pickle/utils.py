@@ -447,6 +447,7 @@ def open_compression_stream(path, compression, stream, mode, arcname=None, **kwa
             file_path = arcname
         if sys.version_info < (3, 6):
             arch.write(file_path, arcname=arcname)
+            io_stream = None
         else:
             io_stream = arch.open(file_path, mode=mode)
     else:
