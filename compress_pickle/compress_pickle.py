@@ -5,13 +5,7 @@ A thin wrapper of standard ``pickle`` with standard compression libraries
 import sys
 import pickle
 import io
-from .utils import (
-    validate_compression,
-    get_compression_write_mode,
-    get_compression_read_mode,
-    preprocess_path,
-    open_compression_stream,
-)
+from .utils import validate_compression, preprocess_path
 
 
 __all__ = ["dump", "load", "dumps", "loads"]
