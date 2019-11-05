@@ -80,10 +80,13 @@ def test_dumps_loads(random_message, compressions):
 def test_dump_vs_dumps(simple_dump_and_remove):
     path, compression, message = simple_dump_and_remove
     dump(message, path, compression=compression, set_default_extension=False)
-    cmp1 = dumps(message, compression=compression)
+    cmp1 = dumps(message, compression=compression, arcname=path)
     with open(path, "rb") as f:
         cmp2 = f.read()
-    assert cmp1 == cmp2
+    if compression != "gzip":
+        assert cmp1 == cmp2
+    else:
+        assert loads(cmp1, compression) == loads(cmp2, compression)
 
 
 @pytest.mark.usefixtures("simple_dump_and_remove")

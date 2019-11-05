@@ -153,10 +153,10 @@ def test_preprocess_path_on_file_types(preprocess_path_on_file_types):
             assert isinstance(stream, stream_class_map[compression])
             assert arch is None
             assert arcname is None
-            assert must_close if compression in ("gzip", "lzma") else not must_close
+            assert not must_close if compression in (None, "pickle") else must_close
         else:
             assert isinstance(arch, stream_class_map[compression])
-            assert not must_close
+            assert must_close
     else:
         with pytest.raises(Exception):
             stream, arch, arcname, must_close = preprocess_path(

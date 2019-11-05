@@ -140,18 +140,18 @@ def dumps(obj, compression=None, protocol=-1, fix_imports=True, **kwargs):
         ``zipfile`` protocol. This kwarg is called ``zipfile_compression``.
 
     """
-    compression = validate_compression(compression, infer_is_valid=False)
-    stream = io.BytesIO()
-    dump(
-        obj,
-        path=stream,
-        compression=compression,
-        protocol=protocol,
-        fix_imports=fix_imports,
-        set_default_extension=False,
-        **kwargs
-    )
-    return stream.getvalue()
+    validate_compression(compression, infer_is_valid=False)
+    with io.BytesIO() as stream:
+        dump(
+            obj,
+            path=stream,
+            compression=compression,
+            protocol=protocol,
+            fix_imports=fix_imports,
+            set_default_extension=False,
+            **kwargs
+        )
+        return stream.getvalue()
 
 
 def load(

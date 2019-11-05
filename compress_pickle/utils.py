@@ -420,22 +420,21 @@ def open_compression_stream(path, compression, stream, mode, arcname=None, **kwa
 
     """
     arch = None
-    must_close = isinstance(path, PATH_TYPES)
+    must_close = True
     if "zipfile_compression" in kwargs:
         kwargs["compression"] = kwargs.pop("zipfile_compression")
     if compression is None or compression == "pickle":
-        if must_close:
+        if isinstance(path, PATH_TYPES):
             io_stream = open(path, mode=mode)
         else:
             io_stream = stream
+            must_close = False
     elif compression == "gzip":
         io_stream = gzip.open(stream, mode=mode, **kwargs)
-        must_close = True  # The wrapped stream isn't closed by GZipFile
     elif compression == "bz2":
         io_stream = bz2.open(stream, mode=mode, **kwargs)
     elif compression == "lzma":
         io_stream = lzma.open(stream, mode=mode, **kwargs)
-        must_close = True  # The wrapped stream isn't closed by LZMAFile
     elif compression == "zipfile":
         arch = zipfile.ZipFile(stream, mode=mode, **kwargs)
         if arcname is None:
