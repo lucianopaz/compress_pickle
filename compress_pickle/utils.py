@@ -431,6 +431,7 @@ def open_compression_stream(path, compression, stream, mode, arcname=None, **kwa
     elif compression == "lzma":
         io_stream = lzma.open(stream, mode=mode, **kwargs)
     elif compression == "zipfile":
+        pwd = kwargs.pop("pwd", None)
         arch = zipfile.ZipFile(stream, mode=mode, **kwargs)
         if arcname is None:
             if isinstance(path, PATH_TYPES):
@@ -443,9 +444,11 @@ def open_compression_stream(path, compression, stream, mode, arcname=None, **kwa
         if sys.version_info < (3, 6):
             if "w" in mode or "a" in mode or "x" in mode:
                 arch.write(file_path, arcname=arcname)
-            io_stream = None
+                io_stream = None
+            else:
+                io_stream = arch.open(arcname, mode=mode, pwd=pwd)
         else:
-            io_stream = arch.open(file_path, mode=mode)
+            io_stream = arch.open(file_path, mode=mode, pwd=pwd)
     else:
         raise ValueError(
             "Unsupported compression {}. Supported values are {}".format(
