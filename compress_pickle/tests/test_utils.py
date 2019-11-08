@@ -149,31 +149,36 @@ def test_preprocess_path_on_path_types(preprocess_path_on_path_types):
 @pytest.mark.usefixtures("preprocess_path_on_file_types")
 def test_preprocess_path_on_file_types(preprocess_path_on_file_types):
     path, compression, mode, expected_fail = preprocess_path_on_file_types
-    if not expected_fail:
-        try:
-            stream, arch, arcname, must_close = preprocess_path(
-                path=path, mode=mode, compression=compression
-            )
-            if compression != "zipfile":
-                assert isinstance(stream, stream_class_map[compression])
-                assert arch is None
-                assert arcname is None
-                assert not must_close if compression in (None, "pickle") else must_close
-            else:
-                assert isinstance(arch, stream_class_map[compression])
-                assert must_close
-        finally:
-            if must_close:
-                try:
-                    stream.close()
-                except Exception:
-                    pass
-                try:
-                    arch.close()
-                except Exception:
-                    pass
-    else:
-        with pytest.raises(Exception):
-            stream, arch, arcname, must_close = preprocess_path(
-                path=path, mode=mode, compression=compression
-            )
+    with path:
+        if not expected_fail:
+            try:
+                stream, arch, arcname, must_close = preprocess_path(
+                    path=path, mode=mode, compression=compression
+                )
+                if compression != "zipfile":
+                    assert isinstance(stream, stream_class_map[compression])
+                    assert arch is None
+                    assert arcname is None
+                    assert (
+                        not must_close
+                        if compression in (None, "pickle")
+                        else must_close
+                    )
+                else:
+                    assert isinstance(arch, stream_class_map[compression])
+                    assert must_close
+            finally:
+                if must_close:
+                    try:
+                        stream.close()
+                    except Exception:
+                        pass
+                    try:
+                        arch.close()
+                    except Exception:
+                        pass
+        else:
+            with pytest.raises(Exception):
+                stream, arch, arcname, must_close = preprocess_path(
+                    path=path, mode=mode, compression=compression
+                )
