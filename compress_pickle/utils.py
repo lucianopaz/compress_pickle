@@ -3,7 +3,6 @@ import os
 import codecs
 import sys
 import warnings
-import io
 import gzip
 import bz2
 import lzma
