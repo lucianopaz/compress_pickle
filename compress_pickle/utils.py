@@ -280,11 +280,10 @@ def preprocess_path(
 
     Parameters
     ----------
-    path: str, bytes, None or iostream
-        A path-like object (``str``, ``bytes``), a file-like object (we call it
+    path: str, bytes or iostream
+        A path-like object (``str``, ``bytes``) or a file-like object (we call it
         iostream but it is defined by the ``io`` module, for example
-        ``io.BytesIO`` or other types of streams), or ``None``. If ``None``,
-        ``path`` is set to a new ``io.BytesIO`` instance.
+        ``io.BytesIO`` or other types of streams).
     mode: str
         Mode with which to open the file-like stream. If "read", the default
         read mode is automatically assigned from
@@ -348,10 +347,7 @@ def preprocess_path(
             path = set_default_extensions(path, compression=compression)
         stream = path
     else:
-        if path is None:
-            stream = io.BytesIO()
-        else:
-            stream = path
+        stream = path
         if compression == "infer":
             raise NotImplementedError(
                 "The compression protocol can only be inferred when the "

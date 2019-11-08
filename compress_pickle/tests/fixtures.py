@@ -33,7 +33,7 @@ FILENAMES = [
 ]
 UNHANDLED_EXTENSIONS = ["ignore", "warn", "raise"]
 FILE_COMPRESSIONS = [None, "pickle", "gzip", "bz2", "lzma", "zipfile", "infer"]
-FILE_TYPES = [None, "file", io.BytesIO, io.BufferedWriter, io.BufferedReader]
+FILE_TYPES = ["file", io.BytesIO, io.BufferedWriter, io.BufferedReader]
 
 
 @pytest.fixture(scope="function")
