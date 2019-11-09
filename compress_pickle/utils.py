@@ -95,19 +95,19 @@ def validate_compression(compression, infer_is_valid=True):
         protocol. If ``False``, it is not accepted as a valid compression
         protocol.
     """
-    known_compressions = get_known_compressions()
+    known_compressions = set(get_known_compressions())
     if infer_is_valid:
-        known_compressions.append("infer")
+        known_compressions.add("infer")
+    result = False
     try:
         result = compression in known_compressions
-    except Exception:
-        result = False
-    if not result:
-        raise ValueError(
-            "Unknown compression {}. Available values are: {}".format(
-                compression, known_compressions
+    finally:
+        if not result:
+            raise ValueError(
+                "Unknown compression {}. Available values are: {}".format(
+                    compression, known_compressions
+                )
             )
-        )
 
 
 def get_default_compression_mapping():
