@@ -443,7 +443,6 @@ def open_compression_stream(path, compression, stream, mode, arcname=None, **kwa
             file_path = arcname
         if sys.version_info < (3, 6):
             if "w" in mode or "a" in mode or "x" in mode:
-                arch.write(file_path, arcname=arcname)
                 io_stream = None
             else:
                 io_stream = arch.open(arcname, mode=mode, pwd=pwd)

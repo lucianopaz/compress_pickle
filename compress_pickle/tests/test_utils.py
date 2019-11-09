@@ -149,6 +149,7 @@ def test_preprocess_path_on_path_types(preprocess_path_on_path_types):
 @pytest.mark.usefixtures("preprocess_path_on_file_types")
 def test_preprocess_path_on_file_types(preprocess_path_on_file_types):
     path, compression, mode, expected_fail = preprocess_path_on_file_types
+    must_close = False
     with path:
         if not expected_fail:
             try:
