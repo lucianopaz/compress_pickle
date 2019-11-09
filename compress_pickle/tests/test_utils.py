@@ -155,7 +155,12 @@ def test_preprocess_path_on_path_types(preprocess_path_on_path_types):
 
 @pytest.mark.usefixtures("preprocess_path_on_file_types_and_compressions")
 def test_preprocess_path_on_file_types(preprocess_path_on_file_types_and_compressions):
-    path, compression, mode, expected_fail = preprocess_path_on_file_types_and_compressions
+    (
+        path,
+        compression,
+        mode,
+        expected_fail,
+    ) = preprocess_path_on_file_types_and_compressions
     must_close = False
     with path:
         if not expected_fail:
@@ -197,9 +202,7 @@ def test_preprocess_cannot_infer_on_filetypes(preprocess_path_on_file_types):
     path, mode = preprocess_path_on_file_types
     with path:
         with pytest.raises(RuntimeError):
-            preprocess_path(
-                path=path, mode=mode, compression="infer"
-            )
+            preprocess_path(path=path, mode=mode, compression="infer")
 
 
 @pytest.mark.usefixture("wrong_compressions")

@@ -134,7 +134,9 @@ def preprocess_path_on_file_types(file_types):
 
 
 @pytest.fixture(scope="function")
-def preprocess_path_on_file_types_and_compressions(preprocess_path_on_file_types, compressions):
+def preprocess_path_on_file_types_and_compressions(
+    preprocess_path_on_file_types, compressions
+):
     path, mode = preprocess_path_on_file_types
     expected_fail = False
     if mode == "read" and compressions == "zipfile":
