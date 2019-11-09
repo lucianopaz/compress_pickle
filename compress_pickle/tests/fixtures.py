@@ -14,7 +14,7 @@ from compress_pickle.utils import _stringyfy_path
 
 
 COMPRESSION_NAMES = [None, "pickle", "gzip", "bz2", "lzma", "zipfile"]
-UNHANDLED_COMPRESSIONS = ["gzip2", "tar", "zip", 3]
+UNHANDLED_COMPRESSIONS = ["gzip2", "tar", "zip", 3, [1, 3]]
 FILENAMES = [
     "test_blabla_{}",
     "test_blabla_{}.pkl",
@@ -81,11 +81,6 @@ def file_compressions(request):
     return request.param
 
 
-@pytest.fixture(scope="module", params=["read", "write"], ids=str)
-def mode(request):
-    return request.param
-
-
 @pytest.fixture(scope="module", params=FILE_TYPES, ids=str)
 def file_types(request):
     return request.param
@@ -122,25 +117,29 @@ def preprocess_path_on_path_types(file, compressions, set_default_extension):
 
 
 @pytest.fixture(scope="function")
-def preprocess_path_on_file_types(file_types, compressions):
-    expected_fail = False
+def preprocess_path_on_file_types(file_types):
     if file_types == "file":
         path = open("test_blabla_stream", "wb")
-    elif file_types is not None:
+    else:
         if file_types in (io.BufferedWriter, io.BufferedReader):
             path = file_types(io.BytesIO())
         else:
             path = file_types()
-    else:
-        path = file_types
     mode = "write"
     if file_types == io.BufferedReader:
         mode = "read"
-        if compressions == "zipfile":
-            expected_fail = True
-    yield path, compressions, mode, expected_fail
+    yield path, mode
     if file_types == "file":
         os.remove("test_blabla_stream")
+
+
+@pytest.fixture(scope="function")
+def preprocess_path_on_file_types_and_compressions(preprocess_path_on_file_types, compressions):
+    path, mode = preprocess_path_on_file_types
+    expected_fail = False
+    if mode == "read" and compressions == "zipfile":
+        expected_fail = True
+    return path, compressions, mode, expected_fail
 
 
 @pytest.fixture(scope="function")

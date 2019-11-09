@@ -30,6 +30,13 @@ stream_class_map = {
 }
 
 
+def test_stringify_path():
+    assert "a" == _stringyfy_path("a")
+    assert "a" == _stringyfy_path(b"a")
+    with pytest.raises(TypeError):
+        _stringyfy_path({"a"})
+
+
 def test_known_compressions():
     kcn = get_known_compressions()
     assert all((cn in kcn for cn in COMPRESSION_NAMES))
@@ -146,9 +153,9 @@ def test_preprocess_path_on_path_types(preprocess_path_on_path_types):
         assert must_close
 
 
-@pytest.mark.usefixtures("preprocess_path_on_file_types")
-def test_preprocess_path_on_file_types(preprocess_path_on_file_types):
-    path, compression, mode, expected_fail = preprocess_path_on_file_types
+@pytest.mark.usefixtures("preprocess_path_on_file_types_and_compressions")
+def test_preprocess_path_on_file_types(preprocess_path_on_file_types_and_compressions):
+    path, compression, mode, expected_fail = preprocess_path_on_file_types_and_compressions
     must_close = False
     with path:
         if not expected_fail:
@@ -183,3 +190,19 @@ def test_preprocess_path_on_file_types(preprocess_path_on_file_types):
                 stream, arch, arcname, must_close = preprocess_path(
                     path=path, mode=mode, compression=compression
                 )
+
+
+@pytest.mark.usefixture("file_types")
+def test_preprocess_cannot_infer_on_filetypes(preprocess_path_on_file_types):
+    path, mode = preprocess_path_on_file_types
+    with path:
+        with pytest.raises(RuntimeError):
+            preprocess_path(
+                path=path, mode=mode, compression="infer"
+            )
+
+
+@pytest.mark.usefixture("wrong_compressions")
+def test_open_stream_unhandled_compression(wrong_compressions):
+    with pytest.raises(ValueError):
+        open_compression_stream("default", wrong_compressions, "default", "w")
