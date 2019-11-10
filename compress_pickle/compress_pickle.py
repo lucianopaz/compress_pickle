@@ -34,10 +34,10 @@ def dump(
     ----------
     obj: any
         The object that will be saved to disk
-    path: str, bytes or iostream
-        A path-like object (``str``, ``bytes``) or a file-like object (we call it
-        iostream but it is defined by the ``io`` module, for example
-        ``io.BytesIO`` or other types of streams). The path to which
+    path: str, bytes, PathLike or iostream
+        A path-like object (``str``, ``bytes``, ``os.PathLike``) or a file-like
+        object (we call it iostream but it is defined by the ``io`` module, for
+        example ``io.BytesIO`` or other types of streams). The path to which
         to dump the ``obj``.
     compression: None or str (optional)
         The compression protocol to use. By default, the compression is
@@ -197,10 +197,10 @@ def load(
 
     Parameters
     ----------
-    path: str, bytes or iostream
-        A path-like object (``str``, ``bytes``) or a file-like object (we call it
-        iostream but it is defined by the ``io`` module, for example
-        ``io.BytesIO`` or other types of streams). The path from which
+    path: str, bytes, PathLike or iostream
+        A path-like object (``str``, ``bytes``, ``os.PathLike``) or a file-like
+        object (we call it iostream but it is defined by the ``io`` module, for
+        example ``io.BytesIO`` or other types of streams). The path from which
         to load the ``obj``.
     compression: None or str (optional)
         The compression protocol to use. By default, the compression is

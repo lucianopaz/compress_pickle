@@ -3,6 +3,7 @@ import os
 import io
 import codecs
 import itertools
+import pathlib
 from compress_pickle import (
     set_default_extensions,
     infer_compression_from_filename,
@@ -30,6 +31,13 @@ FILENAMES = [
     b"test_blabla_{}.lzma",
     b"test_blabla_{}.zip",
     b"test_blabla_{}.unknown",
+    pathlib.Path("test_blabla_{}"),
+    pathlib.Path("test_blabla_{}.pkl"),
+    pathlib.Path("test_blabla_{}.gz"),
+    pathlib.Path("test_blabla_{}.bz"),
+    pathlib.Path("test_blabla_{}.lzma"),
+    pathlib.Path("test_blabla_{}.zip"),
+    pathlib.Path("test_blabla_{}.unknown"),
 ]
 UNHANDLED_EXTENSIONS = ["ignore", "warn", "raise"]
 FILE_COMPRESSIONS = [None, "pickle", "gzip", "bz2", "lzma", "zipfile", "infer"]
@@ -106,6 +114,8 @@ def preprocess_path_on_path_types(file, compressions, set_default_extension):
     _file = _stringyfy_path(file).format(compressions)
     if isinstance(file, bytes):
         file = codecs.encode(_file, "utf-8")
+    elif isinstance(file, pathlib.PurePath):
+        file = pathlib.Path(_file)
     else:
         file = _file
     expected_path = _stringyfy_path(file).format(compressions)
@@ -150,6 +160,8 @@ def dump_load(file, random_message, file_compressions, set_default_extension):
     _file = _stringyfy_path(file).format(file_compressions)
     if isinstance(file, bytes):
         file = codecs.encode(_file, "utf-8")
+    elif isinstance(file, pathlib.PurePath):
+        file = pathlib.Path(_file)
     else:
         file = _file
     expected_fail = None
