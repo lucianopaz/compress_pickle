@@ -89,9 +89,9 @@ using a normal <code class="docutils literal notranslate"><span class="pre">pick
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>obj</strong> (<em>any</em>) – The object that will be saved to disk</p></li>
-<li><p><strong>path</strong> (<em>str</em><em>, </em><em>bytes</em><em> or </em><em>iostream</em>) – A path-like object (<code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes</span></code>) or a file-like object (we call it
-iostream but it is defined by the <code class="docutils literal notranslate"><span class="pre">io</span></code> module, for example
-<code class="docutils literal notranslate"><span class="pre">io.BytesIO</span></code> or other types of streams). The path to which
+<li><p><strong>path</strong> (<em>str</em><em>, </em><em>bytes</em><em>, </em><em>PathLike</em><em> or </em><em>iostream</em>) – A path-like object (<code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes</span></code>, <code class="docutils literal notranslate"><span class="pre">os.PathLike</span></code>) or a file-like
+object (we call it iostream but it is defined by the <code class="docutils literal notranslate"><span class="pre">io</span></code> module, for
+example <code class="docutils literal notranslate"><span class="pre">io.BytesIO</span></code> or other types of streams). The path to which
 to dump the <code class="docutils literal notranslate"><span class="pre">obj</span></code>.</p></li>
 <li><p><strong>compression</strong> (<em>None</em><em> or </em><em>str</em><em> (</em><em>optional</em><em>)</em>) – The compression protocol to use. By default, the compression is
 inferred from the path’s extension. To see available compression
@@ -137,9 +137,9 @@ using a normal <code class="docutils literal notranslate"><span class="pre">pick
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>str</em><em>, </em><em>bytes</em><em> or </em><em>iostream</em>) – A path-like object (<code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes</span></code>) or a file-like object (we call it
-iostream but it is defined by the <code class="docutils literal notranslate"><span class="pre">io</span></code> module, for example
-<code class="docutils literal notranslate"><span class="pre">io.BytesIO</span></code> or other types of streams). The path from which
+<li><p><strong>path</strong> (<em>str</em><em>, </em><em>bytes</em><em>, </em><em>PathLike</em><em> or </em><em>iostream</em>) – A path-like object (<code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes</span></code>, <code class="docutils literal notranslate"><span class="pre">os.PathLike</span></code>) or a file-like
+object (we call it iostream but it is defined by the <code class="docutils literal notranslate"><span class="pre">io</span></code> module, for
+example <code class="docutils literal notranslate"><span class="pre">io.BytesIO</span></code> or other types of streams). The path from which
 to load the <code class="docutils literal notranslate"><span class="pre">obj</span></code>.</p></li>
 <li><p><strong>compression</strong> (<em>None</em><em> or </em><em>str</em><em> (</em><em>optional</em><em>)</em>) – The compression protocol to use. By default, the compression is
 inferred from the path’s extension. To see available compression
