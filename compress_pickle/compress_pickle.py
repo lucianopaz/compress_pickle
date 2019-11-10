@@ -18,6 +18,8 @@ def dump(
     mode=None,
     protocol=-1,
     fix_imports=True,
+    buffer_callback=None,
+    *,
     unhandled_extensions="raise",
     set_default_extension=True,
     **kwargs
@@ -53,6 +55,9 @@ def dump(
         If ``fix_imports`` is ``True`` and ``protocol`` is less than 3, pickle
         will try to map the new Python 3 names to the old module names used
         in Python 2, so that the pickle data stream is readable with Python 2.
+    buffer_callback: None or callable (optional)
+        Only used in python 3.8. Tells pickle how to serialize buffers.
+        Refer to the standard ``pickle`` documentation for details.
     set_default_extension: bool (optional)
         If ``True``, the default extension given the provided compression
         protocol is set to the supplied ``path``. Refer to
@@ -74,6 +79,9 @@ def dump(
     extensions, call the function
     :func:`~compress_pickle.utils.get_default_compression_mapping`.
     """
+    version_dependent_kwargs = dict()
+    if sys.version_info >= (3, 8):
+        version_dependent_kwargs["buffer_callback"] = buffer_callback
     validate_compression(compression)
     if mode is None:
         mode = "write"
@@ -89,10 +97,21 @@ def dump(
     if arch is not None:
         try:
             if sys.version_info < (3, 6):
-                buff = pickle.dumps(obj, protocol=protocol, fix_imports=fix_imports)
+                buff = pickle.dumps(
+                    obj,
+                    protocol=protocol,
+                    fix_imports=fix_imports,
+                    **version_dependent_kwargs
+                )
                 arch.writestr(arcname, buff)
             else:
-                pickle.dump(obj, io_stream, protocol=protocol, fix_imports=fix_imports)
+                pickle.dump(
+                    obj,
+                    io_stream,
+                    protocol=protocol,
+                    fix_imports=fix_imports,
+                    **version_dependent_kwargs
+                )
         finally:
             if sys.version_info >= (3, 6):
                 io_stream.flush()
@@ -109,7 +128,9 @@ def dump(
                 io_stream.close()
 
 
-def dumps(obj, compression=None, protocol=-1, fix_imports=True, **kwargs):
+def dumps(
+    obj, compression=None, protocol=-1, fix_imports=True, buffer_callback=None, **kwargs
+):
     r"""Dump the contents of an object to a byte string, using a
     given compression protocol.
     For example, if ``gzip`` compression is specified, the file buffer is
@@ -131,6 +152,9 @@ def dumps(obj, compression=None, protocol=-1, fix_imports=True, **kwargs):
         If ``fix_imports`` is ``True`` and ``protocol`` is less than 3, pickle
         will try to map the new Python 3 names to the old module names used
         in Python 2, so that the pickle data stream is readable with Python 2.
+    buffer_callback: None or callable (optional)
+        Only used in python 3.8. Tells pickle how to serialize buffers.
+        Refer to the standard ``pickle`` documentation for details.
     kwargs:
         Any extra keyword arguments are passed to the compressed file opening
         protocol. The only exception is the ``compression`` kwarg of the
@@ -145,6 +169,7 @@ def dumps(obj, compression=None, protocol=-1, fix_imports=True, **kwargs):
             compression=compression,
             protocol=protocol,
             fix_imports=fix_imports,
+            buffer_callback=buffer_callback,
             set_default_extension=False,
             **kwargs
         )
@@ -158,6 +183,8 @@ def load(
     fix_imports=True,
     encoding="ASCII",
     errors="strict",
+    buffers=None,
+    *,
     arcname=None,
     set_default_extension=True,
     unhandled_extensions="raise",
@@ -195,6 +222,10 @@ def load(
     errors: str (optional)
         Tells pickle how to decode 8-bit string instances pickled by Python 2.
         Refer to the standard ``pickle`` documentation for details.
+    buffers: None or iterable (optional)
+        Only used in python 3.8. Provides pickle with the buffers from which
+        to read out of band buffer views.
+        Refer to the standard ``pickle`` documentation for details.
     arcname: None or str (optional)
         Only necessary if ``compression="zipfile"``. It is the name of the file
         contained in the zip archive which must be read and decompressed.
@@ -226,6 +257,9 @@ def load(
     extensions, call the function
     :func:`~compress_pickle.utils.get_default_compression_mapping`.
     """
+    version_dependent_kwargs = dict()
+    if sys.version_info >= (3, 8):
+        version_dependent_kwargs["buffers"] = buffers
     validate_compression(compression)
     if mode is None:
         mode = "read"
@@ -242,7 +276,11 @@ def load(
     if arch is not None:
         try:
             output = pickle.load(
-                io_stream, encoding=encoding, errors=errors, fix_imports=fix_imports
+                io_stream,
+                encoding=encoding,
+                errors=errors,
+                fix_imports=fix_imports,
+                **version_dependent_kwargs
             )
         finally:
             if must_close:
@@ -251,7 +289,11 @@ def load(
     else:
         try:
             output = pickle.load(
-                io_stream, encoding=encoding, errors=errors, fix_imports=fix_imports
+                io_stream,
+                encoding=encoding,
+                errors=errors,
+                fix_imports=fix_imports,
+                **version_dependent_kwargs
             )
         finally:
             if must_close:
@@ -265,6 +307,8 @@ def loads(
     fix_imports=True,
     encoding="ASCII",
     errors="strict",
+    buffers=None,
+    *,
     arcname=None,
     **kwargs
 ):
@@ -288,6 +332,10 @@ def loads(
         Refer to the standard ``pickle`` documentation for details.
     errors: str (optional)
         Tells pickle how to decode 8-bit string instances pickled by Python 2.
+        Refer to the standard ``pickle`` documentation for details.
+    buffers: None or iterable (optional)
+        Only used in python 3.8. Provides pickle with the buffers from which
+        to read out of band buffer views.
         Refer to the standard ``pickle`` documentation for details.
     arcname: None or str (optional)
         Only necessary if ``compression="zipfile"``. It is the name of the file
@@ -315,6 +363,7 @@ def loads(
             fix_imports=fix_imports,
             encoding=encoding,
             errors=errors,
+            buffers=buffers,
             set_default_extension=False,
             arcname=arcname,
             **kwargs

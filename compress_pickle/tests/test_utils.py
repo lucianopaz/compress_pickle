@@ -197,7 +197,7 @@ def test_preprocess_path_on_file_types(preprocess_path_on_file_types_and_compres
                 )
 
 
-@pytest.mark.usefixture("file_types")
+@pytest.mark.usefixtures("file_types")
 def test_preprocess_cannot_infer_on_filetypes(preprocess_path_on_file_types):
     path, mode = preprocess_path_on_file_types
     with path:
@@ -205,7 +205,7 @@ def test_preprocess_cannot_infer_on_filetypes(preprocess_path_on_file_types):
             preprocess_path(path=path, mode=mode, compression="infer")
 
 
-@pytest.mark.usefixture("wrong_compressions")
+@pytest.mark.usefixtures("wrong_compressions")
 def test_open_stream_unhandled_compression(wrong_compressions):
     with pytest.raises(ValueError):
         open_compression_stream("default", wrong_compressions, "default", "w")
