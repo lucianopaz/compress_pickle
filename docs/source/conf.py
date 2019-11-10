@@ -215,5 +215,6 @@ nitpick_ignore = [
     ('py:class', 'int'),
     ('py:class', 'callable'),
     ('py:class', 'iterable'),
+    ('py:class', 'PathLike'),
     ('py:obj', 'None'),
 ]

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import pathlib
 import codecs
 import sys
 import warnings
@@ -51,7 +52,11 @@ _DEFAULT_COMPRESSION_READ_MODES = {
 }
 
 
-PATH_TYPES = (str, bytes)
+if hasattr(os, "PathLike"):
+    PathLike = os.PathLike
+else:
+    PathLike = pathlib.PurePath
+PATH_TYPES = (str, bytes, PathLike)
 
 
 def _stringyfy_path(path):
@@ -67,6 +72,8 @@ def _stringyfy_path(path):
         )
     if isinstance(path, bytes):
         path = codecs.decode(path, "utf-8")
+    else:
+        path = str(path)
     return path
 
 
@@ -279,10 +286,10 @@ def preprocess_path(
 
     Parameters
     ----------
-    path: str, bytes or iostream
-        A path-like object (``str``, ``bytes``) or a file-like object (we call it
-        iostream but it is defined by the ``io`` module, for example
-        ``io.BytesIO`` or other types of streams).
+    path: str, bytes, PathLike or iostream
+        A path-like object (``str``, ``bytes``, ``os.PathLike``) or a file-like
+        object (we call it iostream but it is defined by the ``io`` module, for
+        example ``io.BytesIO`` or other types of streams).
     mode: str
         Mode with which to open the file-like stream. If "read", the default
         read mode is automatically assigned from
