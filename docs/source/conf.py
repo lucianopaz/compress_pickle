@@ -213,5 +213,7 @@ nitpick_ignore = [
     ('py:class', 'any'),
     ('py:class', 'bool'),
     ('py:class', 'int'),
+    ('py:class', 'callable'),
+    ('py:class', 'iterable'),
     ('py:obj', 'None'),
 ]
