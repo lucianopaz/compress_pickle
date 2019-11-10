@@ -175,7 +175,7 @@ def dump_load(file, random_message, file_compressions, set_default_extension):
         if set_default_extension:
             expected_file = set_default_extensions(file, inf_compress)
         else:
-            expected_file = file
+            expected_file = _stringyfy_path(file)
     else:
         expected_file = None
     yield (
