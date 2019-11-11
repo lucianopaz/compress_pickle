@@ -134,7 +134,18 @@ We can check that the compressed files actually take up less disk space with sta
     >>> os.path.getsize(fname3)
     232
 
-``compress_pickle`` also provides the ``dumps`` and ``loads`` functions that serializes and compresses an object and returns the resulting ``bytes`` or unserializes and uncompresses an object from a given ``bytes`` object.
+``compress_pickle`` also provides the ``dumps`` and ``loads`` functions that serializes and compresses an object and returns the resulting ``bytes`` or unserializes and uncompresses an object from a given ``bytes`` object. For example
+
+.. code-block:: python
+
+    >>> from compress_pickle import dumps, loads
+    >>> obj = " ".join(["content"] * 100)
+    >>> b = dumps(obj, compression="gzip")
+    >>> b
+    b'\x1f\x8b\x08\x00H;\xc9]\x02\xffj`\x99\x1a\xcc\x00\x01=\xfe\xc9\xf9y%\xa9y%\nT\xa2\xa7\xe8\x01\x00\x00\x00\xff\xff\x03\x00\x9e\x98\xd6$^\x00\x00\x00'
+    >>> loads(b)
+    'content content content content content content content content content content'
+
 
 For more information please refer to the :doc:`API <api>`.
 
