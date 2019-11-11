@@ -143,7 +143,7 @@ We can check that the compressed files actually take up less disk space with sta
     >>> b = dumps(obj, compression="gzip")
     >>> b
     b'\x1f\x8b\x08\x00H;\xc9]\x02\xffj`\x99\x1a\xcc\x00\x01=\xfe\xc9\xf9y%\xa9y%\nT\xa2\xa7\xe8\x01\x00\x00\x00\xff\xff\x03\x00\x9e\x98\xd6$^\x00\x00\x00'
-    >>> loads(b)
+    >>> loads(b, compression="gzip")
     'content content content content content content content content content content'
 
 
