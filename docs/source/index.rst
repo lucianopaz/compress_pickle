@@ -20,9 +20,6 @@ Welcome to compress_pickle's documentation!
 .. image:: https://codecov.io/gh/lucianopaz/compress_pickle/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/lucianopaz/compress_pickle
 
-.. image:: https://coveralls.io/repos/github/lucianopaz/compress_pickle/badge.svg?branch=master
-    :target: https://coveralls.io/github/lucianopaz/compress_pickle?branch=master
-
 .. image:: https://img.shields.io/pypi/v/compress_pickle.svg
     :target: https://pypi.org/project/compress-pickle/
 
@@ -30,7 +27,7 @@ Welcome to compress_pickle's documentation!
     :target: https://opensource.org/licenses/MIT
 
 
-The standard `pickle package <https://docs.python.org/3/library/pickle.html>`_ provides an excellent default tool for serializing arbitrary python objects and storing them to disk. Standard python also includes broad set of `data compression packages <https://docs.python.org/3/library/archiving.html>`_. ``compress_pickle`` provides an interface to the standard ``pickle.dump`` and ``pickle.load`` functions, but wraps them in order to direct the serialized data through one of the standard compression packages. This way you can seemlessly serialize data to disk in a compressed way.
+The standard `pickle package <https://docs.python.org/3/library/pickle.html>`_ provides an excellent default tool for serializing arbitrary python objects and storing them to disk. Standard python also includes broad set of `data compression packages <https://docs.python.org/3/library/archiving.html>`_. ``compress_pickle`` provides an interface to the standard ``pickle.dump``, ``pickle.load``, ``pickle.dumps`` and ``pickle.loads`` functions, but wraps them in order to direct the serialized data through one of the standard compression packages. This way you can seemlessly serialize data to disk or to any file-like object in a compressed way.
 
 ``compress_pickle`` is `built and tested on python >= 3.5 <https://dev.azure.com/lucianopazneuro/lucianopazneuro/_build/latest?definitionId=1&branchName=master>`_, and Ubuntu, macOs and Windows.
 
@@ -64,7 +61,7 @@ Installation
 Usage
 *****
 
-``compress_pickle`` provides two main functions: ``dump`` and ``load``. ``dump`` serializes a python object that can be pickled and saves it to disk. Depending on the supplied path's extension, the data will be pickled with or without compression. For example, to store a regular dictionary to disk without compression, one can simply provide the ``.pkl`` extension or specify that the compression protocol must be ``None`` or ``"pickle"``:
+``compress_pickle`` provides two main functions: ``dump`` and ``load``. ``dump`` serializes a python object that can be pickled and writes it to a path or any file-like object. ``dump`` and ``load`` handle the opening a file object from a specified ``str``, ``bytes`` or ``os.PathLike`` path. The desired compression level can be inferred from the supplied path's extension. For example, to store a regular dictionary to disk without compression, one can simply provide the ``.pkl`` extension or specify that the compression protocol must be ``None`` or ``"pickle"``:
 
 .. code-block:: python
 
@@ -73,7 +70,27 @@ Usage
     >>> fname1 = "uncompressed_data.pkl"  # We can save to an uncompressed pickle file
     >>> dump(obj, fname1)
 
-The ``load`` function uncompresses and loads the serialized objects from a specified path. The compression protocol can be inferred from the path's extension, or a compression protocol can be speficied. Note that by default, ``load`` and ``dump`` set the compression protocol's default extension to the supplied path before loading or saving. This behavior can be changed with the ``set_default_extension`` parameter.
+If instead of writing to a path in the disk, one wants to write to a file-like obejct, for example ``io.BytesIO``, we do it like this:
+
+.. code-block:: python
+
+    >>> from compress_pickle import dump, load
+    >>> import io
+    >>> obj = dict(key1=[None, 1, 2, "3"] * 10000, key2="Test key")
+    >>> stream = io.BytesIO()  # Users must close the stream manually after they finish using it.
+    >>> dump(obj, stream)
+
+or to an open file stream:
+
+.. code-block:: python
+
+    >>> from compress_pickle import dump, load
+    >>> obj = dict(key1=[None, 1, 2, "3"] * 10000, key2="Test key")
+    >>> with open("file", "wb") as f:
+    >>>     dump(obj, f, compression=None, set_default_compression=False)
+
+
+The ``load`` function uncompresses and loads the serialized objects from a specified path or file-like object. The compression protocol can be inferred from the path's extension, or a compression protocol can be speficied. Note that by default, ``load`` and ``dump`` set the compression protocol's default extension to the supplied path before loading or saving. This behavior can be changed with the ``set_default_extension`` parameter.
 
 .. code-block:: python
 
@@ -116,6 +133,8 @@ We can check that the compressed files actually take up less disk space with sta
     285
     >>> os.path.getsize(fname3)
     232
+
+``compress_pickle`` also provides the ``dumps`` and ``loads`` functions that serializes and compresses an object and returns the resulting ``bytes`` or unserializes and uncompresses an object from a given ``bytes`` object.
 
 For more information please refer to the :doc:`API <api>`.
 

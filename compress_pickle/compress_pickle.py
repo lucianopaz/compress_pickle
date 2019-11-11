@@ -78,6 +78,10 @@ def dump(
     To see the mapping between known compression protocols and filename
     extensions, call the function
     :func:`~compress_pickle.utils.get_default_compression_mapping`.
+    If the supplied ``path`` is a file-like object, ``load`` does not close it
+    before exiting. The users must handle the closing on their own. If the
+    supplied ``path`` is a path-like object, ``load`` opens and then closes
+    the file automatically
     """
     version_dependent_kwargs = dict()
     if sys.version_info >= (3, 8):
@@ -256,6 +260,10 @@ def load(
     To see the mapping between known compression protocols and filename
     extensions, call the function
     :func:`~compress_pickle.utils.get_default_compression_mapping`.
+    If the supplied ``path`` is a file-like object, ``load`` does not close it
+    before exiting. The users must handle the closing on their own. If the
+    supplied ``path`` is a path-like object, ``load`` opens and then closes
+    the file automatically.
     """
     version_dependent_kwargs = dict()
     if sys.version_info >= (3, 8):
