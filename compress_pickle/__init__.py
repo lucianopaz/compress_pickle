@@ -11,4 +11,4 @@ from .utils import (
     open_compression_stream,
 )
 
-__version__ = "1.1.0rc"
+__version__ = "1.1.0"
