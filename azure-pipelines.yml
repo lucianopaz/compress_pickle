@@ -91,26 +91,10 @@ stages:
         reportDirectory: "$(System.DefaultWorkingDirectory)/**/htmlcov"
 
     - bash: |
-        export CI_BUILD_URL="$(Build.Repository.Uri)"
-        export SERVICE="azure_pipelines"
-        if [ -z $SYSTEM_PULLREQUEST_PULLREQUESTID ]
-        then
-          export VCS_PULL_REQUEST=$SYSTEM_PULLREQUEST_PULLREQUESTID
-        fi
-        pip install codecov
-        codecov \
-          --required \
-          --token $CODECOV_TOKEN \
-          --commit $BUILD_SOURCEVERSION \
-          --prefix $BUILD_REPOSITORY_URI \
-          --branch $BUILD_SOURCEBRANCHNAME \
-          --build $BUILD_BUILDID \
-          --tag $BUILD_SOURCEBRANCH \
-          --root $BUILD_SOURCESDIRECTORY \
-          --slug $BUILD_REPOSITORY_NAME \
-          --env $BUILD_DEFINITIONNAME \
-          --env $SERVICE
-      displayName: "Publish Code Coverage to codecov"
+        bash <(curl -s https://codecov.io/bash)
+        -P "${SYSTEM_PULLREQUEST_PULLREQUESTNUMBER:-}"
+        -B "${SYSTEM_PULLREQUEST_SOURCEBRANCH:-${BUILD_SOURCEBRANCH}}"
+      displayName: publish code coverage to CodeCov
 
 
 - stage: Deployment
