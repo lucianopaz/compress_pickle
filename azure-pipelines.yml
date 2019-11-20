@@ -93,13 +93,17 @@ stages:
     - bash: |
         export CI_BUILD_URL="$(Build.Repository.Uri)"
         export SERVICE="azure_pipelines"
+        if [ -z $(System.PullRequest.PullRequestId) ]
+        then
+          export VCS_PULL_REQUEST=$(System.PullRequest.PullRequestId)
+        fi
+        pip install codecov
         codecov \
           --required \
           --commit $(Build.SourceVersion) \
           --prefix $(Build.Repository.Uri) \
           --branch $(Build.SourceBranchName) \
           --build $(Build.BuildId) \
-          --pr $(System.PullRequest.PullRequestNumber) \
           --tag $(Build.SourceBranch) \
           --root $(Build.SourcesDirectory) \
           --slug $(Build.Repository.Name) \
