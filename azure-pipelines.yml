@@ -93,7 +93,7 @@ stages:
     - bash: |
         bash <(curl -s https://codecov.io/bash)
       displayName: publish code coverage to CodeCov
-      condition: not(eq(variables["imageName"], 'windows-latest'))
+      condition: not(eq($(imageName), 'windows-latest'))
 
 
 - stage: Deployment
