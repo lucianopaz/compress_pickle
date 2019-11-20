@@ -90,6 +90,24 @@ stages:
         summaryFileLocation: "$(System.DefaultWorkingDirectory)/**/coverage.xml"
         reportDirectory: "$(System.DefaultWorkingDirectory)/**/htmlcov"
 
+    - bash: |
+        export CI_BUILD_URL="$(Build.Repository.Uri)"
+        export SERVICE="azure_pipelines"
+        codecov \
+          --required \
+          --commit $(Build.SourceVersion) \
+          --prefix $(Build.Repository.Uri) \
+          --branch $(Build.SourceBranchName) \
+          --build $(Build.BuildId) \
+          --pr $(System.PullRequest.PullRequestNumber) \
+          --tag $(Build.SourceBranch) \
+          --root $(Build.SourcesDirectory) \
+          --slug $(Build.Repository.Name) \
+          --env $(Build.DefinitionName) \
+          --env $SERVICE
+      displayName: "Publish Code Coverage to codecov"
+
+
 - stage: Deployment
   jobs:
   - job: deploy_documentation
