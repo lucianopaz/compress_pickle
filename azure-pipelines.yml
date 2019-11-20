@@ -90,9 +90,10 @@ stages:
         summaryFileLocation: "$(System.DefaultWorkingDirectory)/**/coverage.xml"
         reportDirectory: "$(System.DefaultWorkingDirectory)/**/htmlcov"
 
-    - bash: >
+    - bash: |
         bash <(curl -s https://codecov.io/bash)
       displayName: publish code coverage to CodeCov
+      condition: not(eq(variables["imageName"], 'windows-latest'))
 
 
 - stage: Deployment
