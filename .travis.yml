@@ -8,11 +8,9 @@ cache:
 
 before_install:
 - ". ./scripts/install_miniconda.sh"
-- export COVERALLS_PARALLEL=true
 
 install:
 - ". ./scripts/create_testenv.sh"
-- pip install coveralls
 - pip install codecov
 - conda list && pip freeze
 
@@ -30,5 +28,4 @@ stages:
 - test
 
 after_success:
-- coveralls
 - codecov

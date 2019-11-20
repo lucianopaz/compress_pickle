@@ -93,21 +93,22 @@ stages:
     - bash: |
         export CI_BUILD_URL="$(Build.Repository.Uri)"
         export SERVICE="azure_pipelines"
-        if [ -z $(System.PullRequest.PullRequestId) ]
+        if [ -z $SYSTEM_PULLREQUEST_PULLREQUESTID ]
         then
-          export VCS_PULL_REQUEST=$(System.PullRequest.PullRequestId)
+          export VCS_PULL_REQUEST=$SYSTEM_PULLREQUEST_PULLREQUESTID
         fi
         pip install codecov
         codecov \
           --required \
-          --commit $(Build.SourceVersion) \
-          --prefix $(Build.Repository.Uri) \
-          --branch $(Build.SourceBranchName) \
-          --build $(Build.BuildId) \
-          --tag $(Build.SourceBranch) \
-          --root $(Build.SourcesDirectory) \
-          --slug $(Build.Repository.Name) \
-          --env $(Build.DefinitionName) \
+          --token $CODECOV_TOKEN \
+          --commit $BUILD_SOURCEVERSION \
+          --prefix $BUILD_REPOSITORY_URI \
+          --branch $BUILD_SOURCEBRANCHNAME \
+          --build $BUILD_BUILDID \
+          --tag $BUILD_SOURCEBRANCH \
+          --root $BUILD_SOURCESDIRECTORY \
+          --slug $BUILD_REPOSITORY_NAME \
+          --env $BUILD_DEFINITIONNAME \
           --env $SERVICE
       displayName: "Publish Code Coverage to codecov"
 
