@@ -90,10 +90,8 @@ stages:
         summaryFileLocation: "$(System.DefaultWorkingDirectory)/**/coverage.xml"
         reportDirectory: "$(System.DefaultWorkingDirectory)/**/htmlcov"
 
-    - bash: |
+    - bash: >
         bash <(curl -s https://codecov.io/bash)
-        -P "${SYSTEM_PULLREQUEST_PULLREQUESTNUMBER:-}"
-        -B "${SYSTEM_PULLREQUEST_SOURCEBRANCH:-${BUILD_SOURCEBRANCH}}"
       displayName: publish code coverage to CodeCov
 
 
