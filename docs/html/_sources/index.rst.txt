@@ -14,9 +14,6 @@ Welcome to compress_pickle's documentation!
 .. image:: https://dev.azure.com/lucianopazneuro/lucianopazneuro/_apis/build/status/lucianopaz.compress_pickle?branchName=master
     :target: https://dev.azure.com/lucianopazneuro/lucianopazneuro/_build/latest?definitionId=1&branchName=master
 
-.. image:: https://travis-ci.org/lucianopaz/compress_pickle.svg?branch=master
-    :target: https://travis-ci.org/lucianopaz/compress_pickle
-
 .. image:: https://codecov.io/gh/lucianopaz/compress_pickle/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/lucianopaz/compress_pickle
 
