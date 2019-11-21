@@ -97,7 +97,7 @@ stages:
 
     - script: |
         choco install codecov
-        codecov.exe
+        codecov.exe -f "%SYSTEM_DEFAULTWORKINGDIRECTORY%\coverage.xml"
       displayName: publish code coverage to CodeCov on windows
       condition: startsWith(variables.imageName, 'windows')
 

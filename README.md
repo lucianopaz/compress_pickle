@@ -3,7 +3,6 @@
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 [![Build Status](https://dev.azure.com/lucianopazneuro/lucianopazneuro/_apis/build/status/lucianopaz.compress_pickle?branchName=master)](https://dev.azure.com/lucianopazneuro/lucianopazneuro/_build/latest?definitionId=1&branchName=master)
-[![Build Status](https://travis-ci.org/lucianopaz/compress_pickle.svg?branch=master)](https://travis-ci.org/lucianopaz/compress_pickle)
 [![Coverage Status](https://codecov.io/gh/lucianopaz/compress_pickle/branch/master/graph/badge.svg)](https://codecov.io/gh/lucianopaz/compress_pickle)
 [![PyPI](https://img.shields.io/pypi/v/compress_pickle.svg)](https://pypi.org/project/compress-pickle/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](https://opensource.org/licenses/MIT)
