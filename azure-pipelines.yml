@@ -95,6 +95,12 @@ stages:
       displayName: publish code coverage to CodeCov
       condition: not(startsWith(variables.imageName, 'windows'))
 
+    - script: |
+        choco install codecov
+        codecov.exe
+      displayName: publish code coverage to CodeCov on windows
+      condition: startsWith(variables.imageName, 'windows')
+
 
 - stage: Deployment
   jobs:
