@@ -7,6 +7,7 @@ import warnings
 import gzip
 import bz2
 import lzma
+import lz4, lz4.frame
 import zipfile
 
 
@@ -30,6 +31,7 @@ _DEFAULT_EXTENSION_MAP = {
     "gzip": ".gz",
     "bz2": ".bz",
     "lzma": ".lzma",
+    "lz4": ".lz4",
     "zipfile": ".zip",
 }
 
@@ -39,6 +41,7 @@ _DEFAULT_COMPRESSION_WRITE_MODES = {
     "gzip": r"wb",
     "bz2": r"wb",
     "lzma": r"wb",
+    "lz4": r"wb",
     "zipfile": r"w",
 }
 
@@ -48,6 +51,7 @@ _DEFAULT_COMPRESSION_READ_MODES = {
     "gzip": r"rb",
     "bz2": r"rb",
     "lzma": r"rb",
+    "lz4": r"rb",
     "zipfile": r"r",
 }
 
@@ -437,6 +441,8 @@ def open_compression_stream(path, compression, stream, mode, arcname=None, **kwa
         io_stream = bz2.open(stream, mode=mode, **kwargs)
     elif compression == "lzma":
         io_stream = lzma.open(stream, mode=mode, **kwargs)
+    elif compression == 'lz4':
+        io_stream = lz4.frame.open(stream, mode=mode, **kwargs)
     elif compression == "zipfile":
         pwd = kwargs.pop("pwd", None)
         arch = zipfile.ZipFile(stream, mode=mode, **kwargs)
