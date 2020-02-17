@@ -441,7 +441,7 @@ def open_compression_stream(path, compression, stream, mode, arcname=None, **kwa
         io_stream = bz2.open(stream, mode=mode, **kwargs)
     elif compression == "lzma":
         io_stream = lzma.open(stream, mode=mode, **kwargs)
-    elif compression == 'lz4':
+    elif compression == "lz4":
         io_stream = lz4.frame.open(stream, mode=mode, **kwargs)
     elif compression == "zipfile":
         pwd = kwargs.pop("pwd", None)
