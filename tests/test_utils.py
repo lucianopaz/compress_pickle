@@ -212,3 +212,11 @@ def test_preprocess_cannot_infer_on_filetypes(preprocess_path_on_file_types):
 def test_open_stream_unhandled_compression(wrong_compressions):
     with pytest.raises(ValueError):
         open_compression_stream("default", wrong_compressions, "default", "w")
+
+
+@pytest.mark.usefixtures("hijack_lz4")
+def test_lz4_available(hijack_lz4):
+    with pytest.raises(RuntimeError):
+        open_compression_stream(
+            "default", compression="lz4", stream="default", mode="r"
+        )

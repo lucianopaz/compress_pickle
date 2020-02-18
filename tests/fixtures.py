@@ -1,6 +1,7 @@
 import pytest
 import os
 import io
+import sys
 import codecs
 import itertools
 import pathlib
@@ -12,6 +13,7 @@ from compress_pickle import (
     get_compression_write_mode,
 )
 from compress_pickle.utils import _stringyfy_path
+import compress_pickle
 
 
 COMPRESSION_NAMES = [None, "pickle", "gzip", "bz2", "lzma", "zipfile", "lz4"]
@@ -198,3 +200,11 @@ def simple_dump_and_remove(random_message, compressions):
     path = "test_dump_vs_dumps_{}".format(compressions)
     yield (path, compressions, random_message)
     os.remove(path)
+
+
+@pytest.fixture(scope="function")
+def hijack_lz4():
+    old_lz4 = sys.modules["lz4"]
+    sys.modules["lz4"] = None
+    yield
+    sys.modules["lz4"] = old_lz4

@@ -9,13 +9,6 @@ import bz2
 import lzma
 import zipfile
 
-try:
-    import lz4, lz4.frame
-
-    lz4_available = True
-except ImportError:
-    lz4_available = False
-
 
 __all__ = [
     "PATH_TYPES",
@@ -466,7 +459,9 @@ def open_compression_stream(path, compression, stream, mode, arcname=None, **kwa
         else:
             io_stream = arch.open(file_path, mode=mode, pwd=pwd)
     elif compression == "lz4":
-        if not lz4_available:
+        try:
+            import lz4.frame
+        except ImportError:
             raise RuntimeError(
                 "The lz4 compression protocol requires the lz4 package to be installed. "
                 "Please pip install lz4 and retry."

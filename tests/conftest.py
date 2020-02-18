@@ -14,4 +14,5 @@ from fixtures import (
     preprocess_path_on_file_types_and_compressions,
     dump_load,
     simple_dump_and_remove,
+    hijack_lz4,
 )
