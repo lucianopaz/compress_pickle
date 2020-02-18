@@ -9,6 +9,13 @@ import bz2
 import lzma
 import zipfile
 
+try:
+    import lz4, lz4.frame
+
+    lz4_available = True
+except ImportError:
+    lz4_available = False
+
 
 __all__ = [
     "PATH_TYPES",
@@ -31,6 +38,7 @@ _DEFAULT_EXTENSION_MAP = {
     "bz2": ".bz",
     "lzma": ".lzma",
     "zipfile": ".zip",
+    "lz4": ".lz4",
 }
 
 _DEFAULT_COMPRESSION_WRITE_MODES = {
@@ -40,6 +48,7 @@ _DEFAULT_COMPRESSION_WRITE_MODES = {
     "bz2": r"wb",
     "lzma": r"wb",
     "zipfile": r"w",
+    "lz4": r"wb",
 }
 
 _DEFAULT_COMPRESSION_READ_MODES = {
@@ -49,6 +58,7 @@ _DEFAULT_COMPRESSION_READ_MODES = {
     "bz2": r"rb",
     "lzma": r"rb",
     "zipfile": r"r",
+    "lz4": r"rb",
 }
 
 
@@ -455,6 +465,13 @@ def open_compression_stream(path, compression, stream, mode, arcname=None, **kwa
                 io_stream = arch.open(arcname, mode=mode, pwd=pwd)
         else:
             io_stream = arch.open(file_path, mode=mode, pwd=pwd)
+    elif compression == "lz4":
+        if not lz4_available:
+            raise RuntimeError(
+                "The lz4 compression protocol requires the lz4 package to be installed. "
+                "Please pip install lz4 and retry."
+            )
+        io_stream = lz4.frame.open(stream, mode=mode, **kwargs)
     else:
         raise ValueError(
             "Unsupported compression {}. Supported values are {}".format(

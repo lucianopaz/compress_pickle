@@ -18,6 +18,7 @@ from gzip import GzipFile
 from bz2 import BZ2File
 from lzma import LZMAFile
 from zipfile import ZipFile
+from lz4.frame import LZ4FrameFile
 
 
 stream_class_map = {
@@ -27,6 +28,7 @@ stream_class_map = {
     "bz2": BZ2File,
     "lzma": LZMAFile,
     "zipfile": ZipFile,
+    "lz4": LZ4FrameFile,
 }
 
 
@@ -113,6 +115,7 @@ def test_infer_compression_from_filename(file, unhandled_extensions):
             "bz": "bz2",
             "lzma": "lzma",
             "zip": "zipfile",
+            "lz4": "lz4",
         }[_file.split(".")[1]]
         assert (
             infer_compression_from_filename(

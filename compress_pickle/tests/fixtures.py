@@ -14,7 +14,7 @@ from compress_pickle import (
 from compress_pickle.utils import _stringyfy_path
 
 
-COMPRESSION_NAMES = [None, "pickle", "gzip", "bz2", "lzma", "zipfile"]
+COMPRESSION_NAMES = [None, "pickle", "gzip", "bz2", "lzma", "zipfile", "lz4"]
 UNHANDLED_COMPRESSIONS = ["gzip2", "tar", "zip", 3, [1, 3]]
 FILENAMES = [
     "test_blabla_{}",
@@ -23,6 +23,7 @@ FILENAMES = [
     "test_blabla_{}.bz",
     "test_blabla_{}.lzma",
     "test_blabla_{}.zip",
+    "test_blabla_{}.lz4",
     "test_blabla_{}.unknown",
     b"test_blabla_{}",
     b"test_blabla_{}.pkl",
@@ -30,6 +31,7 @@ FILENAMES = [
     b"test_blabla_{}.bz",
     b"test_blabla_{}.lzma",
     b"test_blabla_{}.zip",
+    b"test_blabla_{}.lz4",
     b"test_blabla_{}.unknown",
     pathlib.Path("test_blabla_{}"),
     pathlib.Path("test_blabla_{}.pkl"),
@@ -37,10 +39,11 @@ FILENAMES = [
     pathlib.Path("test_blabla_{}.bz"),
     pathlib.Path("test_blabla_{}.lzma"),
     pathlib.Path("test_blabla_{}.zip"),
+    pathlib.Path("test_blabla_{}.lz4"),
     pathlib.Path("test_blabla_{}.unknown"),
 ]
 UNHANDLED_EXTENSIONS = ["ignore", "warn", "raise"]
-FILE_COMPRESSIONS = [None, "pickle", "gzip", "bz2", "lzma", "zipfile", "infer"]
+FILE_COMPRESSIONS = [None, "pickle", "gzip", "bz2", "lzma", "zipfile", "lz4", "infer"]
 FILE_TYPES = ["file", io.BytesIO, io.BufferedWriter, io.BufferedReader]
 
 
