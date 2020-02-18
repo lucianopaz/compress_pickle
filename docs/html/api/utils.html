@@ -10,14 +10,29 @@
     <link rel="stylesheet" href="../_static/cloud.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noticia+Text|Open+Sans|Droid+Sans+Mono" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
-    <script type="text/javascript" src="../_static/jquery.cookie.js"></script>
-    <script type="text/javascript" src="../_static/cloud.base.js"></script>
-    <script type="text/javascript" src="../_static/cloud.js"></script>
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+
+    
+    
+     
+        <script src="../_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="../_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="../_static/cloud.js"></script>
+    
+
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="prev" title="compress_pickle" href="compress_pickle.html" /> 
@@ -89,7 +104,7 @@
 </table>
 <span class="target" id="module-compress_pickle.utils"></span><dl class="function">
 <dt id="compress_pickle.utils.get_known_compressions">
-<code class="sig-prename descclassname">compress_pickle.utils.</code><code class="sig-name descname">get_known_compressions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/utils.py#L80-L88"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.utils.get_known_compressions" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">compress_pickle.utils.</code><code class="sig-name descname">get_known_compressions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/utils.py#L83-L91"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.utils.get_known_compressions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a list of known compression protocols</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -103,7 +118,7 @@
 
 <dl class="function">
 <dt id="compress_pickle.utils.validate_compression">
-<code class="sig-prename descclassname">compress_pickle.utils.</code><code class="sig-name descname">validate_compression</code><span class="sig-paren">(</span><em class="sig-param">compression</em>, <em class="sig-param">infer_is_valid=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/utils.py#L91-L117"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.utils.validate_compression" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">compress_pickle.utils.</code><code class="sig-name descname">validate_compression</code><span class="sig-paren">(</span><em class="sig-param">compression</em>, <em class="sig-param">infer_is_valid=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/utils.py#L94-L120"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.utils.validate_compression" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the supplied <code class="docutils literal notranslate"><span class="pre">compression</span></code> protocol is supported. If it is
 not supported, a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> is raised.</p>
 <dl class="field-list simple">
@@ -121,7 +136,7 @@ protocol.</p></li>
 
 <dl class="function">
 <dt id="compress_pickle.utils.get_default_compression_mapping">
-<code class="sig-prename descclassname">compress_pickle.utils.</code><code class="sig-name descname">get_default_compression_mapping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/utils.py#L120-L130"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.utils.get_default_compression_mapping" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">compress_pickle.utils.</code><code class="sig-name descname">get_default_compression_mapping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/utils.py#L123-L133"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.utils.get_default_compression_mapping" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a mapping from known compression protocols to the default filename
 extensions.</p>
 <dl class="field-list simple">
@@ -137,7 +152,7 @@ file extension.</p>
 
 <dl class="function">
 <dt id="compress_pickle.utils.get_compression_write_mode">
-<code class="sig-prename descclassname">compress_pickle.utils.</code><code class="sig-name descname">get_compression_write_mode</code><span class="sig-paren">(</span><em class="sig-param">compression</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/utils.py#L133-L151"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.utils.get_compression_write_mode" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">compress_pickle.utils.</code><code class="sig-name descname">get_compression_write_mode</code><span class="sig-paren">(</span><em class="sig-param">compression</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/utils.py#L136-L154"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.utils.get_compression_write_mode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the compression’s default mode for openning the file buffer for
 writing.</p>
 <dl class="field-list simple">
@@ -154,7 +169,7 @@ mode used to open files for
 
 <dl class="function">
 <dt id="compress_pickle.utils.get_compression_read_mode">
-<code class="sig-prename descclassname">compress_pickle.utils.</code><code class="sig-name descname">get_compression_read_mode</code><span class="sig-paren">(</span><em class="sig-param">compression</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/utils.py#L154-L172"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.utils.get_compression_read_mode" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">compress_pickle.utils.</code><code class="sig-name descname">get_compression_read_mode</code><span class="sig-paren">(</span><em class="sig-param">compression</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/utils.py#L157-L175"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.utils.get_compression_read_mode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the compression’s default mode for openning the file buffer for
 reading.</p>
 <dl class="field-list simple">
@@ -171,7 +186,7 @@ mode used to open files for
 
 <dl class="function">
 <dt id="compress_pickle.utils.set_default_extensions">
-<code class="sig-prename descclassname">compress_pickle.utils.</code><code class="sig-name descname">set_default_extensions</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">compression=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/utils.py#L175-L212"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.utils.set_default_extensions" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">compress_pickle.utils.</code><code class="sig-name descname">set_default_extensions</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">compression=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/utils.py#L178-L215"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.utils.set_default_extensions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the filename’s extension to the default that corresponds to
 a given compression protocol. If the filename already has a known extension
 (a default extension of a known compression protocol) it is removed
@@ -200,7 +215,7 @@ extensions, call the function
 
 <dl class="function">
 <dt id="compress_pickle.utils.infer_compression_from_filename">
-<code class="sig-prename descclassname">compress_pickle.utils.</code><code class="sig-name descname">infer_compression_from_filename</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">unhandled_extensions='raise'</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/utils.py#L215-L267"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.utils.infer_compression_from_filename" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">compress_pickle.utils.</code><code class="sig-name descname">infer_compression_from_filename</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">unhandled_extensions='raise'</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/utils.py#L218-L270"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.utils.infer_compression_from_filename" title="Permalink to this definition">¶</a></dt>
 <dd><p>Infer the compression protocol by the filename’s extension. This
 looks-up the default compression to extension mapping given by
 <a class="reference internal" href="#compress_pickle.utils.get_default_compression_mapping" title="compress_pickle.utils.get_default_compression_mapping"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_default_compression_mapping()</span></code></a>.</p>
@@ -228,7 +243,7 @@ extensions, call the function
 
 <dl class="function">
 <dt id="compress_pickle.utils.preprocess_path">
-<code class="sig-prename descclassname">compress_pickle.utils.</code><code class="sig-name descname">preprocess_path</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">mode</em>, <em class="sig-param">compression='infer'</em>, <em class="sig-param">set_default_extension=True</em>, <em class="sig-param">unhandled_extensions='raise'</em>, <em class="sig-param">arcname=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/utils.py#L270-L374"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.utils.preprocess_path" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">compress_pickle.utils.</code><code class="sig-name descname">preprocess_path</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">mode</em>, <em class="sig-param">compression='infer'</em>, <em class="sig-param">set_default_extension=True</em>, <em class="sig-param">unhandled_extensions='raise'</em>, <em class="sig-param">arcname=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/utils.py#L273-L377"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.utils.preprocess_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process the supplied path to control if it is a path-like object (str,
 bytes) or a file-like object (io.BytesIO or other types of streams). If it
 is path-like, the compression can be inferred and the default extension can
@@ -293,7 +308,7 @@ by the calling function after reading/writing or not.</p></li>
 
 <dl class="function">
 <dt id="compress_pickle.utils.open_compression_stream">
-<code class="sig-prename descclassname">compress_pickle.utils.</code><code class="sig-name descname">open_compression_stream</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">compression</em>, <em class="sig-param">stream</em>, <em class="sig-param">mode</em>, <em class="sig-param">arcname=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/utils.py#L377-L464"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.utils.open_compression_stream" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">compress_pickle.utils.</code><code class="sig-name descname">open_compression_stream</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">compression</em>, <em class="sig-param">stream</em>, <em class="sig-param">mode</em>, <em class="sig-param">arcname=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/utils.py#L380-L476"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.utils.open_compression_stream" title="Permalink to this definition">¶</a></dt>
 <dd><p>Open the file-like stream that will be used to <code class="docutils literal notranslate"><span class="pre">pickle.dump</span></code> and
 <code class="docutils literal notranslate"><span class="pre">pickle.load</span></code>. This stream is wraps a different class depending on the
 compression protocol.</p>
@@ -370,7 +385,7 @@ by the calling function after reading/writing or not.</p></li>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
     
@@ -415,7 +430,7 @@ by the calling function after reading/writing or not.</p></li>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, Luciano Paz.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>
