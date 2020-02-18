@@ -53,7 +53,7 @@ stages:
         then
           python -m pip install -r requirements-dev.txt
         fi
-        python -m pip install .
+        python -m pip install .[full]
       displayName: 'Install dependencies'
 
     - script: |
@@ -73,7 +73,7 @@ stages:
 
     - script: |
         pip install pytest pytest-azurepipelines pytest-cov
-        python -m pytest -v --cov compress_pickle --junitxml=junit/test-results.xml --cov-report xml --cov-report term --cov-report html .
+        python -m pytest -v --cov compress_pickle --doctest-modules --junitxml=junit/test-results.xml --cov-report xml --cov-report term --cov-report html compress_pickle/ tests/
       condition: variables['test.unittest']
       displayName: 'pytest'
 

@@ -17,6 +17,13 @@ AUTHOR_EMAIL = "luciano.paz.neuro@gmail.com"
 URL = "https://github.com/lucianopaz/compress_pickle"
 
 
+lz4_requires = ["lz4"]
+extras_require = {
+    "lz4": lz4_requires,
+    "full": lz4_requires,
+}
+
+
 def get_requirements():
     with codecs.open(REQUIREMENTS_FILE) as buff:
         return buff.read().splitlines()
@@ -50,6 +57,7 @@ if __name__ == "__main__":
         long_description=get_long_description(),
         long_description_content_type="text/markdown",
         include_package_data=True,
+        extras_require=extras_require,
         classifiers=[
             "Programming Language :: Python :: 3",
             "License :: OSI Approved :: MIT License",
