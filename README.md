@@ -17,4 +17,10 @@ Supported compression protocols:
 - [lzma](https://docs.python.org/3/library/lzma.html)
 - [zipfile](https://docs.python.org/3/library/zipfile.html) (Note that python3.6 and higher allows to build a file-like buffer into the zip archive, which allows us to use less memory than in python3.5)
 
+Furthermore, `compress_pickle` supports the [`lz4`](https://pypi.org/project/lz4/) compression protocol, that isn't part of the standard python compression packages. This is provided as an optional extra requirement that can be installed as:
+
+```bash
+pip install compress_pickle[lz4]
+```
+
 Please refer to the [package's documentation](https://lucianopaz.github.io/compress_pickle/html) for more information
