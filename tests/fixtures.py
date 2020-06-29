@@ -99,6 +99,11 @@ def file_types(request):
     return request.param
 
 
+@pytest.fixture(scope="module", params=[False, True], ids=str)
+def optimize(request):
+    return request.param
+
+
 @pytest.fixture(
     scope="module",
     params=itertools.product(FILE_COMPRESSIONS + UNHANDLED_COMPRESSIONS, [True, False]),
@@ -160,7 +165,7 @@ def preprocess_path_on_file_types_and_compressions(
 
 
 @pytest.fixture(scope="function")
-def dump_load(file, random_message, file_compressions, set_default_extension):
+def dump_load(file, random_message, file_compressions, set_default_extension, optimize):
     message = random_message
     _file = _stringyfy_path(file).format(file_compressions)
     if isinstance(file, bytes):
@@ -188,6 +193,7 @@ def dump_load(file, random_message, file_compressions, set_default_extension):
         file,
         file_compressions,
         set_default_extension,
+        optimize,
         expected_file,
         expected_fail,
     )
@@ -196,9 +202,9 @@ def dump_load(file, random_message, file_compressions, set_default_extension):
 
 
 @pytest.fixture(scope="function")
-def simple_dump_and_remove(random_message, compressions):
+def simple_dump_and_remove(random_message, compressions, optimize):
     path = "test_dump_vs_dumps_{}".format(compressions)
-    yield (path, compressions, random_message)
+    yield (path, compressions, random_message, optimize)
     os.remove(path)
 
 
