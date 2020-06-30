@@ -91,7 +91,7 @@ stages:
         reportDirectory: "$(System.DefaultWorkingDirectory)/**/htmlcov"
 
     - bash: |
-        bash <(curl -s https://codecov.io/bash)
+        bash <(curl -s https://codecov.io/bash) -n "$(NAME)" -C $BUILD_SOURCEVERSION
       displayName: publish code coverage to CodeCov
       condition: not(startsWith(variables.imageName, 'windows'))
 
