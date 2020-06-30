@@ -8,6 +8,7 @@ from fixtures import (
     set_default_extension,
     file_compressions,
     file_types,
+    optimize,
     compressions_to_validate,
     preprocess_path_on_path_types,
     preprocess_path_on_file_types,

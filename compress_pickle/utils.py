@@ -85,7 +85,7 @@ def get_known_compressions():
 
     Returns
     -------
-    compressions: list
+    compressions : list
         List of known compression protocol names.
     """
     return [c for c in _DEFAULT_EXTENSION_MAP]
@@ -97,10 +97,10 @@ def validate_compression(compression, infer_is_valid=True):
 
     Parameters
     ----------
-    compression: str or None
+    compression : str or None
         A compression protocol. To see the known compression protocolos, use
         :func:`~compress_pickle.utils.get_known_compressions`
-    infer_is_valid: bool
+    infer_is_valid : bool
         If ``True``, ``compression="infer"`` is considered a valid compression
         protocol. If ``False``, it is not accepted as a valid compression
         protocol.
@@ -126,7 +126,7 @@ def get_default_compression_mapping():
 
     Returns
     -------
-    compression_map: dict
+    compression_map : dict
         Dictionary that maps known compression protocol names to their default
         file extension.
     """
@@ -139,7 +139,7 @@ def get_compression_write_mode(compression):
 
     Returns
     -------
-    write_mode_map: dict
+    write_mode_map : dict
         Dictionary that maps known compression protocol names to default write
         mode used to open files for
         :func:`~compress_pickle.compress_pickle.dump`.
@@ -160,7 +160,7 @@ def get_compression_read_mode(compression):
 
     Returns
     -------
-    read_mode_map: dict
+    read_mode_map : dict
         Dictionary that maps known compression protocol names to default write
         mode used to open files for
         :func:`~compress_pickle.compress_pickle.load`.
@@ -183,15 +183,15 @@ def set_default_extensions(filename, compression=None):
 
     Parameters
     ----------
-    filename: str
+    filename : str
         The filename to which to set the default extension
-    compression: None or str (optional)
+    compression : None or str (optional)
         A compression protocol. To see the known compression protocolos, use
         :func:`~compress_pickle.utils.get_known_compressions`
 
     Returns
     -------
-    filename: str
+    filename : str
         The filename with the extension set to the default given by the
         compression protocol.
 
@@ -222,16 +222,16 @@ def infer_compression_from_filename(filename, unhandled_extensions="raise"):
 
     Parameters
     ----------
-    filename: str
+    filename : str
         The filename for which to infer the compression protocol
-    unhandled_extensions: str (optional)
+    unhandled_extensions : str (optional)
         Specify what to do if the extension is not understood. Can be
         "ignore" (do nothing), "warn" (issue warning) or "raise" (raise a
         ValueError).
 
     Returns
     -------
-    compression: str
+    compression : str
         The inferred compression protocol's string
 
     Notes
@@ -289,56 +289,56 @@ def preprocess_path(
 
     Parameters
     ----------
-    path: str, bytes, PathLike or iostream
+    path : str, bytes, PathLike or iostream
         A path-like object (``str``, ``bytes``, ``os.PathLike``) or a file-like
         object (we call it iostream but it is defined by the ``io`` module, for
         example ``io.BytesIO`` or other types of streams).
-    mode: str
+    mode : str
         Mode with which to open the file-like stream. If "read", the default
         read mode is automatically assigned from
         :func:`~compress_pickle.utils.get_compression_read_mode`. If "write, the
         default write mode is automatically assigned from
         :func:`~compress_pickle.utils.get_compression_write_mode`.
-    compression: str or None (optional)
+    compression : str or None (optional)
         A compression protocol. To see the known compression protocolos, use
         :func:`~compress_pickle.utils.get_known_compressions`.
-    set_default_extension: bool (optional)
+    set_default_extension : bool (optional)
         If ``True``, the default extension given the provided compression
         protocol is set to the supplied ``path``. Refer to
         :func:`~compress_pickle.utils.set_default_extensions` for
         more information.
-    unhandled_extensions: str (optional)
+    unhandled_extensions : str (optional)
         Specify what to do if the extension is not understood when inferring
         the compression protocol from the provided path-like object. Can be
         "ignore" (use ".pkl"), "warn" (issue warning and use ".pkl") or
         "raise" (raise a ``ValueError``).
-    arcname: None or str (optional)
+    arcname : None or str (optional)
         Only necessary if ``compression="zipfile"``. It is the name of the file
         contained in the zip archive which must be used.
         If ``None``, the ``arcname`` is assumed to be ``path``'s basename (when
         ``path`` is path-like), ``path.name`` (when ``path`` is file-like and
         it has a name attribute) or "default" when ``path`` has no ``name``
         attribute.
-    kwargs:
+    kwargs :
         Any extra keyword arguments are passed to the compressed file opening
         protocol. The only exception is the ``compression`` kwarg of the
         ``zipfile`` protocol. This kwarg is called ``zipfile_compression``.
 
     Returns
     -------
-    io_stream: iostream
+    io_stream : iostream
         The wrapping file-like stream that can be used with ``pickle.dump`` and
         ``pickle.load``
-    arch: None or iostream
+    arch : None or iostream
         If compression is ``"zipfile"``, ``arch`` is the ``ZipFile`` instance
         and ``io_stream`` points to the file from which to read or write inside
         the ``ZipFile`` archive.
-    arcname: str or None
+    arcname : str or None
         Only used on python3.5 for compatibility. Under python3.5, it is the
         name of the file inside the ``ZipFile`` archive from which to read or
         write. It is ``None`` on higher versions of python or when the
         compression isn't ``"zipfile"``.
-    must_close: bool
+    must_close : bool
         A boolean value that indicates whether the ``io_stream`` must be closed
         by the calling function after reading/writing or not.
 
@@ -384,42 +384,42 @@ def open_compression_stream(path, compression, stream, mode, arcname=None, **kwa
 
     Parameters
     ----------
-    path: str or iostream
+    path : str or iostream
         The ``path`` output from :func:`~compress_pickle.utils.preprocess_path`.
-    compression: str or None
+    compression : str or None
         A supported compression protocol. To see the known compression
         protocolos, use :func:`~compress_pickle.utils.get_known_compressions`.
-    stream: iostream
+    stream : iostream
         The ``stream`` output from
         :func:`~compress_pickle.utils.preprocess_path`.
-    arcname: None or str (optional)
+    arcname : None or str (optional)
         Only necessary if ``compression="zipfile"``. It is the name of the file
         contained in the zip archive which must be used.
         If ``None``, the ``arcname`` is assumed to be ``path``'s basename (when
         ``path`` is path-like), ``path.name`` (when ``path`` is file-like and
         it has a name attribute) or "default" when ``path`` has no ``name``
         attribute.
-    kwargs:
+    kwargs :
         Any extra keyword arguments are passed to the compressed file opening
         protocol. The only exception is the ``compression`` kwarg of the
         ``zipfile`` protocol. This kwarg is called ``zipfile_compression``.
 
     Returns
     -------
-    io_stream: iostream
+    io_stream : iostream
         The wrapping file-like stream that can be used with ``pickle.dump`` and
         ``pickle.load``
-    arch: None or iostream
+    arch : None or iostream
         If compression is ``"zipfile"``, ``arch`` is the ``ZipFile`` instance
         and ``io_stream`` points to the file from which to read or write inside
         the ``ZipFile`` archive.
-    arcname: str or None
+    arcname : str or None
         Only used when ``compression="zipfile"``. It is the name of the file
         inside the ``ZipFile`` archive from which to read or write. If an input
         ``arcname`` is supplied and is different than ``None``, it is returned
         here as is. Under other compression protocols, the inputed ``arcname``
         is returned, whether it is ``None`` or not.
-    must_close: bool
+    must_close : bool
         A boolean value that indicates whether the ``io_stream`` must be closed
         by the calling function after reading/writing or not.
 

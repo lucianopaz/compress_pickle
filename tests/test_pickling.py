@@ -34,7 +34,7 @@ def test_load_fails_on_unhandled_compression(wrong_compressions):
 
 @pytest.mark.usefixtures("simple_dump_and_remove")
 def test_dump_compresses(simple_dump_and_remove):
-    path, compression, message = simple_dump_and_remove
+    path, compression, message, optimize = simple_dump_and_remove
     kwargs = dict()
     if compression == "zipfile":
         kwargs = dict(zipfile_compression=zipfile.ZIP_DEFLATED)
@@ -54,6 +54,7 @@ def test_dump_load(dump_load):
         path,
         compression,
         set_default_extension,
+        optimize,
         expected_file,
         expected_fail,
     ) = dump_load
@@ -61,7 +62,11 @@ def test_dump_load(dump_load):
         warnings.simplefilter("ignore", UserWarning)
         if expected_fail is None:
             dump(
-                message, path, compression, set_default_extension=set_default_extension
+                message,
+                path,
+                compression,
+                set_default_extension=set_default_extension,
+                optimize=optimize,
             )
             loaded_message = load(
                 path, compression, set_default_extension=set_default_extension
@@ -74,6 +79,7 @@ def test_dump_load(dump_load):
                     path,
                     compression,
                     set_default_extension=set_default_extension,
+                    optimize=optimize,
                 )
             with pytest.raises(expected_fail):
                 load(path, compression, set_default_extension=set_default_extension)
@@ -87,9 +93,15 @@ def test_dumps_loads(random_message, compressions):
 
 @pytest.mark.usefixtures("simple_dump_and_remove")
 def test_dump_vs_dumps(simple_dump_and_remove):
-    path, compression, message = simple_dump_and_remove
-    dump(message, path, compression=compression, set_default_extension=False)
-    cmp1 = dumps(message, compression=compression, arcname=path)
+    path, compression, message, optimize = simple_dump_and_remove
+    dump(
+        message,
+        path,
+        compression=compression,
+        set_default_extension=False,
+        optimize=optimize,
+    )
+    cmp1 = dumps(message, compression=compression, arcname=path, optimize=optimize)
     with open(path, "rb") as f:
         cmp2 = f.read()
     if compression != "gzip":
@@ -100,18 +112,24 @@ def test_dump_vs_dumps(simple_dump_and_remove):
 
 @pytest.mark.usefixtures("simple_dump_and_remove")
 def test_dump_load_on_filestreams(simple_dump_and_remove):
-    path, compression, message = simple_dump_and_remove
+    path, compression, message, optimize = simple_dump_and_remove
     read_mode = "rb"  # get_compression_read_mode(compression)
     write_mode = "wb"  # get_compression_write_mode(compression)
     with open(path, write_mode) as f:
-        dump(message, f, compression=compression)
+        dump(message, f, compression=compression, optimize=optimize)
     with open(path, read_mode) as f:
         raw_content = f.read()
         f.seek(0)
         loaded_message = load(f, compression=compression)
     assert loaded_message == message
     os.remove(path)
-    dump(message, path, compression=compression, set_default_extension=False)
+    dump(
+        message,
+        path,
+        compression=compression,
+        set_default_extension=False,
+        optimize=optimize,
+    )
     with open(path, read_mode) as f:
         benchmark = f.read()
     # zipfile compression stores the data in a zip archive. The archive then
@@ -123,8 +141,14 @@ def test_dump_load_on_filestreams(simple_dump_and_remove):
 
 @pytest.mark.usefixtures("simple_dump_and_remove")
 def test_load_vs_loads(simple_dump_and_remove):
-    path, compression, message = simple_dump_and_remove
-    dump(message, path, compression=compression, set_default_extension=False)
+    path, compression, message, optimize = simple_dump_and_remove
+    dump(
+        message,
+        path,
+        compression=compression,
+        set_default_extension=False,
+        optimize=optimize,
+    )
     with open(path, "rb") as f:
         data = f.read()
     cmp1 = loads(data, compression=compression, arcname=os.path.basename(path))
