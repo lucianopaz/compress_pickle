@@ -67,6 +67,11 @@ stages:
       displayName: 'pylint'
 
     - script: |
+        mypy --ignore-missing-imports compress_pickle
+      condition: variables['test.style']
+      displayName: 'mypy'
+
+    - script: |
         sphinx-build -nWT docs/source docs/html
       condition: variables['test.docs']
       displayName: 'sphinx-build'
