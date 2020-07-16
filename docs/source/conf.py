@@ -210,4 +210,5 @@ nitpick_ignore = [
     ('py:class', 'IO'),
     ('py:class', 'PathType'),
     ('py:class', 'FileType'),
+    ('py:class', 'zipfile.ZipFile'),
 ]

@@ -35,7 +35,7 @@ def dump(
     unhandled_extensions: str = "raise",
     set_default_extension: bool = True,
     optimize: bool = False,
-    **kwargs
+    **kwargs,
 ):
     r"""Dump the contents of an object to disk, to the supplied path, using a
     given compression protocol.
@@ -113,45 +113,32 @@ def dump(
         compression=compression,
         unhandled_extensions=unhandled_extensions,
         set_default_extension=set_default_extension,
-        **kwargs
+        **kwargs,
     )
 
     if arch is not None:
         try:
-            if sys.version_info < (3, 6):
+            if optimize:
                 buff = pickle.dumps(  # type: ignore
                     obj,
                     protocol=protocol,
                     fix_imports=fix_imports,
                     **version_dependent_kwargs,
                 )
-                if optimize:
-                    buff = pickletools.optimize(buff)
-                arch.writestr(arcname, buff)
+                buff = pickletools.optimize(buff)
+                io_stream.write(buff)
             else:
-                if optimize:
-                    buff = pickle.dumps(  # type: ignore
-                        obj,
-                        protocol=protocol,
-                        fix_imports=fix_imports,
-                        **version_dependent_kwargs,
-                    )
-                    buff = pickletools.optimize(buff)
-                    io_stream.write(buff)
-                else:
-                    pickle.dump(  # type: ignore
-                        obj,
-                        io_stream,
-                        protocol=protocol,
-                        fix_imports=fix_imports,
-                        **version_dependent_kwargs,
-                    )
+                pickle.dump(  # type: ignore
+                    obj,
+                    io_stream,
+                    protocol=protocol,
+                    fix_imports=fix_imports,
+                    **version_dependent_kwargs,
+                )
         finally:
-            if sys.version_info >= (3, 6):
-                io_stream.flush()
+            io_stream.flush()
             if must_close:
-                if sys.version_info >= (3, 6):
-                    io_stream.close()
+                io_stream.close()
                 arch.close()
     else:
         try:
@@ -179,7 +166,7 @@ def dumps(
     fix_imports: bool = True,
     buffer_callback: Optional[Callable] = None,
     optimize: bool = False,
-    **kwargs
+    **kwargs,
 ) -> bytes:
     r"""Dump the contents of an object to a byte string, using a
     given compression protocol.
@@ -231,7 +218,7 @@ def dumps(
             buffer_callback=buffer_callback,
             set_default_extension=False,
             optimize=optimize,
-            **kwargs
+            **kwargs,
         )
         return stream.getvalue()
 
@@ -248,7 +235,7 @@ def load(
     arcname: Optional[str] = None,
     set_default_extension: bool = True,
     unhandled_extensions: str = "raise",
-    **kwargs
+    **kwargs,
 ) -> Any:
     r"""Load an object from a file stored in disk, given compression protocol.
     For example, if ``gzip`` compression is specified, the file buffer is opened
@@ -332,7 +319,7 @@ def load(
         unhandled_extensions=unhandled_extensions,
         set_default_extension=set_default_extension,
         arcname=arcname,
-        **kwargs
+        **kwargs,
     )
 
     if arch is not None:
@@ -372,7 +359,7 @@ def loads(
     buffers: Optional[Iterable] = None,
     *,
     arcname: Optional[str] = None,
-    **kwargs
+    **kwargs,
 ) -> Any:
     r"""Load an object from an input stream, uncompressing the contents with
     the given a compression protocol.
@@ -429,5 +416,5 @@ def loads(
             buffers=buffers,
             set_default_extension=False,
             arcname=arcname,
-            **kwargs
+            **kwargs,
         )

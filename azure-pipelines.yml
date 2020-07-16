@@ -7,10 +7,6 @@ stages:
   - job: "run_tests"
     strategy:
       matrix:
-        Python35:
-          python.version: '3.5'
-          imageName: 'ubuntu-latest'
-          test.unittest: True
         Python36:
           python.version: '3.6'
           imageName: 'ubuntu-latest'

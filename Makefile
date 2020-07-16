@@ -32,7 +32,7 @@ test:  # Test code using pytest.
 
 lint: format style mypy  # Lint code using black and pylint.
 
-check: lint test  # Both lint and test code. Runs `make lint` followed by `make test`.
+check: lint test docscheck  # Both lint and test code. Runs `make lint` followed by `make test`.
 
 docs:  # Build the documentation html site
 	cd docs/ && $(MAKE) -f Makefile html

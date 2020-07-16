@@ -2,7 +2,6 @@
 import os
 import pathlib
 import codecs
-import sys
 import warnings
 import gzip
 import bz2
@@ -318,7 +317,7 @@ def preprocess_path(
     unhandled_extensions: str = "raise",
     arcname: Optional[str] = None,
     **kwargs
-) -> Tuple[IO, Optional[IO], Optional[str], bool]:
+) -> Tuple[IO, Optional[zipfile.ZipFile], Optional[str], bool]:
     """Process the supplied path to control if it is a path-like object (str,
     bytes) or a file-like object (io.BytesIO or other types of streams). If it
     is path-like, the compression can be inferred and the default extension can
@@ -368,7 +367,7 @@ def preprocess_path(
     io_stream : Union[str, IO]
         The wrapping file-like stream that can be used with ``pickle.dump`` and
         ``pickle.load``
-    arch : Optional[IO]
+    arch : Optional[zipfile.ZipFile]
         If compression is ``"zipfile"``, ``arch`` is the ``ZipFile`` instance
         and ``io_stream`` points to the file from which to read or write inside
         the ``ZipFile`` archive.
@@ -424,7 +423,7 @@ def open_compression_stream(
     mode: str,
     arcname: Optional[str] = None,
     **kwargs
-) -> Tuple[IO, Optional[IO], Optional[str], bool]:
+) -> Tuple[IO, Optional[zipfile.ZipFile], Optional[str], bool]:
     """Open the file-like stream that will be used to ``pickle.dump`` and
     ``pickle.load``. This stream is wraps a different class depending on the
     compression protocol.
@@ -456,7 +455,7 @@ def open_compression_stream(
     io_stream : IO
         The wrapping file-like stream that can be used with ``pickle.dump`` and
         ``pickle.load``
-    arch : Optional[IO]
+    arch : Optional[zipfile.ZipFile]
         If compression is ``"zipfile"``, ``arch`` is the ``ZipFile`` instance
         and ``io_stream`` points to the file from which to read or write inside
         the ``ZipFile`` archive.
@@ -498,13 +497,7 @@ def open_compression_stream(
             arcname = file_path
         else:
             file_path = arcname
-        if sys.version_info < (3, 6):
-            if "w" in mode or "a" in mode or "x" in mode:
-                io_stream = None
-            else:
-                io_stream = arch.open(arcname, mode=mode, pwd=pwd)
-        else:
-            io_stream = arch.open(file_path, mode=mode, pwd=pwd)
+        io_stream = arch.open(file_path, mode=mode, pwd=pwd)
     elif compression == "lz4":
         try:
             import lz4.frame
@@ -520,4 +513,4 @@ def open_compression_stream(
                 compression, get_known_compressions()
             )
         )
-    return io_stream, arch, arcname, must_close  # type: ignore
+    return io_stream, arch, arcname, must_close
