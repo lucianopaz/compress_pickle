@@ -7,7 +7,6 @@ import pickle
 import pickletools
 import io
 import os
-import pathlib
 from typing import Any, Union, Optional, Callable, Iterable, IO, Dict
 from .utils import validate_compression, preprocess_path
 
@@ -15,10 +14,7 @@ from .utils import validate_compression, preprocess_path
 __all__ = ["dump", "load", "dumps", "loads"]
 
 
-if hasattr(os, "PathLike"):
-    PathLike = os.PathLike
-else:
-    PathLike = pathlib.PurePath  # type: ignore
+PathLike = os.PathLike
 PathType = Union[str, bytes, PathLike]
 FileType = IO
 

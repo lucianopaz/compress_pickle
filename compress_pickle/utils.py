@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import os
-import pathlib
 import codecs
 import warnings
 import gzip
@@ -55,10 +54,7 @@ _DEFAULT_COMPRESSION_READ_MODES: Dict[Optional[str], str] = {
 }
 
 
-if hasattr(os, "PathLike"):
-    PathLike = os.PathLike
-else:
-    PathLike = pathlib.PurePath  # type: ignore
+PathLike = os.PathLike
 PATH_TYPES = (str, bytes, PathLike)
 PathType = Union[str, bytes, PathLike]
 FileType = IO
