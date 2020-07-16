@@ -52,6 +52,7 @@ if __name__ == "__main__":
         author=AUTHOR,
         author_email=AUTHOR_EMAIL,
         url=URL,
+        python_requires=">=3.6",
         packages=find_packages(),
         install_requires=get_requirements(),
         long_description=get_long_description(),

@@ -203,18 +203,12 @@ def linkcode_resolve(domain, info):
     )
 
 
+intersphinx_mapping = {'python': ('https://docs.python.org/3', None)}
+
 nitpick_ignore = [
-    ('py:class', 'list'),
-    ('py:class', 'dict'),
-    ('py:class', 'str'),
-    ('py:class', 'bytes'),
-    ('py:class', 'optional'),
-    ('py:class', 'iostream'),
-    ('py:class', 'any'),
-    ('py:class', 'bool'),
-    ('py:class', 'int'),
-    ('py:class', 'callable'),
-    ('py:class', 'iterable'),
-    ('py:class', 'PathLike'),
-    ('py:obj', 'None'),
+    ('py:class', 'os.PathLike'),
+    ('py:class', 'IO'),
+    ('py:class', 'PathType'),
+    ('py:class', 'FileType'),
+    ('py:class', 'zipfile.ZipFile'),
 ]

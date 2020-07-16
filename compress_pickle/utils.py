@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
-import pathlib
 import codecs
-import sys
 import warnings
 import gzip
 import bz2
 import lzma
 import zipfile
+from typing import Union, Optional, IO, Dict, List, Tuple
 
 
 __all__ = [
@@ -24,7 +23,7 @@ __all__ = [
 ]
 
 
-_DEFAULT_EXTENSION_MAP = {
+_DEFAULT_EXTENSION_MAP: Dict[Optional[str], str] = {
     None: ".pkl",
     "pickle": ".pkl",
     "gzip": ".gz",
@@ -34,7 +33,7 @@ _DEFAULT_EXTENSION_MAP = {
     "lz4": ".lz4",
 }
 
-_DEFAULT_COMPRESSION_WRITE_MODES = {
+_DEFAULT_COMPRESSION_WRITE_MODES: Dict[Optional[str], str] = {
     None: r"wb+",
     "pickle": r"wb+",
     "gzip": r"wb",
@@ -44,7 +43,7 @@ _DEFAULT_COMPRESSION_WRITE_MODES = {
     "lz4": r"wb",
 }
 
-_DEFAULT_COMPRESSION_READ_MODES = {
+_DEFAULT_COMPRESSION_READ_MODES: Dict[Optional[str], str] = {
     None: r"rb+",
     "pickle": r"rb+",
     "gzip": r"rb",
@@ -55,17 +54,32 @@ _DEFAULT_COMPRESSION_READ_MODES = {
 }
 
 
-if hasattr(os, "PathLike"):
-    PathLike = os.PathLike
-else:
-    PathLike = pathlib.PurePath
+PathLike = os.PathLike
 PATH_TYPES = (str, bytes, PathLike)
+PathType = Union[str, bytes, PathLike]
+FileType = IO
 
 
-def _stringyfy_path(path):
+def _stringyfy_path(path: PathType) -> str:
     """Convert a path that is a PATH_TYPES instance to a string.
-    If path is a ``string`` instance, it is returned as is.
-    If path is a ``bytes`` instance, it is decoded with utf8 codec
+
+    Parameters
+    ----------
+    path : PathType
+        If ``path`` is a ``string`` instance, it is returned as is.
+        If ``path`` is a ``bytes`` instance, it is decoded with utf8 codec.
+        If it is ``os.PathLike`` or ``pathlib.PurePath`` then it is converted
+        to a string with ``str(path)``.
+
+    Returns
+    -------
+    path_string : str
+        The string representation of the ``path``.
+
+    Raises
+    ------
+    TypeError
+        If the supplied ``path`` is not a ``PATH_TYPES`` instance.
 
     """
     if not isinstance(path, PATH_TYPES):
@@ -80,30 +94,36 @@ def _stringyfy_path(path):
     return path
 
 
-def get_known_compressions():
+def get_known_compressions() -> List[Optional[str]]:
     """Get a list of known compression protocols
 
     Returns
     -------
-    compressions : list
+    compressions : List[Optional[str]]
         List of known compression protocol names.
     """
-    return [c for c in _DEFAULT_EXTENSION_MAP]
+    return list(_DEFAULT_EXTENSION_MAP)
 
 
-def validate_compression(compression, infer_is_valid=True):
-    """Check if the supplied ``compression`` protocol is supported. If it is
-    not supported, a ``ValueError`` is raised.
+def validate_compression(compression: Optional[str], infer_is_valid: bool = True):
+    """Check if the supplied ``compression`` protocol is supported.
+    
+    If it is not supported, a ``ValueError`` is raised.
 
     Parameters
     ----------
-    compression : str or None
+    compression : Optional[str]
         A compression protocol. To see the known compression protocolos, use
         :func:`~compress_pickle.utils.get_known_compressions`
     infer_is_valid : bool
         If ``True``, ``compression="infer"`` is considered a valid compression
         protocol. If ``False``, it is not accepted as a valid compression
         protocol.
+
+    Raises
+    ------
+    ValueError
+        If the supplied ``compression`` is not supported.
     """
     known_compressions = set(get_known_compressions())
     if infer_is_valid:
@@ -120,29 +140,35 @@ def validate_compression(compression, infer_is_valid=True):
             )
 
 
-def get_default_compression_mapping():
-    """Get a mapping from known compression protocols to the default filename
-    extensions.
+def get_default_compression_mapping() -> Dict[Optional[str], str]:
+    """Get a mapping from known compression protocols to the default filename extensions.
 
     Returns
     -------
-    compression_map : dict
+    compression_map : Dict[Optional[str], str]
         Dictionary that maps known compression protocol names to their default
         file extension.
     """
     return _DEFAULT_EXTENSION_MAP.copy()
 
 
-def get_compression_write_mode(compression):
-    """Get the compression's default mode for openning the file buffer for
-    writing.
+def get_compression_write_mode(compression: Optional[str]) -> str:
+    """Get the compression's default mode for openning the file buffer for writing.
+
+    Parameters
+    ----------
+    compression : Optional[str]
+        The compression name.
 
     Returns
     -------
-    write_mode_map : dict
-        Dictionary that maps known compression protocol names to default write
-        mode used to open files for
-        :func:`~compress_pickle.compress_pickle.dump`.
+    compression_write_mode : str
+        The default write mode of the given ``compression``.
+
+    Raises
+    ------
+    ValueError
+        If the default write mode of the supplied ``compression`` is not known.
     """
     try:
         return _DEFAULT_COMPRESSION_WRITE_MODES[compression]
@@ -154,16 +180,23 @@ def get_compression_write_mode(compression):
         )
 
 
-def get_compression_read_mode(compression):
-    """Get the compression's default mode for openning the file buffer for
-    reading.
+def get_compression_read_mode(compression: Optional[str]) -> str:
+    """Get the compression's default mode for openning the file buffer for reading.
+
+    Parameters
+    ----------
+    compression : Optional[str]
+        The compression name.
 
     Returns
     -------
-    read_mode_map : dict
-        Dictionary that maps known compression protocol names to default write
-        mode used to open files for
-        :func:`~compress_pickle.compress_pickle.load`.
+    compression_read_mode : str
+        The default read mode of the given ``compression``.
+
+    Raises
+    ------
+    ValueError
+        If the default write mode of the supplied ``compression`` is not known.
     """
     try:
         return _DEFAULT_COMPRESSION_READ_MODES[compression]
@@ -175,7 +208,7 @@ def get_compression_read_mode(compression):
         )
 
 
-def set_default_extensions(filename, compression=None):
+def set_default_extensions(filename: str, compression: Optional[str] = None) -> str:
     """Set the filename's extension to the default that corresponds to
     a given compression protocol. If the filename already has a known extension
     (a default extension of a known compression protocol) it is removed
@@ -185,7 +218,7 @@ def set_default_extensions(filename, compression=None):
     ----------
     filename : str
         The filename to which to set the default extension
-    compression : None or str (optional)
+    compression : Optional[str]
         A compression protocol. To see the known compression protocolos, use
         :func:`~compress_pickle.utils.get_known_compressions`
 
@@ -215,7 +248,9 @@ def set_default_extensions(filename, compression=None):
     return filename
 
 
-def infer_compression_from_filename(filename, unhandled_extensions="raise"):
+def infer_compression_from_filename(
+    filename: str, unhandled_extensions: str = "raise"
+) -> Optional[str]:
     """Infer the compression protocol by the filename's extension. This
     looks-up the default compression to extension mapping given by
     :func:`~compress_pickle.utils.get_default_compression_mapping`.
@@ -224,7 +259,7 @@ def infer_compression_from_filename(filename, unhandled_extensions="raise"):
     ----------
     filename : str
         The filename for which to infer the compression protocol
-    unhandled_extensions : str (optional)
+    unhandled_extensions : str
         Specify what to do if the extension is not understood. Can be
         "ignore" (do nothing), "warn" (issue warning) or "raise" (raise a
         ValueError).
@@ -271,14 +306,14 @@ def infer_compression_from_filename(filename, unhandled_extensions="raise"):
 
 
 def preprocess_path(
-    path,
-    mode,
-    compression="infer",
-    set_default_extension=True,
-    unhandled_extensions="raise",
-    arcname=None,
+    path: Union[PathType, FileType],
+    mode: str,
+    compression: Optional[str] = "infer",
+    set_default_extension: bool = True,
+    unhandled_extensions: str = "raise",
+    arcname: Optional[str] = None,
     **kwargs
-):
+) -> Tuple[IO, Optional[zipfile.ZipFile], Optional[str], bool]:
     """Process the supplied path to control if it is a path-like object (str,
     bytes) or a file-like object (io.BytesIO or other types of streams). If it
     is path-like, the compression can be inferred and the default extension can
@@ -289,30 +324,29 @@ def preprocess_path(
 
     Parameters
     ----------
-    path : str, bytes, PathLike or iostream
-        A path-like object (``str``, ``bytes``, ``os.PathLike``) or a file-like
-        object (we call it iostream but it is defined by the ``io`` module, for
-        example ``io.BytesIO`` or other types of streams).
+    path : Union[PathType, FileType]
+        A path-like object (``str``, ``bytes``, ``os.PathType``) or a file-like
+        object (``io.BaseIO`` instances).
     mode : str
         Mode with which to open the file-like stream. If "read", the default
         read mode is automatically assigned from
         :func:`~compress_pickle.utils.get_compression_read_mode`. If "write, the
         default write mode is automatically assigned from
         :func:`~compress_pickle.utils.get_compression_write_mode`.
-    compression : str or None (optional)
+    compression : Optional[str]
         A compression protocol. To see the known compression protocolos, use
         :func:`~compress_pickle.utils.get_known_compressions`.
-    set_default_extension : bool (optional)
+    set_default_extension : bool
         If ``True``, the default extension given the provided compression
         protocol is set to the supplied ``path``. Refer to
         :func:`~compress_pickle.utils.set_default_extensions` for
         more information.
-    unhandled_extensions : str (optional)
+    unhandled_extensions : str
         Specify what to do if the extension is not understood when inferring
         the compression protocol from the provided path-like object. Can be
         "ignore" (use ".pkl"), "warn" (issue warning and use ".pkl") or
         "raise" (raise a ``ValueError``).
-    arcname : None or str (optional)
+    arcname : Optional[str]
         Only necessary if ``compression="zipfile"``. It is the name of the file
         contained in the zip archive which must be used.
         If ``None``, the ``arcname`` is assumed to be ``path``'s basename (when
@@ -326,14 +360,14 @@ def preprocess_path(
 
     Returns
     -------
-    io_stream : iostream
+    io_stream : Union[str, IO]
         The wrapping file-like stream that can be used with ``pickle.dump`` and
         ``pickle.load``
-    arch : None or iostream
+    arch : Optional[zipfile.ZipFile]
         If compression is ``"zipfile"``, ``arch`` is the ``ZipFile`` instance
         and ``io_stream`` points to the file from which to read or write inside
         the ``ZipFile`` archive.
-    arcname : str or None
+    arcname : Optional[str]
         Only used on python3.5 for compatibility. Under python3.5, it is the
         name of the file inside the ``ZipFile`` archive from which to read or
         write. It is ``None`` on higher versions of python or when the
@@ -348,6 +382,7 @@ def preprocess_path(
     ``compression="infer"`` and ``path`` is not path-like, a
     ``NotImplementedError`` is raised.
     """
+    stream: Union[str, IO]
     if isinstance(path, PATH_TYPES):
         path = _stringyfy_path(path)
         if compression == "infer":
@@ -370,29 +405,36 @@ def preprocess_path(
     return open_compression_stream(
         path=path,
         compression=compression,
-        stream=stream,
+        stream=stream,  # type: ignore
         mode=mode,
         arcname=arcname,
         **kwargs
     )
 
 
-def open_compression_stream(path, compression, stream, mode, arcname=None, **kwargs):
+def open_compression_stream(
+    path: Union[str, IO],
+    compression: Optional[str],
+    stream: IO,
+    mode: str,
+    arcname: Optional[str] = None,
+    **kwargs
+) -> Tuple[IO, Optional[zipfile.ZipFile], Optional[str], bool]:
     """Open the file-like stream that will be used to ``pickle.dump`` and
     ``pickle.load``. This stream is wraps a different class depending on the
     compression protocol.
 
     Parameters
     ----------
-    path : str or iostream
+    path : Union[str, IO]
         The ``path`` output from :func:`~compress_pickle.utils.preprocess_path`.
-    compression : str or None
+    compression : Optional[str]
         A supported compression protocol. To see the known compression
         protocolos, use :func:`~compress_pickle.utils.get_known_compressions`.
-    stream : iostream
+    stream : IO
         The ``stream`` output from
         :func:`~compress_pickle.utils.preprocess_path`.
-    arcname : None or str (optional)
+    arcname : Optional[str]
         Only necessary if ``compression="zipfile"``. It is the name of the file
         contained in the zip archive which must be used.
         If ``None``, the ``arcname`` is assumed to be ``path``'s basename (when
@@ -406,14 +448,14 @@ def open_compression_stream(path, compression, stream, mode, arcname=None, **kwa
 
     Returns
     -------
-    io_stream : iostream
+    io_stream : IO
         The wrapping file-like stream that can be used with ``pickle.dump`` and
         ``pickle.load``
-    arch : None or iostream
+    arch : Optional[zipfile.ZipFile]
         If compression is ``"zipfile"``, ``arch`` is the ``ZipFile`` instance
         and ``io_stream`` points to the file from which to read or write inside
         the ``ZipFile`` archive.
-    arcname : str or None
+    arcname : Optional[str]
         Only used when ``compression="zipfile"``. It is the name of the file
         inside the ``ZipFile`` archive from which to read or write. If an input
         ``arcname`` is supplied and is different than ``None``, it is returned
@@ -451,13 +493,7 @@ def open_compression_stream(path, compression, stream, mode, arcname=None, **kwa
             arcname = file_path
         else:
             file_path = arcname
-        if sys.version_info < (3, 6):
-            if "w" in mode or "a" in mode or "x" in mode:
-                io_stream = None
-            else:
-                io_stream = arch.open(arcname, mode=mode, pwd=pwd)
-        else:
-            io_stream = arch.open(file_path, mode=mode, pwd=pwd)
+        io_stream = arch.open(file_path, mode=mode, pwd=pwd)
     elif compression == "lz4":
         try:
             import lz4.frame

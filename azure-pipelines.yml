@@ -7,10 +7,6 @@ stages:
   - job: "run_tests"
     strategy:
       matrix:
-        Python35:
-          python.version: '3.5'
-          imageName: 'ubuntu-latest'
-          test.unittest: True
         Python36:
           python.version: '3.6'
           imageName: 'ubuntu-latest'
@@ -65,6 +61,11 @@ stages:
         pylint compress_pickle
       condition: variables['test.style']
       displayName: 'pylint'
+
+    - script: |
+        mypy --ignore-missing-imports compress_pickle
+      condition: variables['test.style']
+      displayName: 'mypy'
 
     - script: |
         sphinx-build -nWT docs/source docs/html

@@ -27,13 +27,15 @@ Welcome to compress_pickle's documentation!
 The standard `pickle package <https://docs.python.org/3/library/pickle.html>`_ provides an excellent default tool for serializing arbitrary python objects and storing them to disk. Standard python also includes broad set of `data compression packages <https://docs.python.org/3/library/archiving.html>`_. ``compress_pickle`` provides an interface to the standard ``pickle.dump``, ``pickle.load``, ``pickle.dumps`` and ``pickle.loads`` functions, but wraps them in order to direct the serialized data through one of the standard compression packages. This way you can seemlessly serialize data to disk or to any file-like object in a compressed way.
 
 ``compress_pickle`` is `built and tested on python >= 3.5 <https://dev.azure.com/lucianopazneuro/lucianopazneuro/_build/latest?definitionId=1&branchName=master>`_, and Ubuntu, macOs and Windows.
+``compress_pickle`` supports `python >= 3.6 <https://dev.azure.com/lucianopazneuro/lucianopazneuro/_build/latest?definitionId=1&branchName=master>`_, and can run on Ubuntu, macOs and Windows. If you must support python 3.5, please install ``compress_pickle==v1.1.1``.
+
 
 Supported compression protocols:
 
 * `gzip <https://docs.python.org/3/library/gzip.html>`_
 * `bz2 <https://docs.python.org/3/library/bz2.html>`_
 * `lzma <https://docs.python.org/3/library/lzma.html>`_
-* `zipfile <https://docs.python.org/3/library/zipfile.html>`_ (Note that python3.6 and higher allows to build a file-like buffer into the zip archive, which allows us to use less memory than in python3.5)
+* `zipfile <https://docs.python.org/3/library/zipfile.html>`_
 
 
 Furthermore, ``compress_pickle`` supports the `lz4 <https://pypi.org/project/lz4/>` compression protocol, that isn't part of the standard python compression packages. This is provided as an optional extra requirement that can be installed as:
