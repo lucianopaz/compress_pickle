@@ -1,4 +1,4 @@
-.PHONY: help format style black test lint check docs
+.PHONY: help format style black test lint check docs docscheck
 .DEFAULT_GOAL = help
 
 PYTHON = python
@@ -34,5 +34,9 @@ lint: format style mypy  # Lint code using black and pylint.
 
 check: lint test  # Both lint and test code. Runs `make lint` followed by `make test`.
 
-docs:
+docs:  # Build the documentation html site
 	cd docs/ && $(MAKE) -f Makefile html
+
+docscheck:  # Test that the documentation is properly built
+	sphinx-build -nWT docs/source test_docs
+	rm -rf test_docs
