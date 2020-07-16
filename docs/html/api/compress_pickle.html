@@ -96,7 +96,7 @@
 <span class="target" id="module-compress_pickle.compress_pickle"></span><p>A thin wrapper of standard <code class="docutils literal notranslate"><span class="pre">pickle</span></code> with standard compression libraries</p>
 <dl class="py function">
 <dt id="compress_pickle.compress_pickle.dump">
-<code class="sig-prename descclassname">compress_pickle.compress_pickle.</code><code class="sig-name descname">dump</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">compression</span><span class="o">=</span><span class="default_value">'infer'</span></em>, <em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">protocol</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">fix_imports</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">buffer_callback</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">unhandled_extensions</span><span class="o">=</span><span class="default_value">'raise'</span></em>, <em class="sig-param"><span class="n">set_default_extension</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">optimize</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compress_pickle.py#L15-L164"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.dump" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">compress_pickle.compress_pickle.</code><code class="sig-name descname">dump</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span></em>, <em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>bytes<span class="p">, </span>os.PathLike<span class="p">, </span>IO<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">compression</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'infer'</span></em>, <em class="sig-param"><span class="n">mode</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">protocol</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">fix_imports</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">buffer_callback</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Callable<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">unhandled_extensions</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'raise'</span></em>, <em class="sig-param"><span class="n">set_default_extension</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">optimize</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compress_pickle.py#L22-L155"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.dump" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dump the contents of an object to disk, to the supplied path, using a
 given compression protocol.
 For example, if <code class="docutils literal notranslate"><span class="pre">gzip</span></code> compression is specified, the file buffer is
@@ -105,30 +105,28 @@ using a normal <code class="docutils literal notranslate"><span class="pre">pick
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>obj</strong> (<em>any</em>) – The object that will be saved to disk</p></li>
-<li><p><strong>path</strong> (<em>str</em><em>, </em><em>bytes</em><em>, </em><em>PathLike</em><em> or </em><em>iostream</em>) – A path-like object (<code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes</span></code>, <code class="docutils literal notranslate"><span class="pre">os.PathLike</span></code>) or a file-like
-object (we call it iostream but it is defined by the <code class="docutils literal notranslate"><span class="pre">io</span></code> module, for
-example <code class="docutils literal notranslate"><span class="pre">io.BytesIO</span></code> or other types of streams). The path to which
-to dump the <code class="docutils literal notranslate"><span class="pre">obj</span></code>.</p></li>
-<li><p><strong>compression</strong> (<em>None</em><em> or </em><em>str</em><em> (</em><em>optional</em><em>)</em>) – The compression protocol to use. By default, the compression is
+<li><p><strong>obj</strong> (<em>Any</em>) – The object that will be saved to disk</p></li>
+<li><p><strong>path</strong> (<em>Union</em><em>[</em><em>PathType</em><em>, </em><em>FileType</em><em>]</em>) – A path-like object (<code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes</span></code>, <code class="docutils literal notranslate"><span class="pre">os.PathType</span></code>) or a file-like
+object (<code class="docutils literal notranslate"><span class="pre">io.BaseIO</span></code> instances). The path to which to dump the <code class="docutils literal notranslate"><span class="pre">obj</span></code>.</p></li>
+<li><p><strong>compression</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – The compression protocol to use. By default, the compression is
 inferred from the path’s extension. To see available compression
 protocols refer to
 <a class="reference internal" href="utils.html#compress_pickle.utils.get_known_compressions" title="compress_pickle.utils.get_known_compressions"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_known_compressions()</span></code></a>.</p></li>
-<li><p><strong>mode</strong> (<em>None</em><em> or </em><em>str</em><em> (</em><em>optional</em><em>)</em>) – Mode with which to open the file buffer. The default changes according
+<li><p><strong>mode</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Mode with which to open the file buffer. The default changes according
 to the compression protocol. Refer to
 <a class="reference internal" href="utils.html#compress_pickle.utils.get_compression_write_mode" title="compress_pickle.utils.get_compression_write_mode"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_compression_write_mode()</span></code></a> to
 see the defaults.</p></li>
-<li><p><strong>protocol</strong> (<em>int</em><em> (</em><em>optional</em><em>)</em>) – Pickle protocol to use</p></li>
-<li><p><strong>fix_imports</strong> (<em>bool</em><em> (</em><em>optional</em><em>)</em>) – If <code class="docutils literal notranslate"><span class="pre">fix_imports</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> and <code class="docutils literal notranslate"><span class="pre">protocol</span></code> is less than 3, pickle
+<li><p><strong>protocol</strong> (<em>int</em>) – Pickle protocol to use</p></li>
+<li><p><strong>fix_imports</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">fix_imports</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> and <code class="docutils literal notranslate"><span class="pre">protocol</span></code> is less than 3, pickle
 will try to map the new Python 3 names to the old module names used
 in Python 2, so that the pickle data stream is readable with Python 2.</p></li>
-<li><p><strong>buffer_callback</strong> (<em>None</em><em> or </em><em>callable</em><em> (</em><em>optional</em><em>)</em>) – Only used in python 3.8. Tells pickle how to serialize buffers.
+<li><p><strong>buffer_callback</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>]</em>) – Only used in python 3.8. Tells pickle how to serialize buffers.
 Refer to the standard <code class="docutils literal notranslate"><span class="pre">pickle</span></code> documentation for details.</p></li>
-<li><p><strong>set_default_extension</strong> (<em>bool</em><em> (</em><em>optional</em><em>)</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the default extension given the provided compression
+<li><p><strong>set_default_extension</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the default extension given the provided compression
 protocol is set to the supplied <code class="docutils literal notranslate"><span class="pre">path</span></code>. Refer to
 <a class="reference internal" href="utils.html#compress_pickle.utils.set_default_extensions" title="compress_pickle.utils.set_default_extensions"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_default_extensions()</span></code></a> for
 more information.</p></li>
-<li><p><strong>unhandled_extensions</strong> (<em>str</em><em> (</em><em>optional</em><em>)</em>) – Specify what to do if the extension is not understood when inferring
+<li><p><strong>unhandled_extensions</strong> (<em>str</em>) – Specify what to do if the extension is not understood when inferring
 the compression protocol from the provided path. Can be “ignore” (use
 “.pkl”), “warn” (issue warning and use “.pkl”) or “raise” (raise a
 ValueError).</p></li>
@@ -156,7 +154,7 @@ the file automatically</p>
 
 <dl class="py function">
 <dt id="compress_pickle.compress_pickle.dumps">
-<code class="sig-prename descclassname">compress_pickle.compress_pickle.</code><code class="sig-name descname">dumps</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">compression</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">protocol</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">fix_imports</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">buffer_callback</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">optimize</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compress_pickle.py#L167-L223"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.dumps" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">compress_pickle.compress_pickle.</code><code class="sig-name descname">dumps</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span></em>, <em class="sig-param"><span class="n">compression</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'infer'</span></em>, <em class="sig-param"><span class="n">protocol</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">fix_imports</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">buffer_callback</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Callable<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">optimize</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; bytes<a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compress_pickle.py#L158-L219"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.dumps" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dump the contents of an object to a byte string, using a
 given compression protocol.
 For example, if <code class="docutils literal notranslate"><span class="pre">gzip</span></code> compression is specified, the file buffer is
@@ -165,16 +163,16 @@ using a normal <code class="docutils literal notranslate"><span class="pre">pick
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>obj</strong> (<em>any</em>) – The object that will be saved to disk</p></li>
-<li><p><strong>compression</strong> (<em>None</em><em> or </em><em>str</em><em> (</em><em>optional</em><em>)</em>) – The compression protocol to use. By default, the compression is
+<li><p><strong>obj</strong> (<em>Any</em>) – The object that will be saved to disk</p></li>
+<li><p><strong>compression</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – The compression protocol to use. By default, the compression is
 inferred from the path’s extension. To see available compression
 protocols refer to
 <a class="reference internal" href="utils.html#compress_pickle.utils.get_known_compressions" title="compress_pickle.utils.get_known_compressions"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_known_compressions()</span></code></a>.</p></li>
-<li><p><strong>protocol</strong> (<em>int</em><em> (</em><em>optional</em><em>)</em>) – Pickle protocol to use</p></li>
-<li><p><strong>fix_imports</strong> (<em>bool</em><em> (</em><em>optional</em><em>)</em>) – If <code class="docutils literal notranslate"><span class="pre">fix_imports</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> and <code class="docutils literal notranslate"><span class="pre">protocol</span></code> is less than 3, pickle
+<li><p><strong>protocol</strong> (<em>int</em>) – Pickle protocol to use</p></li>
+<li><p><strong>fix_imports</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">fix_imports</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> and <code class="docutils literal notranslate"><span class="pre">protocol</span></code> is less than 3, pickle
 will try to map the new Python 3 names to the old module names used
 in Python 2, so that the pickle data stream is readable with Python 2.</p></li>
-<li><p><strong>buffer_callback</strong> (<em>None</em><em> or </em><em>callable</em><em> (</em><em>optional</em><em>)</em>) – Only used in python 3.8. Tells pickle how to serialize buffers.
+<li><p><strong>buffer_callback</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>]</em>) – Only used in python 3.8. Tells pickle how to serialize buffers.
 Refer to the standard <code class="docutils literal notranslate"><span class="pre">pickle</span></code> documentation for details.</p></li>
 <li><p><strong>optimize</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the pickled data is optimized using <code class="docutils literal notranslate"><span class="pre">pickletools.optimize</span></code>
 before compressing it. This will produce a final byte array that has a
@@ -184,12 +182,19 @@ protocol. The only exception is the <code class="docutils literal notranslate"><
 <code class="docutils literal notranslate"><span class="pre">zipfile</span></code> protocol. This kwarg is called <code class="docutils literal notranslate"><span class="pre">zipfile_compression</span></code>.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>blob</strong> (<em>bytes</em>)</p></li>
+<li><p>The resulting bytes of the pickled and compressed <code class="docutils literal notranslate"><span class="pre">obj</span></code>.</p></li>
+</ul>
+</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt id="compress_pickle.compress_pickle.load">
-<code class="sig-prename descclassname">compress_pickle.compress_pickle.</code><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">compression</span><span class="o">=</span><span class="default_value">'infer'</span></em>, <em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fix_imports</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">encoding</span><span class="o">=</span><span class="default_value">'ASCII'</span></em>, <em class="sig-param"><span class="n">errors</span><span class="o">=</span><span class="default_value">'strict'</span></em>, <em class="sig-param"><span class="n">buffers</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">arcname</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">set_default_extension</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">unhandled_extensions</span><span class="o">=</span><span class="default_value">'raise'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compress_pickle.py#L226-L352"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.load" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">compress_pickle.compress_pickle.</code><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>bytes<span class="p">, </span>os.PathLike<span class="p">, </span>IO<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">compression</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'infer'</span></em>, <em class="sig-param"><span class="n">mode</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fix_imports</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">encoding</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'ASCII'</span></em>, <em class="sig-param"><span class="n">errors</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'strict'</span></em>, <em class="sig-param"><span class="n">buffers</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Iterable<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">arcname</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">set_default_extension</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">unhandled_extensions</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'raise'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; Any<a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compress_pickle.py#L222-L346"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load an object from a file stored in disk, given compression protocol.
 For example, if <code class="docutils literal notranslate"><span class="pre">gzip</span></code> compression is specified, the file buffer is opened
 as <code class="docutils literal notranslate"><span class="pre">gzip.open</span></code> and the desired content is loaded from the open buffer
@@ -197,38 +202,36 @@ using a normal <code class="docutils literal notranslate"><span class="pre">pick
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>str</em><em>, </em><em>bytes</em><em>, </em><em>PathLike</em><em> or </em><em>iostream</em>) – A path-like object (<code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes</span></code>, <code class="docutils literal notranslate"><span class="pre">os.PathLike</span></code>) or a file-like
-object (we call it iostream but it is defined by the <code class="docutils literal notranslate"><span class="pre">io</span></code> module, for
-example <code class="docutils literal notranslate"><span class="pre">io.BytesIO</span></code> or other types of streams). The path from which
-to load the <code class="docutils literal notranslate"><span class="pre">obj</span></code>.</p></li>
-<li><p><strong>compression</strong> (<em>None</em><em> or </em><em>str</em><em> (</em><em>optional</em><em>)</em>) – The compression protocol to use. By default, the compression is
+<li><p><strong>path</strong> (<em>Union</em><em>[</em><em>PathType</em><em>, </em><em>FileType</em><em>]</em>) – A path-like object (<code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes</span></code>, <code class="docutils literal notranslate"><span class="pre">os.PathType</span></code>) or a file-like
+object (<code class="docutils literal notranslate"><span class="pre">io.BaseIO</span></code> instances). The path from which to load the <code class="docutils literal notranslate"><span class="pre">obj</span></code>.</p></li>
+<li><p><strong>compression</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – The compression protocol to use. By default, the compression is
 inferred from the path’s extension. To see available compression
 protocols refer to
 <a class="reference internal" href="utils.html#compress_pickle.utils.get_known_compressions" title="compress_pickle.utils.get_known_compressions"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_known_compressions()</span></code></a>.</p></li>
-<li><p><strong>mode</strong> (<em>None</em><em> or </em><em>str</em><em> (</em><em>optional</em><em>)</em>) – Mode with which to open the file buffer. The default changes according
+<li><p><strong>mode</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Mode with which to open the file buffer. The default changes according
 to the compression protocol. Refer to
 <a class="reference internal" href="utils.html#compress_pickle.utils.get_compression_read_mode" title="compress_pickle.utils.get_compression_read_mode"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_compression_read_mode()</span></code></a> to
 see the defaults.</p></li>
-<li><p><strong>fix_imports</strong> (<em>bool</em><em> (</em><em>optional</em><em>)</em>) – If <code class="docutils literal notranslate"><span class="pre">fix_imports</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> and <code class="docutils literal notranslate"><span class="pre">protocol</span></code> is less than 3, pickle
+<li><p><strong>fix_imports</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">fix_imports</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> and <code class="docutils literal notranslate"><span class="pre">protocol</span></code> is less than 3, pickle
 will try to map the new Python 3 names to the old module names used
 in Python 2, so that the pickle data stream is readable with Python 2.</p></li>
-<li><p><strong>encoding</strong> (<em>str</em><em> (</em><em>optional</em><em>)</em>) – Tells pickle how to decode 8-bit string instances pickled by Python 2.
+<li><p><strong>encoding</strong> (<em>str</em>) – Tells pickle how to decode 8-bit string instances pickled by Python 2.
 Refer to the standard <code class="docutils literal notranslate"><span class="pre">pickle</span></code> documentation for details.</p></li>
-<li><p><strong>errors</strong> (<em>str</em><em> (</em><em>optional</em><em>)</em>) – Tells pickle how to decode 8-bit string instances pickled by Python 2.
+<li><p><strong>errors</strong> (<em>str</em>) – Tells pickle how to decode 8-bit string instances pickled by Python 2.
 Refer to the standard <code class="docutils literal notranslate"><span class="pre">pickle</span></code> documentation for details.</p></li>
-<li><p><strong>buffers</strong> (<em>None</em><em> or </em><em>iterable</em><em> (</em><em>optional</em><em>)</em>) – Only used in python 3.8. Provides pickle with the buffers from which
+<li><p><strong>buffers</strong> (<em>Optional</em><em>[</em><em>Iterable</em><em>]</em>) – Only used in python 3.8. Provides pickle with the buffers from which
 to read out of band buffer views.
 Refer to the standard <code class="docutils literal notranslate"><span class="pre">pickle</span></code> documentation for details.</p></li>
-<li><p><strong>arcname</strong> (<em>None</em><em> or </em><em>str</em><em> (</em><em>optional</em><em>)</em>) – Only necessary if <code class="docutils literal notranslate"><span class="pre">compression=&quot;zipfile&quot;</span></code>. It is the name of the file
+<li><p><strong>arcname</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Only necessary if <code class="docutils literal notranslate"><span class="pre">compression=&quot;zipfile&quot;</span></code>. It is the name of the file
 contained in the zip archive which must be read and decompressed.
 If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the <code class="docutils literal notranslate"><span class="pre">arcname</span></code> is assumed to be <code class="docutils literal notranslate"><span class="pre">path</span></code> (when <code class="docutils literal notranslate"><span class="pre">path</span></code>
 is path-like), <code class="docutils literal notranslate"><span class="pre">path.name</span></code> (when <code class="docutils literal notranslate"><span class="pre">path</span></code> is file-like and it has a
 name attribute) or “default” when <code class="docutils literal notranslate"><span class="pre">path</span></code> has no <code class="docutils literal notranslate"><span class="pre">name</span></code> attribute.</p></li>
-<li><p><strong>set_default_extension</strong> (<em>bool</em><em> (</em><em>optional</em><em>)</em>) – If <cite>True</cite>, the default extension given the provided compression
+<li><p><strong>set_default_extension</strong> (<em>bool</em>) – If <cite>True</cite>, the default extension given the provided compression
 protocol is set to the supplied <cite>path</cite>. Refer to
 <a class="reference internal" href="utils.html#compress_pickle.utils.set_default_extensions" title="compress_pickle.utils.set_default_extensions"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_default_extensions()</span></code></a> for
 more information.</p></li>
-<li><p><strong>unhandled_extensions</strong> (<em>str</em><em> (</em><em>optional</em><em>)</em>) – Specify what to do if the extension is not understood when inferring
+<li><p><strong>unhandled_extensions</strong> (<em>str</em>) – Specify what to do if the extension is not understood when inferring
 the compression protocol from the provided path. Can be “ignore” (use
 “.pkl”), “warn” (issue warning and use “.pkl”) or “raise” (raise a
 ValueError).</p></li>
@@ -241,7 +244,7 @@ protocol. The only exception is the <code class="docutils literal notranslate"><
 <dd class="field-even"><p><strong>The unpickled object</strong></p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>any</p>
+<dd class="field-odd"><p>Any</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -256,27 +259,27 @@ the file automatically.</p>
 
 <dl class="py function">
 <dt id="compress_pickle.compress_pickle.loads">
-<code class="sig-prename descclassname">compress_pickle.compress_pickle.</code><code class="sig-name descname">loads</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">compression</span></em>, <em class="sig-param"><span class="n">fix_imports</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">encoding</span><span class="o">=</span><span class="default_value">'ASCII'</span></em>, <em class="sig-param"><span class="n">errors</span><span class="o">=</span><span class="default_value">'strict'</span></em>, <em class="sig-param"><span class="n">buffers</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">arcname</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compress_pickle.py#L355-L421"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.loads" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">compress_pickle.compress_pickle.</code><code class="sig-name descname">loads</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">bytes</span></em>, <em class="sig-param"><span class="n">compression</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">fix_imports</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">encoding</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'ASCII'</span></em>, <em class="sig-param"><span class="n">errors</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'strict'</span></em>, <em class="sig-param"><span class="n">buffers</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Iterable<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">arcname</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; Any<a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compress_pickle.py#L349-L416"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.loads" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load an object from an input stream, uncompressing the contents with
 the given a compression protocol.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<em>bytes</em>) – The bytes that contain the object to load from</p></li>
-<li><p><strong>compression</strong> (<em>None</em><em> or </em><em>str</em>) – The compression protocol to use. To see available compression
+<li><p><strong>compression</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – The compression protocol to use. To see available compression
 protocols refer to
 <a class="reference internal" href="utils.html#compress_pickle.utils.get_known_compressions" title="compress_pickle.utils.get_known_compressions"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_known_compressions()</span></code></a>.</p></li>
-<li><p><strong>fix_imports</strong> (<em>bool</em><em> (</em><em>optional</em><em>)</em>) – If <code class="docutils literal notranslate"><span class="pre">fix_imports</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> and <code class="docutils literal notranslate"><span class="pre">protocol</span></code> is less than 3, pickle
+<li><p><strong>fix_imports</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">fix_imports</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> and <code class="docutils literal notranslate"><span class="pre">protocol</span></code> is less than 3, pickle
 will try to map the new Python 3 names to the old module names used
 in Python 2, so that the pickle data stream is readable with Python 2.</p></li>
-<li><p><strong>encoding</strong> (<em>str</em><em> (</em><em>optional</em><em>)</em>) – Tells pickle how to decode 8-bit string instances pickled by Python 2.
+<li><p><strong>encoding</strong> (<em>str</em>) – Tells pickle how to decode 8-bit string instances pickled by Python 2.
 Refer to the standard <code class="docutils literal notranslate"><span class="pre">pickle</span></code> documentation for details.</p></li>
-<li><p><strong>errors</strong> (<em>str</em><em> (</em><em>optional</em><em>)</em>) – Tells pickle how to decode 8-bit string instances pickled by Python 2.
+<li><p><strong>errors</strong> (<em>str</em>) – Tells pickle how to decode 8-bit string instances pickled by Python 2.
 Refer to the standard <code class="docutils literal notranslate"><span class="pre">pickle</span></code> documentation for details.</p></li>
-<li><p><strong>buffers</strong> (<em>None</em><em> or </em><em>iterable</em><em> (</em><em>optional</em><em>)</em>) – Only used in python 3.8. Provides pickle with the buffers from which
+<li><p><strong>buffers</strong> (<em>Optional</em><em>[</em><em>Iterable</em><em>]</em>) – Only used in python 3.8. Provides pickle with the buffers from which
 to read out of band buffer views.
 Refer to the standard <code class="docutils literal notranslate"><span class="pre">pickle</span></code> documentation for details.</p></li>
-<li><p><strong>arcname</strong> (<em>None</em><em> or </em><em>str</em><em> (</em><em>optional</em><em>)</em>) – Only necessary if <code class="docutils literal notranslate"><span class="pre">compression=&quot;zipfile&quot;</span></code>. It is the name of the file
+<li><p><strong>arcname</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Only necessary if <code class="docutils literal notranslate"><span class="pre">compression=&quot;zipfile&quot;</span></code>. It is the name of the file
 contained in the zip archive which must be read and decompressed.
 If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the <code class="docutils literal notranslate"><span class="pre">arcname</span></code> is assumed to be “default”.</p></li>
 <li><p><strong>kwargs</strong> – Any extra keyword arguments are passed to the compressed file opening
@@ -285,10 +288,11 @@ protocol. The only exception is the <code class="docutils literal notranslate"><
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>The unpickled object</strong></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>any</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>obj</strong> (<em>Any</em>)</p></li>
+<li><p><em>The uncompressed and unpickled object.</em></p></li>
+</ul>
+</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -385,7 +389,7 @@ input stream parameter.</p>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, Luciano Paz.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.2.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>

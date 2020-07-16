@@ -77,13 +77,14 @@
 <a class="reference external image-reference" href="https://pypi.org/project/compress-pickle/"><img alt="https://img.shields.io/pypi/v/compress_pickle.svg" src="https://img.shields.io/pypi/v/compress_pickle.svg" /></a>
 <a class="reference external image-reference" href="https://opensource.org/licenses/MIT"><img alt="https://img.shields.io/badge/License-MIT-purple.svg" src="https://img.shields.io/badge/License-MIT-purple.svg" /></a>
 <p>The standard <a class="reference external" href="https://docs.python.org/3/library/pickle.html">pickle package</a> provides an excellent default tool for serializing arbitrary python objects and storing them to disk. Standard python also includes broad set of <a class="reference external" href="https://docs.python.org/3/library/archiving.html">data compression packages</a>. <code class="docutils literal notranslate"><span class="pre">compress_pickle</span></code> provides an interface to the standard <code class="docutils literal notranslate"><span class="pre">pickle.dump</span></code>, <code class="docutils literal notranslate"><span class="pre">pickle.load</span></code>, <code class="docutils literal notranslate"><span class="pre">pickle.dumps</span></code> and <code class="docutils literal notranslate"><span class="pre">pickle.loads</span></code> functions, but wraps them in order to direct the serialized data through one of the standard compression packages. This way you can seemlessly serialize data to disk or to any file-like object in a compressed way.</p>
-<p><code class="docutils literal notranslate"><span class="pre">compress_pickle</span></code> is <a class="reference external" href="https://dev.azure.com/lucianopazneuro/lucianopazneuro/_build/latest?definitionId=1&amp;branchName=master">built and tested on python &gt;= 3.5</a>, and Ubuntu, macOs and Windows.</p>
+<p><code class="docutils literal notranslate"><span class="pre">compress_pickle</span></code> is <a class="reference external" href="https://dev.azure.com/lucianopazneuro/lucianopazneuro/_build/latest?definitionId=1&amp;branchName=master">built and tested on python &gt;= 3.5</a>, and Ubuntu, macOs and Windows.
+<code class="docutils literal notranslate"><span class="pre">compress_pickle</span></code> supports <a class="reference external" href="https://dev.azure.com/lucianopazneuro/lucianopazneuro/_build/latest?definitionId=1&amp;branchName=master">python &gt;= 3.6</a>, and can run on Ubuntu, macOs and Windows. If you must support python 3.5, please install <code class="docutils literal notranslate"><span class="pre">compress_pickle==v1.1.1</span></code>.</p>
 <p>Supported compression protocols:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3/library/gzip.html">gzip</a></p></li>
 <li><p><a class="reference external" href="https://docs.python.org/3/library/bz2.html">bz2</a></p></li>
 <li><p><a class="reference external" href="https://docs.python.org/3/library/lzma.html">lzma</a></p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/zipfile.html">zipfile</a> (Note that python3.6 and higher allows to build a file-like buffer into the zip archive, which allows us to use less memory than in python3.5)</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/zipfile.html">zipfile</a></p></li>
 </ul>
 <p>Furthermore, <code class="docutils literal notranslate"><span class="pre">compress_pickle</span></code> supports the <cite>lz4 &lt;https://pypi.org/project/lz4/&gt;</cite> compression protocol, that isn’t part of the standard python compression packages. This is provided as an optional extra requirement that can be installed as:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install compress_pickle<span class="o">[</span>lz4<span class="o">]</span>
@@ -279,7 +280,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, Luciano Paz.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.2.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>
