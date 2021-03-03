@@ -18,6 +18,8 @@ import compress_pickle
 
 COMPRESSION_NAMES = [None, "pickle", "gzip", "bz2", "lzma", "zipfile", "lz4"]
 UNHANDLED_COMPRESSIONS = ["gzip2", "tar", "zip", 3, [1, 3]]
+PICKLER_NAMES = ["pickle", "optimized_pickle", "marshal", "dill", "cloudpickle"]
+UNHANDLED_PICKLERS = [None, "tar", "zip", 3, [1, 3]]
 FILENAMES = [
     "test_blabla_{}",
     "test_blabla_{}.pkl",
@@ -117,6 +119,18 @@ def compressions_to_validate(request):
     elif not infer_is_valid and compression == "infer":
         expected_fail = True
     return compression, infer_is_valid, expected_fail
+
+
+@pytest.fixture(
+    scope="module",
+    params=zip(
+        itertools.product(PICKLER_NAMES, [True]),
+        itertools.product(UNHANDLED_PICKLERS, [False])
+    ),
+    ids=str,
+)
+def picklers_to_validate(request):
+    return request.param
 
 
 @pytest.fixture(scope="function")

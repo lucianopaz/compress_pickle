@@ -7,6 +7,7 @@ from fixtures import (
     unhandled_extensions,
     set_default_extension,
     file_compressions,
+    picklers_to_validate,
     file_types,
     optimize,
     compressions_to_validate,
