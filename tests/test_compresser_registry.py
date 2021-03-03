@@ -1,5 +1,6 @@
 import re
 import pytest
+from compress_pickle.compressers.base import BaseCompresser
 from compress_pickle.compressers.registry import (
     get_compresser,
     get_compresser_from_extension,
@@ -19,7 +20,8 @@ def test_compresser_registry():
         extensions = ["mock_extension", ".mock"]
         read_mode = "rambling"
         write_mode = "stuttering"
-        proxy = object()
+        class proxy(BaseCompresser):
+            pass
         with pytest.raises(
             ValueError, match=f"Unknown compresser {name}. Available values are "
         ):
@@ -36,11 +38,12 @@ def test_compresser_registry():
         assert get_compression_write_mode(name) == write_mode
         assert get_compresser_from_extension("mock_extension") is proxy
         assert get_compresser_from_extension("mock") is proxy
+        assert get_compresser_from_extension(".mock") is proxy
         with pytest.raises(
             ValueError,
-            match=r"Unregistered extension \.mock. Registered extensions are ",
+            match=r"Tried to register the extension ",
         ):
-            get_compresser_from_extension(".mock")
+            register_compresser("mock2", proxy, extensions=["mock"])
     finally:
         del _compresser_registry._compresser_registry[name]
         del _compresser_registry._compresser_default_write_modes[name]
