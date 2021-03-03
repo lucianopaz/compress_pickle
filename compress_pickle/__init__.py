@@ -10,5 +10,8 @@ from .utils import (
     preprocess_path,
     open_compression_stream,
 )
+from . import compressers
+# from . import picklers
+# from . import io
 
-__version__ = "1.2.0"
+__version__ = "2.0.0"

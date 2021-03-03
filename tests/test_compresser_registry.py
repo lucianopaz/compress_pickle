@@ -38,7 +38,7 @@ def test_compresser_registry():
         assert get_compresser_from_extension("mock") is proxy
         with pytest.raises(
             ValueError,
-            match=r"Unregistered extension \.mock. Registered extensions are "
+            match=r"Unregistered extension \.mock. Registered extensions are ",
         ):
             get_compresser_from_extension(".mock")
     finally:
@@ -58,7 +58,8 @@ def test_validate_compression(compressions_to_validate):
     compression, infer_is_valid, expected_fail = compressions_to_validate
     if expected_fail:
         with pytest.raises(
-            ValueError, match=re.escape(f"Unknown compression {compression}. Available values are")
+            ValueError,
+            match=re.escape(f"Unknown compression {compression}. Available values are"),
         ):
             validate_compression(compression, infer_is_valid=infer_is_valid)
     else:
@@ -68,7 +69,10 @@ def test_validate_compression(compressions_to_validate):
 def test_get_default_compression_mapping():
     default_compression_mapping = get_default_compression_mapping()
     encountered = set()
-    for extension, compresser in _compresser_registry._compression_extension_map.items():
+    for (
+        extension,
+        compresser,
+    ) in _compresser_registry._compression_extension_map.items():
         if compresser not in encountered:
             assert default_compression_mapping[compresser] == extension
             encountered.add(compresser)
