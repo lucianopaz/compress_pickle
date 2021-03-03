@@ -19,7 +19,7 @@ class GzipCompresser(BaseCompresser):
 
 
 register_compresser(
-    name="gzip",
+    compression="gzip",
     compresser=GzipCompresser,
     extensions=["gz"],
     default_write_mode="wb",

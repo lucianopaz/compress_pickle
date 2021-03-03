@@ -32,7 +32,7 @@ class ZipfileCompresser(BaseCompresser):
 
 
 register_compresser(
-    name="zipfile",
+    compression="zipfile",
     compresser=ZipfileCompresser,
     extensions=["zip"],
     default_write_mode="w",

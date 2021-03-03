@@ -24,7 +24,7 @@ class NoCompresser(BaseCompresser):
 
 
 register_compresser(
-    name=None,
+    compression=None,
     compresser=NoCompresser,
     extensions=["pkl", "pickle"],
     default_write_mode="wb",

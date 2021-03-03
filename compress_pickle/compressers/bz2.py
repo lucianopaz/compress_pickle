@@ -19,7 +19,7 @@ class Bz2Compresser(BaseCompresser):
 
 
 register_compresser(
-    name="bz2",
+    compression="bz2",
     compresser=Bz2Compresser,
     extensions=["bz", "bz2"],
     default_write_mode="wb",

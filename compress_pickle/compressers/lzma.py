@@ -19,7 +19,7 @@ class LzmaCompresser(BaseCompresser):
 
 
 register_compresser(
-    name="lzma",
+    compression="lzma",
     compresser=LzmaCompresser,
     extensions=["lzma", "xz"],
     default_write_mode="wb",

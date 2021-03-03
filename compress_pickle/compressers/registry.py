@@ -130,7 +130,11 @@ class _compresser_registry:
                 f"A compresser with name {compression} is already registered. "
                 "Please choose a different name."
             )
-        if not issubclass(compresser, BaseCompresser):
+        try:
+            _subclass = issubclass(compresser, BaseCompresser)
+            if not _subclass:
+                raise TypeError()
+        except Exception:
             raise TypeError(
                 f"The supplied compresser {compresser} is not a derived from {BaseCompresser}"
             )
@@ -331,6 +335,6 @@ def list_registered_compressers() -> List[BaseCompresser]:
     Returns
     -------
     List[BaseCompresser]
-        The list of registerred compresser classes.
+        The list of registered compresser classes.
     """
     return list(_compresser_registry._compresser_registry.values())

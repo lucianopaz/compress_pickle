@@ -25,7 +25,7 @@ class Lz4Compresser(BaseCompresser):
 
 
 register_compresser(
-    name="lz4",
+    compression="lz4",
     compresser=Lz4Compresser,
     extensions=["lz4"],
     default_write_mode="wb",
