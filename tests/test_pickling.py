@@ -31,11 +31,18 @@ def test_load_fails_on_unhandled_compression(wrong_compressions):
 
 @pytest.mark.usefixtures("simple_dump_and_remove")
 def test_dump_compresses(simple_dump_and_remove):
-    path, compression, message = simple_dump_and_remove
+    path, compression, pickler_method, message = simple_dump_and_remove
     kwargs = dict()
     if compression == "zipfile":
         kwargs = dict(zipfile_compression=zipfile.ZIP_DEFLATED)
-    dump(message, path, compression=compression, set_default_extension=False, **kwargs)
+    dump(
+        message,
+        path,
+        compression=compression,
+        pickler_method=pickler_method,
+        set_default_extension=False,
+        **kwargs,
+    )
     with open(path, "rb") as f:
         compressed_message = f.read()
     if compression in (None, "pickle"):
@@ -80,15 +87,22 @@ def test_dump_load(dump_load):
                 load(path, compression, set_default_extension=set_default_extension)
 
 
-@pytest.mark.usefixtures("random_message", "compressions")
-def test_dumps_loads(random_message, compressions):
+@pytest.mark.usefixtures("random_message", "compressions", "pickler_method")
+def test_dumps_loads(random_message, compressions, pickler_method):
     message = random_message
-    assert loads(dumps(message, compressions), compressions) == message
+    assert (
+        loads(
+            dumps(message, compressions, pickler_method=pickler_method),
+            compressions,
+            pickler_method=pickler_method,
+        )
+        == message
+    )
 
 
 @pytest.mark.usefixtures("simple_dump_and_remove")
 def test_dump_vs_dumps(simple_dump_and_remove):
-    path, compression, message = simple_dump_and_remove
+    path, compression, pickler_method, message = simple_dump_and_remove
     kwargs = {}
     if compression == "zipfile":
         kwargs["arcname"] = path
@@ -96,35 +110,41 @@ def test_dump_vs_dumps(simple_dump_and_remove):
         message,
         path,
         compression=compression,
+        pickler_method=pickler_method,
         set_default_extension=False,
         **kwargs,
     )
-    cmp1 = dumps(message, compression=compression, **kwargs)
+    cmp1 = dumps(
+        message, compression=compression, pickler_method=pickler_method, **kwargs
+    )
     with open(path, "rb") as f:
         cmp2 = f.read()
     if compression != "gzip":
         assert cmp1 == cmp2
     else:
-        assert loads(cmp1, compression, **kwargs) == loads(cmp2, compression, **kwargs)
+        assert loads(
+            cmp1, compression, pickler_method=pickler_method, **kwargs
+        ) == loads(cmp2, compression, pickler_method=pickler_method, **kwargs)
 
 
 @pytest.mark.usefixtures("simple_dump_and_remove")
 def test_dump_load_on_filestreams(simple_dump_and_remove):
-    path, compression, message = simple_dump_and_remove
+    path, compression, pickler_method, message = simple_dump_and_remove
     read_mode = "rb"
     write_mode = "wb"
     with open(path, write_mode) as f:
-        dump(message, f, compression=compression)
+        dump(message, f, compression=compression, pickler_method=pickler_method)
     with open(path, read_mode) as f:
         raw_content = f.read()
         f.seek(0)
-        loaded_message = load(f, compression=compression)
+        loaded_message = load(f, compression=compression, pickler_method=pickler_method)
     assert loaded_message == message
     os.remove(path)
     dump(
         message,
         path,
         compression=compression,
+        pickler_method=pickler_method,
         set_default_extension=False,
     )
     with open(path, read_mode) as f:
@@ -138,7 +158,7 @@ def test_dump_load_on_filestreams(simple_dump_and_remove):
 
 @pytest.mark.usefixtures("simple_dump_and_remove")
 def test_load_vs_loads(simple_dump_and_remove):
-    path, compression, message = simple_dump_and_remove
+    path, compression, pickler_method, message = simple_dump_and_remove
     kwargs = {}
     if compression == "zipfile":
         kwargs["arcname"] = path
@@ -146,12 +166,19 @@ def test_load_vs_loads(simple_dump_and_remove):
         message,
         path,
         compression=compression,
+        pickler_method=pickler_method,
         set_default_extension=False,
         **kwargs,
     )
     with open(path, "rb") as f:
         data = f.read()
-    cmp1 = loads(data, compression=compression, **kwargs)
-    cmp2 = load(path, compression=compression, set_default_extension=False, **kwargs)
+    cmp1 = loads(data, compression=compression, pickler_method=pickler_method, **kwargs)
+    cmp2 = load(
+        path,
+        compression=compression,
+        pickler_method=pickler_method,
+        set_default_extension=False,
+        **kwargs,
+    )
     assert cmp1 == cmp2
     assert cmp1 == message

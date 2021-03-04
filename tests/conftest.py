@@ -11,6 +11,7 @@ from fixtures import (
     file_compressions,
     picklers_to_validate,
     file_types,
+    pickler_method,
     compressions_to_validate,
     preprocess_path_on_path_types,
     preprocess_path_on_file_types,

@@ -6,7 +6,7 @@ try:
     import cloudpickle
 
     _cloudpickle_available = True
-except ImportError:
+except ImportError:  # pragma: no cover
     _cloudpickle_available = False
 
 

@@ -103,6 +103,11 @@ def file_types(request):
     return request.param
 
 
+@pytest.fixture(scope="module", params=PICKLER_NAMES, ids=str)
+def pickler_method(request):
+    return request.param
+
+
 @pytest.fixture(
     scope="module",
     params=itertools.product(FILE_COMPRESSIONS + UNHANDLED_COMPRESSIONS, [True, False]),
@@ -216,9 +221,9 @@ def dump_load(file, random_message, file_compressions, set_default_extension):
 
 
 @pytest.fixture(scope="function")
-def simple_dump_and_remove(random_message, compressions):
+def simple_dump_and_remove(random_message, compressions, pickler_method):
     path = "test_dump_vs_dumps_{}".format(compressions)
-    yield (path, compressions, random_message)
+    yield (path, compressions, pickler_method, random_message)
     os.remove(path)
 
 

@@ -6,7 +6,7 @@ try:
     import dill
 
     _dill_available = True
-except ImportError:
+except ImportError:  # pragma: no cover
     _dill_available = False
 
 
