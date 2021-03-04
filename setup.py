@@ -18,9 +18,13 @@ URL = "https://github.com/lucianopaz/compress_pickle"
 
 
 lz4_requires = ["lz4"]
+dill_requires = ["dill"]
+cloudpickle_requires = ["cloudpickle"]
 extras_require = {
     "lz4": lz4_requires,
-    "full": lz4_requires,
+    "dill": dill_requires,
+    "cloudpickle": cloudpickle_requires,
+    "full": lz4_requires + dill_requires + cloudpickle_requires,
 }
 
 

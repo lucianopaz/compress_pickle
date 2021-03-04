@@ -1,6 +1,6 @@
 from os.path import basename
 from io import IOBase
-from typing import Union
+from typing import IO, Union
 import zipfile
 from .base import BaseCompresser, PathType, PATH_TYPES
 from .registry import register_compresser
@@ -9,7 +9,7 @@ from .registry import register_compresser
 class ZipfileCompresser(BaseCompresser):
     def __init__(
         self,
-        path: Union[PathType, IOBase],
+        path: Union[PathType, IO[bytes]],
         mode: str,
         arcname=None,
         pwd=None,
@@ -20,7 +20,7 @@ class ZipfileCompresser(BaseCompresser):
             kwargs["compression"] = zipfile_compression
         if not isinstance(path, PATH_TYPES + (IOBase,)):
             raise TypeError(f"Unhandled path type {type(path)}")
-        self._arch = zipfile.ZipFile(path, mode=mode, **kwargs)
+        self._arch = zipfile.ZipFile(path, mode=mode, **kwargs)  # type: ignore
         if arcname is None:
             if isinstance(path, PATH_TYPES):
                 file_path = basename(path)
@@ -29,13 +29,13 @@ class ZipfileCompresser(BaseCompresser):
             arcname = file_path
         else:
             file_path = arcname
-        self._stream = self._arch.open(file_path, mode=mode, pwd=pwd)
+        self._stream = self._arch.open(file_path, mode=mode, pwd=pwd)  # type: ignore
 
     def close(self):
         self._stream.close()
         self._arch.close()
 
-    def get_stream(self) -> IOBase:
+    def get_stream(self) -> IO[bytes]:
         return self._stream
 
 

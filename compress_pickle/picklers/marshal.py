@@ -9,10 +9,12 @@ __all__ = ["MarshalPicklerIO"]
 
 class MarshalPicklerIO(BasePicklerIO):
     def dump(self, obj: Any, stream: IO[bytes], **kwargs):
-        marshal.dump(obj, stream, **kwargs)
+        args = kwargs.pop("version", tuple())
+        args += tuple(kwargs.values())
+        marshal.dump(obj, stream, *args)
 
     def load(self, stream: IO[bytes], **kwargs):
-        return marshal.load(stream, **kwargs)
+        return marshal.load(stream)
 
 
 register_pickler("marshal", MarshalPicklerIO)

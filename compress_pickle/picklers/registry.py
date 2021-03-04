@@ -1,4 +1,4 @@
-from typing import Dict, Optional, List
+from typing import Dict, List, Type
 from .base import BasePicklerIO
 
 
@@ -11,11 +11,11 @@ __all__ = [
 
 
 class _pickler_registry:
-    _pickler_registry: Dict[str, BasePicklerIO] = {}
+    _pickler_registry: Dict[str, Type[BasePicklerIO]] = {}
     _pickler_aliases: Dict[str, str] = {}
 
     @classmethod
-    def get_pickler(cls, name: Optional[str]) -> BasePicklerIO:
+    def get_pickler(cls, name: str) -> Type[BasePicklerIO]:
         """Get the PicklerIO class registered with a given pickler name.
 
         Parameters
@@ -44,8 +44,8 @@ class _pickler_registry:
     @classmethod
     def register_pickler(
         cls,
-        name: Optional[str],
-        pickler: BasePicklerIO,
+        name: str,
+        pickler: Type[BasePicklerIO],
     ):
         """Register a pickler handler.
 
@@ -53,7 +53,7 @@ class _pickler_registry:
         ----------
         name: str
             The pickler name that will be registered.
-        pickler : BasePicklerIO
+        pickler : Type[BasePicklerIO]
             The PicklerIO class. This should be a :class:`~compress_pickle.picklers.base.BasePicklerIO`
             subclass.
 
@@ -129,7 +129,7 @@ def get_known_picklers() -> List[str]:
     return list(_pickler_registry._pickler_registry)
 
 
-def list_registered_picklers() -> List[BasePicklerIO]:  # pragma: no cover
+def list_registered_picklers() -> List[Type[BasePicklerIO]]:  # pragma: no cover
     """Get the list of registered PicklerIO classes.
 
     Returns
@@ -137,4 +137,4 @@ def list_registered_picklers() -> List[BasePicklerIO]:  # pragma: no cover
     List[BasePicklerIO]
         The list of registered pickler classes.
     """
-    return list(_pickler_registry.values())
+    return list(_pickler_registry._pickler_registry.values())

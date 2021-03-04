@@ -1,4 +1,4 @@
-from typing import Union, Optional
+from typing import Union, Optional, IO
 import codecs
 from os import PathLike
 from os.path import splitext
@@ -14,6 +14,7 @@ from .compressers import (
 
 PATH_TYPES = (str, bytes, PathLike)
 PathType = Union[str, bytes, PathLike]
+FileType = IO[bytes]
 
 
 __all__ = [
@@ -57,27 +58,29 @@ def _stringyfy_path(path: PathType) -> str:
 
 def instantiate_compresser(
     compression: Optional[str],
-    path: PathLike,
-    mode: Optional[str],
+    path: Union[PathType, FileType],
+    mode: str,
     set_default_extension: bool = True,
     **kwargs,
 ) -> BaseCompresser:
     if isinstance(path, PATH_TYPES):
-        path = _stringyfy_path(path)
+        _path = _stringyfy_path(path)
     if compression == "infer":
-        compression = _infer_compression_from_path(path)
+        compression = _infer_compression_from_path(_path)
     compresser_class = get_compresser(compression)
     if set_default_extension and isinstance(path, PATH_TYPES):
-        path = _set_default_extension(path, compression)
+        _path = _set_default_extension(_path, compression)
     if mode == "write":
         mode = get_compression_write_mode(compression)
     elif mode == "read":
         mode = get_compression_read_mode(compression)
-    compresser = compresser_class(path, mode=mode, **kwargs)
+    compresser = compresser_class(
+        _path if isinstance(path, PATH_TYPES) else path, mode=mode, **kwargs
+    )
     return compresser
 
 
-def _infer_compression_from_path(path):
+def _infer_compression_from_path(path: PathType) -> Optional[str]:
     if not isinstance(path, PATH_TYPES):
         raise TypeError(
             f"Cannot infer the compression from a path that is not an instance of "
@@ -87,6 +90,6 @@ def _infer_compression_from_path(path):
     return get_compression_from_extension(extension)
 
 
-def _set_default_extension(path, compression):
+def _set_default_extension(path: PathType, compression: Optional[str]) -> str:
     root, current_ext = splitext(_stringyfy_path(path))
     return root + get_default_compression_mapping()[compression]

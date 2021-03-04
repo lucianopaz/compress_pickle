@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Sequence, List
+from typing import Dict, Optional, Sequence, List, Type
 from .base import BaseCompresser
 
 
@@ -18,7 +18,7 @@ __all__ = [
 
 
 class _compresser_registry:
-    _compresser_registry: Dict[Optional[str], BaseCompresser] = {}
+    _compresser_registry: Dict[Optional[str], Type[BaseCompresser]] = {}
 
     _compresser_default_write_modes: Dict[Optional[str], str] = {}
 
@@ -29,7 +29,7 @@ class _compresser_registry:
     _compression_aliases: Dict[str, Optional[str]] = {}
 
     @classmethod
-    def get_compresser(cls, compression: Optional[str]) -> BaseCompresser:
+    def get_compresser(cls, compression: Optional[str]) -> Type[BaseCompresser]:
         """Get the compresser class registered with a given compression name.
 
         Parameters
@@ -44,7 +44,7 @@ class _compresser_registry:
 
         Returns
         -------
-        BaseCompresser
+        Type[BaseCompresser]
             The compresser class associated to the ``compression`` name.
         """
         try:
@@ -56,7 +56,7 @@ class _compresser_registry:
             )
 
     @classmethod
-    def get_compresser_from_extension(cls, extension: str) -> BaseCompresser:
+    def get_compresser_from_extension(cls, extension: str) -> Type[BaseCompresser]:
         """Get the compresser class registered with a given file extension.
 
         Parameters
@@ -74,7 +74,7 @@ class _compresser_registry:
 
         Returns
         -------
-        BaseCompresser
+        Type[BaseCompresser]
             The compresser class associated to the extension.
         """
         return cls._compresser_registry[cls.get_compression_from_extension(extension)]
@@ -113,7 +113,7 @@ class _compresser_registry:
     def register_compresser(
         cls,
         compression: Optional[str],
-        compresser: BaseCompresser,
+        compresser: Type[BaseCompresser],
         extensions: Sequence[str],
         default_write_mode: str = "wb",
         default_read_mode: str = "rb",
@@ -124,7 +124,7 @@ class _compresser_registry:
         ----------
         compression : Optional[str]
             The compression name that will be registered.
-        compresser : BaseCompresser
+        compresser : Type[BaseCompresser]
             The compresser class. This should be a :class:`~compress_pickle.compressers.base.BaseCompresser`
             subclass.
         extensions : Sequence[str]
@@ -179,7 +179,7 @@ class _compresser_registry:
         cls._compresser_default_read_modes[compression] = default_read_mode
 
     @classmethod
-    def get_compression_write_mode(cls, compression: Optional[str]):
+    def get_compression_write_mode(cls, compression: Optional[str]) -> str:
         """Get the compression's default mode for openning the file buffer for writing.
 
         Parameters
@@ -207,7 +207,7 @@ class _compresser_registry:
             )
 
     @classmethod
-    def get_compression_read_mode(cls, compression):
+    def get_compression_read_mode(cls, compression: Optional[str]) -> str:
         """Get the compression's default mode for openning the file buffer for reading.
 
         Parameters
@@ -364,12 +364,12 @@ def get_default_compression_mapping() -> Dict[Optional[str], str]:
     return output
 
 
-def list_registered_compressers() -> List[BaseCompresser]:  # pragma: no cover
+def list_registered_compressers() -> List[Type[BaseCompresser]]:  # pragma: no cover
     """Get the list of registered compresser classes.
 
     Returns
     -------
-    List[BaseCompresser]
+    List[Type[BaseCompresser]]
         The list of registered compresser classes.
     """
     return list(_compresser_registry._compresser_registry.values())

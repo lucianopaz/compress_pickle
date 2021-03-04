@@ -15,7 +15,7 @@ __all__ = ["dump", "load", "dumps", "loads"]
 
 PathLike = os.PathLike
 PathType = Union[str, bytes, PathLike]
-FileType = IO
+FileType = IO[bytes]
 
 
 def dump(
@@ -94,13 +94,12 @@ def dump(
     supplied ``path`` is a path-like object, ``load`` opens and then closes
     the file automatically
     """
-    if mode is None:
-        mode = "write"
+    _mode = "write" if mode is None else mode
     pickler = get_pickler(pickler_method)()
     compresser = instantiate_compresser(
         compression=compression,
         path=path,
-        mode=mode,
+        mode=_mode,
         set_default_extension=set_default_extension,
         **kwargs,
     )
@@ -307,13 +306,12 @@ def load(
     supplied ``path`` is a path-like object, ``load`` opens and then closes
     the file automatically.
     """
-    if mode is None:
-        mode = "read"
+    _mode = "read" if mode is None else mode
     pickler = get_pickler(pickler_method)()
     compresser = instantiate_compresser(
         compression=compression,
         path=path,
-        mode=mode,
+        mode=_mode,
         set_default_extension=set_default_extension,
         **kwargs,
     )

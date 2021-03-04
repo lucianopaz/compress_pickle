@@ -1,11 +1,11 @@
 from io import IOBase
-from typing import Union
+from typing import IO, Union
 from .base import BaseCompresser, PathType, PATH_TYPES
 from .registry import register_compresser
 
 
 class Lz4Compresser(BaseCompresser):
-    def __init__(self, path: Union[PathType, IOBase], mode: str, **kwargs):
+    def __init__(self, path: Union[PathType, IO[bytes]], mode: str, **kwargs):
         try:
             import lz4.frame
         except ImportError:
@@ -20,8 +20,8 @@ class Lz4Compresser(BaseCompresser):
     def close(self):
         self._stream.close()
 
-    def get_stream(self) -> IOBase:
-        return self._stream
+    def get_stream(self) -> IO[bytes]:
+        return self._stream  # type: ignore
 
 
 register_compresser(

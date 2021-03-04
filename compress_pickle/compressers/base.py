@@ -1,6 +1,5 @@
-from typing import Union
+from typing import Union, IO
 from abc import abstractmethod
-from io import IOBase
 from os import PathLike
 
 
@@ -12,7 +11,7 @@ class BaseCompresser:
     @abstractmethod
     def __init__(
         self,
-        path: Union[PathType, IOBase],
+        path: Union[PathType, IO[bytes]],
         mode: str,
         **kwargs,
     ):  # pragma: no cover
@@ -23,5 +22,5 @@ class BaseCompresser:
         pass
 
     @abstractmethod
-    def get_stream(self) -> IOBase:  # pragma: no cover
+    def get_stream(self) -> IO[bytes]:  # pragma: no cover
         pass
