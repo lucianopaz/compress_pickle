@@ -6,6 +6,7 @@ from compress_pickle.picklers.registry import (
     register_pickler,
     get_known_picklers,
     list_registered_picklers,
+    add_pickler_alias,
     _pickler_registry,
 )
 
@@ -13,8 +14,10 @@ from compress_pickle.picklers.registry import (
 def test_compresser_registry():
     try:
         name = "mock_pickler"
+
         class proxy(BasePicklerIO):
             pass
+
         with pytest.raises(
             ValueError, match=f"Unknown pickler {name}. Available values are "
         ):
@@ -24,6 +27,11 @@ def test_compresser_registry():
             proxy,
         )
         assert get_pickler(name) is proxy
+        with pytest.raises(
+            ValueError,
+            match=f"A pickler with name {name} is already registered. Please choose a ",
+        ):
+            register_pickler(name, proxy)
     finally:
         del _pickler_registry._pickler_registry[name]
 
@@ -43,3 +51,55 @@ def test_validate_picklers(picklers_to_validate):
             get_pickler(name)
     else:
         get_pickler(name)
+
+
+def test_register_wrong_type():
+    pickler = object
+    with pytest.raises(
+        TypeError,
+        match=re.escape(f"The supplied pickler {pickler} is not a derived from "),
+    ):
+        register_pickler(
+            name="mock_pickler",
+            pickler=pickler,
+        )
+
+
+def test_aliasing():
+    alias = "mock_alias"
+    name = "mock_pickler"
+
+    class proxy(BasePicklerIO):
+        pass
+
+    with pytest.raises(
+        ValueError, match=f"Unknown pickler name {name}. Available values are:"
+    ):
+        add_pickler_alias(
+            alias,
+            name,
+        )
+
+    register_pickler(
+        name,
+        proxy,
+    )
+    try:
+        add_pickler_alias(
+            alias,
+            name,
+        )
+        assert get_pickler(name) is get_pickler(alias)
+        assert _pickler_registry._pickler_aliases[alias] == name
+
+        with pytest.raises(
+            ValueError, match=f"The alias {alias} is already registered"
+        ):
+            add_pickler_alias(
+                alias,
+                name,
+            )
+    finally:
+        del _pickler_registry._pickler_registry[name]
+        del _pickler_registry._pickler_registry[alias]
+        del _pickler_registry._pickler_aliases[alias]

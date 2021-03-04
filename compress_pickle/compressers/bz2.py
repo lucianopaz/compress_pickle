@@ -7,9 +7,9 @@ from .registry import register_compresser
 
 class Bz2Compresser(BaseCompresser):
     def __init__(self, path: Union[PathType, IOBase], mode: str, **kwargs):
-        if not isinstance(PATH_TYPES + (IOBase,)):
+        if not isinstance(path, PATH_TYPES + (IOBase,)):
             raise TypeError(f"Unhandled path type {type(path)}")
-        self._stream = bz2.open(file=path, mode=mode, **kwargs)
+        self._stream = bz2.open(path, mode=mode, **kwargs)
 
     def close(self):
         self._stream.close()

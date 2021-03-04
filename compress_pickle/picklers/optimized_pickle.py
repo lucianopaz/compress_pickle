@@ -10,11 +10,8 @@ __all__ = ["OptimizedPicklerIO"]
 
 class OptimizedPicklerIO(BuiltinPicklerIO):
     def dump(self, obj: Any, stream: IO[bytes], **kwargs):
-        data = self.dumps(obj, **kwargs)
+        data = pickletools.optimize(pickle.dumps(obj, **kwargs))
         stream.write(data)
-
-    def dumps(self, data: Any, **kwargs) -> bytes:
-        return pickletools.optimize(pickle.dumps(data, **kwargs))
 
 
 register_pickler("optimized_pickle", OptimizedPicklerIO)

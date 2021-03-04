@@ -13,7 +13,7 @@ class Lz4Compresser(BaseCompresser):
                 "The lz4 compression protocol requires the lz4 package to be installed. "
                 "Please pip install lz4 and retry."
             )
-        if not isinstance(PATH_TYPES + (IOBase,)):
+        if not isinstance(path, PATH_TYPES + (IOBase,)):
             raise TypeError(f"Unhandled path type {type(path)}")
         self._stream = lz4.frame.open(path, mode=mode, **kwargs)
 

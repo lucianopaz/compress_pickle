@@ -2,13 +2,12 @@
 """
 A thin wrapper of standard ``pickle`` with standard compression libraries
 """
-import sys
-import pickle
-import pickletools
 import io
 import os
-from typing import Any, Union, Optional, Callable, Iterable, IO, Dict
-from .utils import validate_compression, preprocess_path
+from typing import Any, Union, Optional, IO, Dict
+from .picklers import get_pickler
+from .io import compress_and_pickle, uncompress_and_unpickle
+from .utils import instantiate_compresser
 
 
 __all__ = ["dump", "load", "dumps", "loads"]
@@ -23,14 +22,12 @@ def dump(
     obj: Any,
     path: Union[PathType, FileType],
     compression: Optional[str] = "infer",
+    pickler_method: str = "pickle",
+    pickler_kwargs: Optional[Dict[str, Any]] = None,
     mode: Optional[str] = None,
-    protocol: int = -1,
-    fix_imports: bool = True,
-    buffer_callback: Optional[Callable] = None,
     *,
     unhandled_extensions: str = "raise",
     set_default_extension: bool = True,
-    optimize: bool = False,
     **kwargs,
 ):
     r"""Dump the contents of an object to disk, to the supplied path, using a
@@ -50,13 +47,13 @@ def dump(
         The compression protocol to use. By default, the compression is
         inferred from the path's extension. To see available compression
         protocols refer to
-        :func:`~compress_pickle.utils.get_known_compressions`.
+        :func:`~compress_pickle.compressers.registry.get_known_compressions`.
     mode : Optional[str]
         Mode with which to open the file buffer. The default changes according
         to the compression protocol. Refer to
-        :func:`~compress_pickle.utils.get_compression_write_mode` to
+        :func:`~compress_pickle.compressers.registry.get_compression_write_mode` to
         see the defaults.
-    protocol : int
+    protocol : Optional[int]
         Pickle protocol to use
     fix_imports : bool
         If ``fix_imports`` is ``True`` and ``protocol`` is less than 3, pickle
@@ -91,77 +88,93 @@ def dump(
     -----
     To see the mapping between known compression protocols and filename
     extensions, call the function
-    :func:`~compress_pickle.utils.get_default_compression_mapping`.
+    :func:`~compress_pickle.compressers.registry.get_default_compression_mapping`.
     If the supplied ``path`` is a file-like object, ``load`` does not close it
     before exiting. The users must handle the closing on their own. If the
     supplied ``path`` is a path-like object, ``load`` opens and then closes
     the file automatically
     """
-    version_dependent_kwargs: Dict[str, Any] = dict()
-    if sys.version_info >= (3, 8):
-        version_dependent_kwargs["buffer_callback"] = buffer_callback
-    validate_compression(compression)
     if mode is None:
         mode = "write"
-    io_stream, arch, arcname, must_close = preprocess_path(
-        path,
-        mode,
+    pickler = get_pickler(pickler_method)()
+    compresser = instantiate_compresser(
         compression=compression,
-        unhandled_extensions=unhandled_extensions,
+        path=path,
+        mode=mode,
         set_default_extension=set_default_extension,
         **kwargs,
     )
+    if pickler_kwargs is None:
+        pickler_kwargs = {}
+    try:
+        compress_and_pickle(
+            compresser,
+            pickler=pickler,
+            obj=obj,
+            **pickler_kwargs,
+        )
+    finally:
+        compresser.close()
 
-    if arch is not None:
-        try:
-            if optimize:
-                buff = pickle.dumps(  # type: ignore
-                    obj,
-                    protocol=protocol,
-                    fix_imports=fix_imports,
-                    **version_dependent_kwargs,
-                )
-                buff = pickletools.optimize(buff)
-                io_stream.write(buff)
-            else:
-                pickle.dump(  # type: ignore
-                    obj,
-                    io_stream,
-                    protocol=protocol,
-                    fix_imports=fix_imports,
-                    **version_dependent_kwargs,
-                )
-        finally:
-            io_stream.flush()
-            if must_close:
-                io_stream.close()
-                arch.close()
-    else:
-        try:
-            if optimize:
-                buff = pickle.dumps(  # type: ignore
-                    obj,
-                    protocol=protocol,
-                    fix_imports=fix_imports,
-                    **version_dependent_kwargs,
-                )
-                buff = pickletools.optimize(buff)
-                io_stream.write(buff)
-            else:
-                pickle.dump(obj, io_stream, protocol=protocol, fix_imports=fix_imports)
-        finally:
-            io_stream.flush()
-            if must_close:
-                io_stream.close()
+    # if mode is None:
+    #     mode = "write"
+    # io_stream, arch, arcname, must_close = preprocess_path(
+    #     path,
+    #     mode,
+    #     compression=compression,
+    #     unhandled_extensions=unhandled_extensions,
+    #     set_default_extension=set_default_extension,
+    #     **kwargs,
+    # )
+
+    # if arch is not None:
+    #     try:
+    #         if optimize:
+    #             buff = pickle.dumps(  # type: ignore
+    #                 obj,
+    #                 protocol=protocol,
+    #                 fix_imports=fix_imports,
+    #                 **version_dependent_kwargs,
+    #             )
+    #             buff = pickletools.optimize(buff)
+    #             io_stream.write(buff)
+    #         else:
+    #             pickle.dump(  # type: ignore
+    #                 obj,
+    #                 io_stream,
+    #                 protocol=protocol,
+    #                 fix_imports=fix_imports,
+    #                 **version_dependent_kwargs,
+    #             )
+    #     finally:
+    #         io_stream.flush()
+    #         if must_close:
+    #             io_stream.close()
+    #             arch.close()
+    # else:
+    #     try:
+    #         if optimize:
+    #             buff = pickle.dumps(  # type: ignore
+    #                 obj,
+    #                 protocol=protocol,
+    #                 fix_imports=fix_imports,
+    #                 **version_dependent_kwargs,
+    #             )
+    #             buff = pickletools.optimize(buff)
+    #             io_stream.write(buff)
+    #         else:
+    #             pickle.dump(obj, io_stream, protocol=protocol, fix_imports=fix_imports)
+    #     finally:
+    #         io_stream.flush()
+    #         if must_close:
+    #             io_stream.close()
 
 
 def dumps(
     obj: Any,
     compression: Optional[str] = "infer",
-    protocol: int = -1,
-    fix_imports: bool = True,
-    buffer_callback: Optional[Callable] = None,
-    optimize: bool = False,
+    pickler_method: str = "pickle",
+    pickler_kwargs: Optional[Dict[str, Any]] = None,
     **kwargs,
 ) -> bytes:
     r"""Dump the contents of an object to a byte string, using a
@@ -201,19 +214,14 @@ def dumps(
     -------
     blob : bytes
     The resulting bytes of the pickled and compressed ``obj``.
-
     """
-    validate_compression(compression, infer_is_valid=False)
     with io.BytesIO() as stream:
         dump(
             obj,
             path=stream,
             compression=compression,
-            protocol=protocol,
-            fix_imports=fix_imports,
-            buffer_callback=buffer_callback,
-            set_default_extension=False,
-            optimize=optimize,
+            pickler_method=pickler_method,
+            pickler_kwargs=pickler_kwargs,
             **kwargs,
         )
         return stream.getvalue()
@@ -222,13 +230,10 @@ def dumps(
 def load(
     path: Union[PathType, FileType],
     compression: Optional[str] = "infer",
+    pickler_method: str = "pickle",
+    pickler_kwargs: Optional[Dict[str, Any]] = None,
     mode: Optional[str] = None,
-    fix_imports: bool = True,
-    encoding: str = "ASCII",
-    errors: str = "strict",
-    buffers: Optional[Iterable] = None,
     *,
-    arcname: Optional[str] = None,
     set_default_extension: bool = True,
     unhandled_extensions: str = "raise",
     **kwargs,
@@ -302,47 +307,26 @@ def load(
     supplied ``path`` is a path-like object, ``load`` opens and then closes
     the file automatically.
     """
-    version_dependent_kwargs: Dict[str, Any] = dict()
-    if sys.version_info >= (3, 8):
-        version_dependent_kwargs["buffers"] = buffers
-    validate_compression(compression)
     if mode is None:
         mode = "read"
-    io_stream, arch, arcname, must_close = preprocess_path(
-        path,
-        mode,
+    pickler = get_pickler(pickler_method)()
+    compresser = instantiate_compresser(
         compression=compression,
-        unhandled_extensions=unhandled_extensions,
+        path=path,
+        mode=mode,
         set_default_extension=set_default_extension,
-        arcname=arcname,
         **kwargs,
     )
-
-    if arch is not None:
-        try:
-            output = pickle.load(  # type: ignore
-                io_stream,
-                encoding=encoding,
-                errors=errors,
-                fix_imports=fix_imports,
-                **version_dependent_kwargs,
-            )
-        finally:
-            if must_close:
-                arch.close()
-                io_stream.close()
-    else:
-        try:
-            output = pickle.load(  # type: ignore
-                io_stream,
-                encoding=encoding,
-                errors=errors,
-                fix_imports=fix_imports,
-                **version_dependent_kwargs,
-            )
-        finally:
-            if must_close:
-                io_stream.close()
+    if pickler_kwargs is None:
+        pickler_kwargs = {}
+    try:
+        output = uncompress_and_unpickle(
+            compresser,
+            pickler=pickler,
+            **pickler_kwargs,
+        )
+    finally:
+        compresser.close()
     return output
 
 
@@ -350,11 +334,8 @@ def loads(
     data: bytes,
     compression: Optional[str],
     fix_imports: bool = True,
-    encoding: str = "ASCII",
-    errors: str = "strict",
-    buffers: Optional[Iterable] = None,
-    *,
-    arcname: Optional[str] = None,
+    pickler_method: str = "pickle",
+    pickler_kwargs: Optional[Dict[str, Any]] = None,
     **kwargs,
 ) -> Any:
     r"""Load an object from an input stream, uncompressing the contents with
@@ -401,16 +382,11 @@ def loads(
     The compression is a mandatory argument and it cannot be inferred from the
     input stream parameter.
     """
-    validate_compression(compression, infer_is_valid=False)
     with io.BytesIO(bytes(data)) as stream:
         return load(
             stream,
             compression=compression,
-            fix_imports=fix_imports,
-            encoding=encoding,
-            errors=errors,
-            buffers=buffers,
-            set_default_extension=False,
-            arcname=arcname,
+            pickler_method=pickler_method,
+            pickler_kwargs=pickler_kwargs,
             **kwargs,
         )

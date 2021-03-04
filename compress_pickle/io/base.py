@@ -1,42 +1,36 @@
 from functools import singledispatch
-from ..picklers.base import BasePickler
+from typing import Any
+from ..compressers.base import BaseCompresser
+from ..picklers.base import BasePicklerIO
 
 
 @singledispatch
-def dump_to_stream(pickler, stream, data, **kwargs):
+def compress_and_pickle(compresser, pickler, obj, pickler_kwargs=None):
     raise NotImplementedError(
-        f"dump_to_stream is not implemented for the supplied pickler type: {type(pickler)}"
+        f"compress_and_pickle is not implemented for the supplied compresser type: "
+        f"{type(compresser)}"
     )
 
-@dump_to_stream.register(BasePickler)
-def default_dump_to_stream(pickler, stream, data, **kwargs):
-    pickler(stream, **kwargs).dump(data)
 
-
-@singledispatch
-def compress_and_pickle(
-    compresser, pickler, data, compresser_kwargs=None, pickler_kwargs=None
+@compress_and_pickle.register(BaseCompresser)
+def default_compress_and_pickle(
+    compresser: BaseCompresser, pickler: BasePicklerIO, obj: Any, **kwargs
 ):
-    if compresser_kwargs is None:
-        compresser_kwargs = {}
-    if pickler_kwargs is None:
-        pickler_kwargs = {}
-    stream = compresser(compresser_kwargs).get_stream()
-    dump_to_stream(pickler=pickler, stream=stream, data=data, **pickler_kwargs)
-
-
-@singledispatch
-def load_from_stream(unpickler, stream, **kwargs):
-    return unpickler(stream, **kwargs).load()
+    pickler.dump(obj=obj, stream=compresser.get_stream(), **kwargs)
 
 
 @singledispatch
 def uncompress_and_unpickle(
-    uncompresser, unpickler, uncompresser_kwargs=None, unpickler_kwargs=None
-):
-    if uncompresser_kwargs is None:
-        uncompresser_kwargs = {}
-    if unpickler_kwargs is None:
-        unpickler_kwargs = {}
-    stream = uncompresser(uncompresser_kwargs).get_stream()
-    return load_from_stream(unpickler=unpickler, stream=stream, **unpickler_kwargs)
+    compresser: BaseCompresser, pickler: BasePicklerIO, **kwargs
+) -> Any:
+    raise NotImplementedError(
+        f"uncompress_and_unpickle is not implemented for the supplied compresser type: "
+        f"{type(compresser)}"
+    )
+
+
+@uncompress_and_unpickle.register(BaseCompresser)
+def default_uncompress_and_unpickle(
+    compresser: BaseCompresser, pickler: BasePicklerIO, **kwargs
+) -> Any:
+    return pickler.load(stream=compresser.get_stream(), **kwargs)

@@ -13,7 +13,7 @@ class NoCompresser(BaseCompresser):
             self._must_close = False
             self._stream = path
         else:
-            raise TypeError("Not handled type")
+            raise TypeError(f"Unhandled path type {type(path)}")
 
     def close(self):
         if self._must_close:

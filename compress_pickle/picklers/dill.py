@@ -1,8 +1,10 @@
 from typing import Any, IO
 from .base import BasePicklerIO
 from .registry import register_pickler
+
 try:
     import dill
+
     _dill_available = True
 except ImportError:
     _dill_available = False
@@ -25,12 +27,6 @@ class DillPicklerIO(BasePicklerIO):
 
     def load(self, stream: IO[bytes], **kwargs):
         return dill.load(stream, **kwargs)
-
-    def dumps(self, obj: Any, **kwargs) -> bytes:
-        return dill.dumps(obj, **kwargs)
-
-    def loads(self, data: bytes, **kwargs) -> Any:
-        return dill.loads(data, **kwargs)
 
 
 register_pickler("dill", DillPicklerIO)

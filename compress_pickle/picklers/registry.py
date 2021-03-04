@@ -2,11 +2,17 @@ from typing import Dict, Optional, List
 from .base import BasePicklerIO
 
 
-__all__ = ["get_pickler", "register_pickler", "get_known_picklers", "list_registered_picklers"]
+__all__ = [
+    "get_pickler",
+    "register_pickler",
+    "get_known_picklers",
+    "list_registered_picklers",
+]
 
 
 class _pickler_registry:
     _pickler_registry: Dict[str, BasePicklerIO] = {}
+    _pickler_aliases: Dict[str, str] = {}
 
     @classmethod
     def get_pickler(cls, name: Optional[str]) -> BasePicklerIO:
@@ -102,11 +108,14 @@ class _pickler_registry:
                 )
             )
         cls._pickler_registry[alias] = cls._pickler_registry[pickler]
+        cls._pickler_aliases[alias] = pickler
 
 
 get_pickler = _pickler_registry.get_pickler
 
 register_pickler = _pickler_registry.register_pickler
+
+add_pickler_alias = _pickler_registry.add_pickler_alias
 
 
 def get_known_picklers() -> List[str]:
@@ -120,9 +129,9 @@ def get_known_picklers() -> List[str]:
     return list(_pickler_registry._pickler_registry)
 
 
-def list_registered_picklers() -> List[BasePicklerIO]:
+def list_registered_picklers() -> List[BasePicklerIO]:  # pragma: no cover
     """Get the list of registered PicklerIO classes.
-    
+
     Returns
     -------
     List[BasePicklerIO]

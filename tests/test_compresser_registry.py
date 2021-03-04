@@ -10,6 +10,7 @@ from compress_pickle.compressers.registry import (
     get_known_compressions,
     validate_compression,
     get_default_compression_mapping,
+    add_compression_alias,
     _compresser_registry,
 )
 
@@ -20,8 +21,10 @@ def test_compresser_registry():
         extensions = ["mock_extension", ".mock"]
         read_mode = "rambling"
         write_mode = "stuttering"
+
         class proxy(BaseCompresser):
             pass
+
         with pytest.raises(
             ValueError, match=f"Unknown compresser {name}. Available values are "
         ):
@@ -44,6 +47,11 @@ def test_compresser_registry():
             match=r"Tried to register the extension ",
         ):
             register_compresser("mock2", proxy, extensions=["mock"])
+        with pytest.raises(
+            ValueError,
+            match=f"A compresser with name {name} is already registered. Please choose a ",
+        ):
+            register_compresser(name, proxy, extensions)
     finally:
         del _compresser_registry._compresser_registry[name]
         del _compresser_registry._compresser_default_write_modes[name]
@@ -81,3 +89,70 @@ def test_get_default_compression_mapping():
             encountered.add(compresser)
         else:
             assert default_compression_mapping[compresser] != extension
+
+
+def test_register_wrong_type():
+    compresser = object
+    with pytest.raises(
+        TypeError,
+        match=re.escape(f"The supplied compresser {compresser} is not a derived from "),
+    ):
+        register_compresser(
+            compression="mock_compresser",
+            compresser=compresser,
+            extensions=["mock_extension", ".mock"],
+        )
+
+
+def test_aliasing():
+    alias = "mock_alias"
+    name = "mock_compresser"
+    extensions = ["mock_extension", ".mock"]
+    read_mode = "rambling"
+    write_mode = "stuttering"
+
+    class proxy(BaseCompresser):
+        pass
+
+    with pytest.raises(
+        ValueError, match=f"Unknown compression {name}. Available values are:"
+    ):
+        add_compression_alias(
+            alias,
+            name,
+        )
+
+    register_compresser(
+        name,
+        proxy,
+        extensions=extensions,
+        default_read_mode=read_mode,
+        default_write_mode=write_mode,
+    )
+    try:
+        add_compression_alias(
+            alias,
+            name,
+        )
+        assert get_compresser(name) is get_compresser(alias)
+        assert get_compression_read_mode(name) == get_compression_read_mode(alias)
+        assert get_compression_write_mode(name) == get_compression_write_mode(alias)
+        assert _compresser_registry._compression_aliases[alias] == name
+
+        with pytest.raises(
+            ValueError, match=f"The alias {alias} is already registered"
+        ):
+            add_compression_alias(
+                alias,
+                name,
+            )
+    finally:
+        del _compresser_registry._compresser_registry[name]
+        del _compresser_registry._compresser_default_write_modes[name]
+        del _compresser_registry._compresser_default_read_modes[name]
+        for extension in extensions:
+            del _compresser_registry._compression_extension_map[extension.lstrip(".")]
+        del _compresser_registry._compresser_registry[alias]
+        del _compresser_registry._compresser_default_write_modes[alias]
+        del _compresser_registry._compresser_default_read_modes[alias]
+        del _compresser_registry._compression_aliases[alias]

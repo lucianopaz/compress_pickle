@@ -14,11 +14,5 @@ class MarshalPicklerIO(BasePicklerIO):
     def load(self, stream: IO[bytes], **kwargs):
         return marshal.load(stream, **kwargs)
 
-    def dumps(self, obj: Any, **kwargs) -> bytes:
-        return marshal.dumps(obj, **kwargs)
-
-    def loads(self, data: bytes, **kwargs) -> Any:
-        return marshal.loads(data, **kwargs)
-
 
 register_pickler("marshal", MarshalPicklerIO)

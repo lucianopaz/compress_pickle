@@ -5,6 +5,7 @@ from .base import BaseCompresser
 __all__ = [
     "get_compresser",
     "get_compresser_from_extension",
+    "get_compression_from_extension",
     "register_compresser",
     "get_compression_write_mode",
     "get_compression_read_mode",
@@ -24,6 +25,8 @@ class _compresser_registry:
     _compresser_default_read_modes: Dict[Optional[str], str] = {}
 
     _compression_extension_map: Dict[str, Optional[str]] = {}
+
+    _compression_aliases: Dict[str, Optional[str]] = {}
 
     @classmethod
     def get_compresser(cls, compression: Optional[str]) -> BaseCompresser:
@@ -74,14 +77,37 @@ class _compresser_registry:
         BaseCompresser
             The compresser class associated to the extension.
         """
+        return cls._compresser_registry[cls.get_compression_from_extension(extension)]
+
+    @classmethod
+    def get_compression_from_extension(cls, extension: str) -> Optional[str]:
+        """Get the compression name registered with a given file extension.
+
+        Parameters
+        ----------
+        extension : str
+            The file extension, for example ".zip".
+            Note that the dot characters will be striped from the left of any supplied extension
+            before the lookup it. This means that ".zip" and "zip" will be considered equivalent
+            extensions.
+
+        Raises
+        ------
+        ValueError
+            If the supplied ``extension`` has not been registered.
+
+        Returns
+        -------
+        Optional[str]
+            The compression name associated to the extension.
+        """
         try:
-            name = cls._compression_extension_map[extension.lstrip(".")]
+            return cls._compression_extension_map[extension.lstrip(".")]
         except Exception:
             raise ValueError(
                 f"Unregistered extension {extension}. "
                 f"Registered extensions are {list(cls._compression_extension_map)}"
             )
-        return cls._compresser_registry[name]
 
     @classmethod
     def register_compresser(
@@ -173,7 +199,7 @@ class _compresser_registry:
         """
         try:
             return cls._compresser_default_write_modes[compression]
-        except Exception:
+        except Exception:  # pragma: no cover
             raise ValueError(
                 "Unknown compression {}. Available values are: {}".format(
                     compression, list(cls._compresser_default_write_modes)
@@ -201,7 +227,7 @@ class _compresser_registry:
         """
         try:
             return cls._compresser_default_read_modes[compression]
-        except Exception:
+        except Exception:  # pragma: no cover
             raise ValueError(
                 "Unknown compression {}. Available values are: {}".format(
                     compression, list(cls._compresser_default_read_modes)
@@ -242,11 +268,14 @@ class _compresser_registry:
         cls._compresser_default_read_modes[alias] = cls._compresser_default_read_modes[
             compression
         ]
+        cls._compression_aliases[alias] = compression
 
 
 get_compresser = _compresser_registry.get_compresser
 
 get_compresser_from_extension = _compresser_registry.get_compresser_from_extension
+
+get_compression_from_extension = _compresser_registry.get_compression_from_extension
 
 register_compresser = _compresser_registry.register_compresser
 
@@ -257,7 +286,7 @@ get_compression_write_mode = _compresser_registry.get_compression_write_mode
 add_compression_alias = _compresser_registry.add_compression_alias
 
 
-def get_registered_extensions() -> Dict[str, Optional[str]]:
+def get_registered_extensions() -> Dict[str, Optional[str]]:  # pragma: no cover
     """Get a copy of the mapping between file extensions and registered compressers.
 
     Returns
@@ -326,12 +355,18 @@ def get_default_compression_mapping() -> Dict[Optional[str], str]:
     ) in _compresser_registry._compression_extension_map.items():
         if compresser_name not in output:
             output[compresser_name] = extension
+    output.update(
+        {
+            alias: output[compression]
+            for alias, compression in _compresser_registry._compression_aliases.items()
+        }
+    )
     return output
 
 
-def list_registered_compressers() -> List[BaseCompresser]:
+def list_registered_compressers() -> List[BaseCompresser]:  # pragma: no cover
     """Get the list of registered compresser classes.
-    
+
     Returns
     -------
     List[BaseCompresser]

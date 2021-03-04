@@ -8,9 +8,17 @@ from .registry import register_compresser
 
 class ZipfileCompresser(BaseCompresser):
     def __init__(
-        self, path: Union[PathType, IOBase], mode: str, arcname=None, pwd=None, **kwargs
+        self,
+        path: Union[PathType, IOBase],
+        mode: str,
+        arcname=None,
+        pwd=None,
+        zipfile_compression=None,
+        **kwargs,
     ):
-        if not isinstance(PATH_TYPES + (IOBase,)):
+        if zipfile_compression is not None:
+            kwargs["compression"] = zipfile_compression
+        if not isinstance(path, PATH_TYPES + (IOBase,)):
             raise TypeError(f"Unhandled path type {type(path)}")
         self._arch = zipfile.ZipFile(path, mode=mode, **kwargs)
         if arcname is None:

@@ -14,11 +14,5 @@ class BuiltinPicklerIO(BasePicklerIO):
     def load(self, stream: IO[bytes], **kwargs):
         return pickle.load(stream, **kwargs)
 
-    def dumps(self, obj: Any, **kwargs) -> bytes:
-        return pickle.dumps(obj, **kwargs)
-
-    def loads(self, data: bytes, **kwargs) -> Any:
-        return pickle.loads(data, **kwargs)
-
 
 register_pickler("pickle", BuiltinPicklerIO)
