@@ -6,6 +6,9 @@ API Reference
    :maxdepth: 2
 
    api/compress_pickle
+   api/io
+   api/compressers
+   api/picklers
    api/utils
 
 Indices and tables

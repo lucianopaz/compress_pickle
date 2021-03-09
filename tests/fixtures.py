@@ -5,47 +5,41 @@ import sys
 import codecs
 import itertools
 import pathlib
-from compress_pickle import (
-    set_default_extensions,
-    infer_compression_from_filename,
-    get_default_compression_mapping,
-    get_compression_read_mode,
-    get_compression_write_mode,
-)
-from compress_pickle.utils import _stringyfy_path
 import compress_pickle
+from compress_pickle.compressers import get_compression_write_mode
+from compress_pickle.utils import (
+    _stringyfy_path,
+    _set_default_extension,
+    _infer_compression_from_path,
+)
 
 
 COMPRESSION_NAMES = [None, "pickle", "gzip", "bz2", "lzma", "zipfile", "lz4"]
 UNHANDLED_COMPRESSIONS = ["gzip2", "tar", "zip", 3, [1, 3]]
+PICKLER_NAMES = ["pickle", "optimized_pickle", "marshal", "dill", "cloudpickle"]
+UNHANDLED_PICKLERS = [None, "tar", "zip", 3, [1, 3]]
+VALID_EXTENSIONS = [
+    ("pkl", None),
+    ("pickle", None),
+    ("gz", "gzip"),
+    ("bz", "bz2"),
+    ("bz2", "bz2"),
+    ("lzma", "lzma"),
+    ("xz", "lzma"),
+    ("zip", "zipfile"),
+    ("lz4", "lz4"),
+]
+INVALID_EXTENSIONS = ["", "unknown"]
 FILENAMES = [
-    "test_blabla_{}",
-    "test_blabla_{}.pkl",
-    "test_blabla_{}.gz",
-    "test_blabla_{}.bz",
-    "test_blabla_{}.lzma",
-    "test_blabla_{}.zip",
-    "test_blabla_{}.lz4",
-    "test_blabla_{}.unknown",
-    b"test_blabla_{}",
-    b"test_blabla_{}.pkl",
-    b"test_blabla_{}.gz",
-    b"test_blabla_{}.bz",
-    b"test_blabla_{}.lzma",
-    b"test_blabla_{}.zip",
-    b"test_blabla_{}.lz4",
-    b"test_blabla_{}.unknown",
-    pathlib.Path("test_blabla_{}"),
-    pathlib.Path("test_blabla_{}.pkl"),
-    pathlib.Path("test_blabla_{}.gz"),
-    pathlib.Path("test_blabla_{}.bz"),
-    pathlib.Path("test_blabla_{}.lzma"),
-    pathlib.Path("test_blabla_{}.zip"),
-    pathlib.Path("test_blabla_{}.lz4"),
-    pathlib.Path("test_blabla_{}.unknown"),
+    klass(".".join([prefix, extension]) if extension else prefix)
+    for prefix, extension, klass in itertools.product(
+        ["test_blabla_{}"],
+        [e[0] for e in VALID_EXTENSIONS] + INVALID_EXTENSIONS,
+        [str, lambda x: bytes(x, "utf-8"), pathlib.Path],
+    )
 ]
 UNHANDLED_EXTENSIONS = ["ignore", "warn", "raise"]
-FILE_COMPRESSIONS = [None, "pickle", "gzip", "bz2", "lzma", "zipfile", "lz4", "infer"]
+FILE_COMPRESSIONS = COMPRESSION_NAMES + ["infer"]
 FILE_TYPES = ["file", io.BytesIO, io.BufferedWriter, io.BufferedReader]
 
 
@@ -74,6 +68,16 @@ def wrong_compressions(request):
     return request.param
 
 
+@pytest.fixture(scope="module", params=VALID_EXTENSIONS, ids=str)
+def valid_extensions(request):
+    return request.param
+
+
+@pytest.fixture(scope="module", params=INVALID_EXTENSIONS, ids=str)
+def invalid_extensions(request):
+    return request.param
+
+
 @pytest.fixture(scope="module", params=FILENAMES, ids=str)
 def file(request):
     return request.param
@@ -99,8 +103,8 @@ def file_types(request):
     return request.param
 
 
-@pytest.fixture(scope="module", params=[False, True], ids=str)
-def optimize(request):
+@pytest.fixture(scope="module", params=PICKLER_NAMES, ids=str)
+def pickler_method(request):
     return request.param
 
 
@@ -119,6 +123,18 @@ def compressions_to_validate(request):
     return compression, infer_is_valid, expected_fail
 
 
+@pytest.fixture(
+    scope="module",
+    params=zip(
+        itertools.product(PICKLER_NAMES, [True]),
+        itertools.product(UNHANDLED_PICKLERS, [False]),
+    ),
+    ids=str,
+)
+def picklers_to_validate(request):
+    return request.param
+
+
 @pytest.fixture(scope="function")
 def preprocess_path_on_path_types(file, compressions, set_default_extension):
     _file = _stringyfy_path(file).format(compressions)
@@ -130,7 +146,7 @@ def preprocess_path_on_path_types(file, compressions, set_default_extension):
         file = _file
     expected_path = _stringyfy_path(file).format(compressions)
     if set_default_extension:
-        expected_path = set_default_extensions(expected_path, compression=compressions)
+        expected_path = _set_default_extension(expected_path, compression=compressions)
     mode = get_compression_write_mode(compressions)
     yield file, compressions, set_default_extension, mode, expected_path
     os.remove(expected_path)
@@ -165,7 +181,7 @@ def preprocess_path_on_file_types_and_compressions(
 
 
 @pytest.fixture(scope="function")
-def dump_load(file, random_message, file_compressions, set_default_extension, optimize):
+def dump_load(file, random_message, file_compressions, set_default_extension):
     message = random_message
     _file = _stringyfy_path(file).format(file_compressions)
     if isinstance(file, bytes):
@@ -176,14 +192,16 @@ def dump_load(file, random_message, file_compressions, set_default_extension, op
         file = _file
     expected_fail = None
     if file_compressions == "infer":
-        inf_compress = infer_compression_from_filename(file, "ignore")
-        if inf_compress is None:
+        try:
+            inf_compress = _infer_compression_from_path(file)
+        except:
+            inf_compress = None
             expected_fail = ValueError
     else:
         inf_compress = file_compressions
     if expected_fail is None:
         if set_default_extension:
-            expected_file = set_default_extensions(file, inf_compress)
+            expected_file = _set_default_extension(file, inf_compress)
         else:
             expected_file = _stringyfy_path(file)
     else:
@@ -192,19 +210,20 @@ def dump_load(file, random_message, file_compressions, set_default_extension, op
         message,
         file,
         file_compressions,
+        inf_compress,
         set_default_extension,
-        optimize,
         expected_file,
         expected_fail,
     )
     if expected_file is not None:
+        print(file, file_compressions, set_default_extension, expected_file)
         os.remove(expected_file)
 
 
 @pytest.fixture(scope="function")
-def simple_dump_and_remove(random_message, compressions, optimize):
+def simple_dump_and_remove(random_message, compressions, pickler_method):
     path = "test_dump_vs_dumps_{}".format(compressions)
-    yield (path, compressions, random_message, optimize)
+    yield (path, compressions, pickler_method, random_message)
     os.remove(path)
 
 
@@ -214,3 +233,19 @@ def hijack_lz4():
     sys.modules["lz4"] = None
     yield
     sys.modules["lz4"] = old_lz4
+
+
+@pytest.fixture(scope="function")
+def hijack_dill():
+    old = compress_pickle.picklers.dill._dill_available
+    compress_pickle.picklers.dill._dill_available = False
+    yield
+    compress_pickle.picklers.dill._dill_available = old
+
+
+@pytest.fixture(scope="function")
+def hijack_cloudpickle():
+    old = compress_pickle.picklers.cloudpickle._cloudpickle_available
+    compress_pickle.picklers.cloudpickle._cloudpickle_available = False
+    yield
+    compress_pickle.picklers.cloudpickle._cloudpickle_available = old

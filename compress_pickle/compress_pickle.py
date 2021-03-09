@@ -2,13 +2,12 @@
 """
 A thin wrapper of standard ``pickle`` with standard compression libraries
 """
-import sys
-import pickle
-import pickletools
 import io
 import os
-from typing import Any, Union, Optional, Callable, Iterable, IO, Dict
-from .utils import validate_compression, preprocess_path
+from typing import Any, Union, Optional, IO, Dict
+from .picklers import get_pickler
+from .io import compress_and_pickle, uncompress_and_unpickle
+from .utils import instantiate_compresser
 
 
 __all__ = ["dump", "load", "dumps", "loads"]
@@ -16,204 +15,168 @@ __all__ = ["dump", "load", "dumps", "loads"]
 
 PathLike = os.PathLike
 PathType = Union[str, bytes, PathLike]
-FileType = IO
+FileType = IO[bytes]
 
 
 def dump(
     obj: Any,
     path: Union[PathType, FileType],
     compression: Optional[str] = "infer",
+    pickler_method: str = "pickle",
+    pickler_kwargs: Optional[Dict[str, Any]] = None,
     mode: Optional[str] = None,
-    protocol: int = -1,
-    fix_imports: bool = True,
-    buffer_callback: Optional[Callable] = None,
     *,
-    unhandled_extensions: str = "raise",
     set_default_extension: bool = True,
-    optimize: bool = False,
     **kwargs,
 ):
-    r"""Dump the contents of an object to disk, to the supplied path, using a
-    given compression protocol.
-    For example, if ``gzip`` compression is specified, the file buffer is
-    opened as ``gzip.open`` and the desired content is dumped into the buffer
-    using a normal ``pickle.dump`` call.
+    """Serialize an object and write it to a file-like object.
+
+    It is possible to specify a desired serialization method and a compression protocol to use.
+    For example, if ``gzip`` compression is specified, the object is serialized using the standard
+    :func:`pickle.dump` and compressed using gzip.
+
+    Behind the scenes, this function only instantiates
+    :class:`~compress_pickle.compressers.base.BaseCompresser` and
+    :class:`~compress_pickle.picklers.base.BasePicklerIO` instances depending on the supplied
+    names, and then calls :func:`~compress_pickle.io.base.compress_and_pickle` with them.
 
     Parameters
     ----------
     obj : Any
-        The object that will be saved to disk
+        The object that will be serialized
     path : Union[PathType, FileType]
-        A path-like object (``str``, ``bytes``, ``os.PathType``) or a file-like
-        object (``io.BaseIO`` instances). The path to which to dump the ``obj``.
+        A path-like object (``str``, ``bytes``, ``os.PathType``) or a file-like object
+        (``io.BaseIO`` instances). The path to which to dump the ``obj``.
     compression : Optional[str]
-        The compression protocol to use. By default, the compression is
-        inferred from the path's extension. To see available compression
-        protocols refer to
-        :func:`~compress_pickle.utils.get_known_compressions`.
+        The compression protocol to use. By default, the compression is inferred from the path's
+        extension. This compression name passed to
+        :func:`~compress_pickle.compressers.registry.get_compresser` to create a
+        :class:`~compress_pickle.compressers.base.BaseCompresser` instance. This instance will be
+        used to create a file-like object onto which to write the serialized binary representation
+        of ``obj``.
+        To see available compression protocols refer to
+        :func:`~compress_pickle.compressers.registry.get_known_compressions`.
+    pickler_method : str
+        The name of the serialization method to use. This method name is passed to
+        :func:`~compress_pickle.picklers.registry.get_pickler` to create a
+        :class:`~compress_pickle.picklers.base.BasePicklerIO` instance. The default method is
+        ``"pickle"``, which means that a :class:`~compress_pickle.picklers.pickle.BuiltinPicklerIO`
+        will be created by default, and its
+        :meth:`~compress_pickle.picklers.pickle.BuiltinPicklerIO.dump` will be used for
+        serializing the ``obj``.
+        Refer to :func:`~compress_pickle.picklers.registry.get_known_picklers` to see the available
+        serialization methods.
+    pickler_kwargs : Optional[Dict[str, Any]]
+        An optional dictionary of keyword arguments to pass to
+        :meth:`~compress_pickle.picklers.base.BasePicklerIO.dump` when ``obj`` is serialized. For
+        example, this could be ``{"protocol": -1, "fix_imports": True}`` when the default
+        ``"pickle"`` serialization method is used.
     mode : Optional[str]
-        Mode with which to open the file buffer. The default changes according
-        to the compression protocol. Refer to
-        :func:`~compress_pickle.utils.get_compression_write_mode` to
-        see the defaults.
-    protocol : int
-        Pickle protocol to use
-    fix_imports : bool
-        If ``fix_imports`` is ``True`` and ``protocol`` is less than 3, pickle
-        will try to map the new Python 3 names to the old module names used
-        in Python 2, so that the pickle data stream is readable with Python 2.
-    buffer_callback : Optional[Callable]
-        Only used in python 3.8. Tells pickle how to serialize buffers.
-        Refer to the standard ``pickle`` documentation for details.
+        Mode with which to open the file buffer. The default changes according to the compression
+        protocol. Refer to :func:`~compress_pickle.compressers.registry.get_compression_write_mode`
+        to see the defaults.
     set_default_extension : bool
-        If ``True``, the default extension given the provided compression
-        protocol is set to the supplied ``path``. Refer to
-        :func:`~compress_pickle.utils.set_default_extensions` for
-        more information.
-    unhandled_extensions : str
-        Specify what to do if the extension is not understood when inferring
-        the compression protocol from the provided path. Can be "ignore" (use
-        ".pkl"), "warn" (issue warning and use ".pkl") or "raise" (raise a
-        ValueError).
-    optimize : bool
-        If ``True``, the pickled data is optimized using ``pickletools.optimize``
-        before writing it to the ``path``. This may lead end files that have
-        smaller in size, but this also means that the uncompressed pickled
-        data will first be loaded completely in memory to optimize it and
-        finally write it to the ``path``. Meaning it can produce a
-        ``MemoryError``.
+        If ``True``, the default extension given the provided compression protocol is set to the
+        supplied ``path``. Refer to
+        :func:`~compress_pickle.compressers.registry.get_default_compression_mapping` for the
+        default extension registered to each compression method.
     kwargs :
-        Any extra keyword arguments are passed to the compressed file opening
-        protocol. The only exception is the ``compression`` kwarg of the
-        ``zipfile`` protocol. This kwarg is called ``zipfile_compression``.
+        Any extra keyword arguments are passed to
+        :func:`compress_pickle.utils.instantiate_compresser`, which in turn creates the
+        compresser instance that will be used.
 
     Notes
     -----
-    To see the mapping between known compression protocols and filename
-    extensions, call the function
-    :func:`~compress_pickle.utils.get_default_compression_mapping`.
-    If the supplied ``path`` is a file-like object, ``load`` does not close it
-    before exiting. The users must handle the closing on their own. If the
-    supplied ``path`` is a path-like object, ``load`` opens and then closes
-    the file automatically
+    If the supplied ``path`` is a file-like object, ``dump`` does not close it before exiting.
+    The users must handle the closing on their own. If the supplied ``path`` is a path-like object,
+    ``dump`` opens and then closes the file after the writting process finishes.
     """
-    version_dependent_kwargs: Dict[str, Any] = dict()
-    if sys.version_info >= (3, 8):
-        version_dependent_kwargs["buffer_callback"] = buffer_callback
-    validate_compression(compression)
-    if mode is None:
-        mode = "write"
-    io_stream, arch, arcname, must_close = preprocess_path(
-        path,
-        mode,
+    _mode = "write" if mode is None else mode
+    pickler = get_pickler(pickler_method)()
+    compresser = instantiate_compresser(
         compression=compression,
-        unhandled_extensions=unhandled_extensions,
+        path=path,
+        mode=_mode,
         set_default_extension=set_default_extension,
         **kwargs,
     )
-
-    if arch is not None:
-        try:
-            if optimize:
-                buff = pickle.dumps(  # type: ignore
-                    obj,
-                    protocol=protocol,
-                    fix_imports=fix_imports,
-                    **version_dependent_kwargs,
-                )
-                buff = pickletools.optimize(buff)
-                io_stream.write(buff)
-            else:
-                pickle.dump(  # type: ignore
-                    obj,
-                    io_stream,
-                    protocol=protocol,
-                    fix_imports=fix_imports,
-                    **version_dependent_kwargs,
-                )
-        finally:
-            io_stream.flush()
-            if must_close:
-                io_stream.close()
-                arch.close()
-    else:
-        try:
-            if optimize:
-                buff = pickle.dumps(  # type: ignore
-                    obj,
-                    protocol=protocol,
-                    fix_imports=fix_imports,
-                    **version_dependent_kwargs,
-                )
-                buff = pickletools.optimize(buff)
-                io_stream.write(buff)
-            else:
-                pickle.dump(obj, io_stream, protocol=protocol, fix_imports=fix_imports)
-        finally:
-            io_stream.flush()
-            if must_close:
-                io_stream.close()
+    if pickler_kwargs is None:
+        pickler_kwargs = {}
+    try:
+        compress_and_pickle(
+            compresser,
+            pickler=pickler,
+            obj=obj,
+            **pickler_kwargs,
+        )
+    finally:
+        compresser.close()
 
 
 def dumps(
     obj: Any,
-    compression: Optional[str] = "infer",
-    protocol: int = -1,
-    fix_imports: bool = True,
-    buffer_callback: Optional[Callable] = None,
-    optimize: bool = False,
+    compression: Optional[str],
+    pickler_method: str = "pickle",
+    pickler_kwargs: Optional[Dict[str, Any]] = None,
     **kwargs,
 ) -> bytes:
-    r"""Dump the contents of an object to a byte string, using a
-    given compression protocol.
-    For example, if ``gzip`` compression is specified, the file buffer is
-    opened as ``gzip.open`` and the desired content is dumped into the buffer
-    using a normal ``pickle.dump`` call.
+    """Serialize an object and return its binary representation.
+
+    It is possible to specify a desired serialization method and a compression protocol to use.
+    For example, if ``gzip`` compression is specified, the serialized object is compressed using
+    gzip.
+
+    Behind the scenes, this function only instantiates
+    :class:`~compress_pickle.compressers.base.BaseCompresser` around a ``io.BinaryIO`` and
+    :class:`~compress_pickle.picklers.base.BasePicklerIO` instances depending on the supplied
+    names, and then calls :func:`~compress_pickle.io.base.compress_and_pickle` with them. The
+    contents of the ``io.BinaryIO`` are then returned.
 
     Parameters
     ----------
     obj : Any
-        The object that will be saved to disk
+        The object that will be serialized.
     compression : Optional[str]
-        The compression protocol to use. By default, the compression is
-        inferred from the path's extension. To see available compression
-        protocols refer to
-        :func:`~compress_pickle.utils.get_known_compressions`.
-    protocol : int
-        Pickle protocol to use
-    fix_imports : bool
-        If ``fix_imports`` is ``True`` and ``protocol`` is less than 3, pickle
-        will try to map the new Python 3 names to the old module names used
-        in Python 2, so that the pickle data stream is readable with Python 2.
-    buffer_callback : Optional[Callable]
-        Only used in python 3.8. Tells pickle how to serialize buffers.
-        Refer to the standard ``pickle`` documentation for details.
-    optimize : bool
-        If ``True``, the pickled data is optimized using ``pickletools.optimize``
-        before compressing it. This will produce a final byte array that has a
-        smaller or equal size than the ``optimze=False`` case.
-    kwargs :
-        Any extra keyword arguments are passed to the compressed file opening
-        protocol. The only exception is the ``compression`` kwarg of the
-        ``zipfile`` protocol. This kwarg is called ``zipfile_compression``.
+        The compression protocol to use. By default, the compression is inferred from the path's
+        extension. This compression name passed to
+        :func:`~compress_pickle.compressers.registry.get_compresser` to create a
+        :class:`~compress_pickle.compressers.base.BaseCompresser` instance. This instance will be
+        used to create a file-like object onto which to write the serialized binary representation
+        of ``obj``.
+        To see available compression protocols refer to
+        :func:`~compress_pickle.compressers.registry.get_known_compressions`.
+    pickler_method : str
+        The name of the serialization method to use. This method name is passed to
+        :func:`~compress_pickle.picklers.registry.get_pickler` to create a
+        :class:`~compress_pickle.picklers.base.BasePicklerIO` instance. The default method is
+        ``"pickle"``, which means that a :class:`~compress_pickle.picklers.pickle.BuiltinPicklerIO`
+        will be created by default, and its
+        :meth:`~compress_pickle.picklers.pickle.BuiltinPicklerIO.dump` will be used for
+        serializing the ``obj``.
+        Refer to :func:`~compress_pickle.picklers.registry.get_known_picklers` to see the available
+        serialization methods.
+    pickler_kwargs : Optional[Dict[str, Any]]
+        An optional dictionary of keyword arguments to pass to
+        :meth:`~compress_pickle.picklers.base.BasePicklerIO.dump` when ``obj`` is serialized. For
+        example, this could be ``{"protocol": -1, "fix_imports": True}`` when the default
+        ``"pickle"`` serialization method is used.
 
     Returns
     -------
-    blob : bytes
-    The resulting bytes of the pickled and compressed ``obj``.
+    bytes
+        The resulting bytes of the serialized ``obj`` after being compressed.
 
+    Notes
+    -----
+    The ``compression`` argument is mandatory because it cannot be inferred.
     """
-    validate_compression(compression, infer_is_valid=False)
     with io.BytesIO() as stream:
         dump(
             obj,
             path=stream,
             compression=compression,
-            protocol=protocol,
-            fix_imports=fix_imports,
-            buffer_callback=buffer_callback,
-            set_default_extension=False,
-            optimize=optimize,
+            pickler_method=pickler_method,
+            pickler_kwargs=pickler_kwargs,
             **kwargs,
         )
         return stream.getvalue()
@@ -222,195 +185,166 @@ def dumps(
 def load(
     path: Union[PathType, FileType],
     compression: Optional[str] = "infer",
+    pickler_method: str = "pickle",
+    pickler_kwargs: Optional[Dict[str, Any]] = None,
     mode: Optional[str] = None,
-    fix_imports: bool = True,
-    encoding: str = "ASCII",
-    errors: str = "strict",
-    buffers: Optional[Iterable] = None,
     *,
-    arcname: Optional[str] = None,
     set_default_extension: bool = True,
-    unhandled_extensions: str = "raise",
     **kwargs,
 ) -> Any:
-    r"""Load an object from a file stored in disk, given compression protocol.
-    For example, if ``gzip`` compression is specified, the file buffer is opened
-    as ``gzip.open`` and the desired content is loaded from the open buffer
-    using a normal ``pickle.load`` call.
+    """Load an object from its serialized binary representation stored in a file-like object.
+
+    It is possible to specify a desired serialization method and a compression protocol to use.
+    For example, if ``gzip`` compression is specified, the contents of the supplied file-like
+    object are uncompressed using gzip and then loaded using standard :func:`pickle.load`.
+
+    Behind the scenes, this function only instantiates
+    :class:`~compress_pickle.compressers.base.BaseCompresser` and
+    :class:`~compress_pickle.picklers.base.BasePicklerIO` instances depending on the supplied
+    names, and then calls :func:`~compress_pickle.io.base.uncompress_and_unpickle` with them.
 
     Parameters
     ----------
     path : Union[PathType, FileType]
-        A path-like object (``str``, ``bytes``, ``os.PathType``) or a file-like
-        object (``io.BaseIO`` instances). The path from which to load the ``obj``.
+        A path-like object (``str``, ``bytes``, ``os.PathType``) or a file-like object
+        (``io.BaseIO`` instances). The path to which to dump the ``obj``.
     compression : Optional[str]
-        The compression protocol to use. By default, the compression is
-        inferred from the path's extension. To see available compression
-        protocols refer to
-        :func:`~compress_pickle.utils.get_known_compressions`.
+        The compression protocol to use. By default, the compression is inferred from the path's
+        extension. This compression name passed to
+        :func:`~compress_pickle.compressers.registry.get_compresser` to create a
+        :class:`~compress_pickle.compressers.base.BaseCompresser` instance. This instance will be
+        used to open a file-like object from which to read the serialized binary representation
+        of ``obj``.
+        To see available compression protocols refer to
+        :func:`~compress_pickle.compressers.registry.get_known_compressions`.
+    pickler_method : str
+        The name of the serialization method to use. This method name is passed to
+        :func:`~compress_pickle.picklers.registry.get_pickler` to create a
+        :class:`~compress_pickle.picklers.base.BasePicklerIO` instance. The default method is
+        ``"pickle"``, which means that a :class:`~compress_pickle.picklers.pickle.BuiltinPicklerIO`
+        will be created by default, and its
+        :meth:`~compress_pickle.picklers.pickle.BuiltinPicklerIO.load` will be used for
+        unserializing the ``obj``.
+        Refer to :func:`~compress_pickle.picklers.registry.get_known_picklers` to see the available
+        serialization methods.
+    pickler_kwargs : Optional[Dict[str, Any]]
+        An optional dictionary of keyword arguments to pass to
+        :meth:`~compress_pickle.picklers.base.BasePicklerIO.load` when the ``obj`` is loaded. For
+        example, this could be ``{"fix_imports": True}`` when the default ``"pickle"``
+        serialization method is used.
     mode : Optional[str]
-        Mode with which to open the file buffer. The default changes according
-        to the compression protocol. Refer to
-        :func:`~compress_pickle.utils.get_compression_read_mode` to
-        see the defaults.
-    fix_imports : bool
-        If ``fix_imports`` is ``True`` and ``protocol`` is less than 3, pickle
-        will try to map the new Python 3 names to the old module names used
-        in Python 2, so that the pickle data stream is readable with Python 2.
-    encoding : str
-        Tells pickle how to decode 8-bit string instances pickled by Python 2.
-        Refer to the standard ``pickle`` documentation for details.
-    errors : str
-        Tells pickle how to decode 8-bit string instances pickled by Python 2.
-        Refer to the standard ``pickle`` documentation for details.
-    buffers : Optional[Iterable]
-        Only used in python 3.8. Provides pickle with the buffers from which
-        to read out of band buffer views.
-        Refer to the standard ``pickle`` documentation for details.
-    arcname : Optional[str]
-        Only necessary if ``compression="zipfile"``. It is the name of the file
-        contained in the zip archive which must be read and decompressed.
-        If ``None``, the ``arcname`` is assumed to be ``path`` (when ``path``
-        is path-like), ``path.name`` (when ``path`` is file-like and it has a
-        name attribute) or "default" when ``path`` has no ``name`` attribute.
+        Mode with which to open the file buffer. The default changes according to the compression
+        protocol. Refer to :func:`~compress_pickle.compressers.registry.get_compression_read_mode`
+        to see the defaults.
     set_default_extension : bool
-        If `True`, the default extension given the provided compression
-        protocol is set to the supplied `path`. Refer to
-        :func:`~compress_pickle.utils.set_default_extensions` for
-        more information.
-    unhandled_extensions : str
-        Specify what to do if the extension is not understood when inferring
-        the compression protocol from the provided path. Can be "ignore" (use
-        ".pkl"), "warn" (issue warning and use ".pkl") or "raise" (raise a
-        ValueError).
+        If ``True``, the default extension given the provided compression protocol is set to the
+        supplied ``path``. Refer to
+        :func:`~compress_pickle.compressers.registry.get_default_compression_mapping` for the
+        default extension registered to each compression method.
     kwargs :
-        Any extra keyword arguments are passed to the compressed file opening
-        protocol. The only exception is the ``compression`` kwarg of the
-        ``zipfile`` protocol. This kwarg is called ``zipfile_compression``.
+        Any extra keyword arguments are passed to
+        :func:`compress_pickle.utils.instantiate_compresser`, which in turn creates the
+        compresser instance that will be used.
 
     Returns
     -------
-    The unpickled object : Any
+    obj : Any
+        The object that is loaded from its compressed binary representation.
 
     Notes
     -----
-    To see the mapping between known compression protocols and filename
-    extensions, call the function
-    :func:`~compress_pickle.utils.get_default_compression_mapping`.
-    If the supplied ``path`` is a file-like object, ``load`` does not close it
-    before exiting. The users must handle the closing on their own. If the
-    supplied ``path`` is a path-like object, ``load`` opens and then closes
-    the file automatically.
+    If the supplied ``path`` is a file-like object, ``load`` does not close it before exiting.
+    The users must handle the closing on their own. If the supplied ``path`` is a path-like object,
+    ``load`` opens and then closes the file after the writting process finishes.
     """
-    version_dependent_kwargs: Dict[str, Any] = dict()
-    if sys.version_info >= (3, 8):
-        version_dependent_kwargs["buffers"] = buffers
-    validate_compression(compression)
-    if mode is None:
-        mode = "read"
-    io_stream, arch, arcname, must_close = preprocess_path(
-        path,
-        mode,
+    _mode = "read" if mode is None else mode
+    pickler = get_pickler(pickler_method)()
+    compresser = instantiate_compresser(
         compression=compression,
-        unhandled_extensions=unhandled_extensions,
+        path=path,
+        mode=_mode,
         set_default_extension=set_default_extension,
-        arcname=arcname,
         **kwargs,
     )
-
-    if arch is not None:
-        try:
-            output = pickle.load(  # type: ignore
-                io_stream,
-                encoding=encoding,
-                errors=errors,
-                fix_imports=fix_imports,
-                **version_dependent_kwargs,
-            )
-        finally:
-            if must_close:
-                arch.close()
-                io_stream.close()
-    else:
-        try:
-            output = pickle.load(  # type: ignore
-                io_stream,
-                encoding=encoding,
-                errors=errors,
-                fix_imports=fix_imports,
-                **version_dependent_kwargs,
-            )
-        finally:
-            if must_close:
-                io_stream.close()
+    if pickler_kwargs is None:
+        pickler_kwargs = {}
+    try:
+        output = uncompress_and_unpickle(
+            compresser,
+            pickler=pickler,
+            **pickler_kwargs,
+        )
+    finally:
+        compresser.close()
     return output
 
 
 def loads(
     data: bytes,
     compression: Optional[str],
-    fix_imports: bool = True,
-    encoding: str = "ASCII",
-    errors: str = "strict",
-    buffers: Optional[Iterable] = None,
-    *,
-    arcname: Optional[str] = None,
+    pickler_method: str = "pickle",
+    pickler_kwargs: Optional[Dict[str, Any]] = None,
     **kwargs,
 ) -> Any:
-    r"""Load an object from an input stream, uncompressing the contents with
-    the given a compression protocol.
+    """Load an object from its serialized binary representation.
+
+    It is possible to specify a desired serialization method and a compression protocol to use.
+    For example, if ``gzip`` compression is specified, the supplied binary data is uncompressed with
+    gzip and then loaded using standard :func:`pickle.load`.
+
+    Behind the scenes, this function only instantiates
+    :class:`~compress_pickle.compressers.base.BaseCompresser` around a ``io.BinaryIO(data)`` stream
+    and :class:`~compress_pickle.picklers.base.BasePicklerIO` instances depending on the supplied
+    names, and then calls :func:`~compress_pickle.io.base.uncompress_and_unpickle` with them.
 
     Parameters
     ----------
     data : bytes
-        The bytes that contain the object to load from
+        The bytes that contain the compressed serialized binary representation of the object that
+        must be loaded.
     compression : Optional[str]
-        The compression protocol to use. To see available compression
-        protocols refer to
-        :func:`~compress_pickle.utils.get_known_compressions`.
-    fix_imports : bool
-        If ``fix_imports`` is ``True`` and ``protocol`` is less than 3, pickle
-        will try to map the new Python 3 names to the old module names used
-        in Python 2, so that the pickle data stream is readable with Python 2.
-    encoding : str
-        Tells pickle how to decode 8-bit string instances pickled by Python 2.
-        Refer to the standard ``pickle`` documentation for details.
-    errors : str
-        Tells pickle how to decode 8-bit string instances pickled by Python 2.
-        Refer to the standard ``pickle`` documentation for details.
-    buffers : Optional[Iterable]
-        Only used in python 3.8. Provides pickle with the buffers from which
-        to read out of band buffer views.
-        Refer to the standard ``pickle`` documentation for details.
-    arcname : Optional[str]
-        Only necessary if ``compression="zipfile"``. It is the name of the file
-        contained in the zip archive which must be read and decompressed.
-        If ``None``, the ``arcname`` is assumed to be "default".
+        The compression protocol to use. By default, the compression is inferred from the path's
+        extension. This compression name passed to
+        :func:`~compress_pickle.compressers.registry.get_compresser` to create a
+        :class:`~compress_pickle.compressers.base.BaseCompresser` instance. This instance will be
+        used to open a file-like object from which to read the serialized binary representation
+        of ``obj``.
+        To see available compression protocols refer to
+        :func:`~compress_pickle.compressers.registry.get_known_compressions`.
+    pickler_method : str
+        The name of the serialization method to use. This method name is passed to
+        :func:`~compress_pickle.picklers.registry.get_pickler` to create a
+        :class:`~compress_pickle.picklers.base.BasePicklerIO` instance. The default method is
+        ``"pickle"``, which means that a :class:`~compress_pickle.picklers.pickle.BuiltinPicklerIO`
+        will be created by default, and its
+        :meth:`~compress_pickle.picklers.pickle.BuiltinPicklerIO.load` will be used for
+        unserializing the ``obj``.
+        Refer to :func:`~compress_pickle.picklers.registry.get_known_picklers` to see the available
+        serialization methods.
+    pickler_kwargs : Optional[Dict[str, Any]]
+        An optional dictionary of keyword arguments to pass to
+        :meth:`~compress_pickle.picklers.base.BasePicklerIO.load` when the ``obj`` is loaded. For
+        example, this could be ``{"fix_imports": True}`` when the default ``"pickle"``
+        serialization method is used.
     kwargs :
-        Any extra keyword arguments are passed to the compressed file opening
-        protocol. The only exception is the ``compression`` kwarg of the
-        ``zipfile`` protocol. This kwarg is called ``zipfile_compression``.
+        Any extra keyword arguments are passed to
+        :func:`compress_pickle.utils.instantiate_compresser`, which in turn creates the
+        compresser instance that will be used.
 
     Returns
     -------
     obj : Any
-    The uncompressed and unpickled object.
+        The object that is loaded from its compressed binary representation.
 
     Notes
     -----
-    The compression is a mandatory argument and it cannot be inferred from the
-    input stream parameter.
+    The ``compression`` argument is mandatory because it cannot be inferred.
     """
-    validate_compression(compression, infer_is_valid=False)
     with io.BytesIO(bytes(data)) as stream:
         return load(
             stream,
             compression=compression,
-            fix_imports=fix_imports,
-            encoding=encoding,
-            errors=errors,
-            buffers=buffers,
-            set_default_extension=False,
-            arcname=arcname,
+            pickler_method=pickler_method,
+            pickler_kwargs=pickler_kwargs,
             **kwargs,
         )

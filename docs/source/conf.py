@@ -21,7 +21,7 @@ import cloud_sptheme as csp
 # -- Project information -----------------------------------------------------
 
 project = 'compress_pickle'
-copyright = '2019, Luciano Paz'
+copyright = '2019-2021, Luciano Paz'
 author = 'Luciano Paz'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -51,6 +51,7 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.napoleon',
     'sphinx.ext.autosummary',
+    'sphinx.ext.intersphinx',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -203,12 +204,15 @@ def linkcode_resolve(domain, info):
     )
 
 
-intersphinx_mapping = {'python': ('https://docs.python.org/3', None)}
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3', None),
+    'lz4': ('https://python-lz4.readthedocs.io/en/stable', None),
+    'dill': ('https://dill.readthedocs.io/en/stable', None),
+}
 
 nitpick_ignore = [
-    ('py:class', 'os.PathLike'),
+    ('py:class', 'zipfile.ZipFile'),
     ('py:class', 'IO'),
     ('py:class', 'PathType'),
     ('py:class', 'FileType'),
-    ('py:class', 'zipfile.ZipFile'),
 ]
