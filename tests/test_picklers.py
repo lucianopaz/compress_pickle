@@ -1,3 +1,4 @@
+import sys
 import pytest
 import numpy as np
 from compress_pickle.picklers.dill import DillPicklerIO
@@ -25,6 +26,8 @@ def test_import_error_cloudpickle():
 
 @pytest.mark.usefixtures("compressions")
 def test_pickle_dump_protocol_5(compressions):
+    if not (sys.version_info[0] >= 3 and sys.version_info[1] >= 8):
+        pytest.skip("Pickle protocol 5 was introduced in version 3.8")
     obj = np.zeros((100, 37000, 3))
     out = loads(
         dumps(
