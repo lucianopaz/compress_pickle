@@ -1,0 +1,819 @@
+
+
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>compressers &#8212; compress_pickle 2.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/cloud.css" type="text/css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+
+    
+    
+     
+        <script src="../_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="../_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="../_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="picklers" href="picklers.html" />
+    <link rel="prev" title="io" href="io.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="picklers.html" title="picklers"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="io.html" title="io"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">compress_pickle 2.0.0 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../api.html" accesskey="U">API Reference</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">compressers</span></code></a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="compressers">
+<h1><code class="docutils literal notranslate"><span class="pre">compressers</span></code><a class="headerlink" href="#compressers" title="Permalink to this headline">¶</a></h1>
+<p>Has two main parts:</p>
+<ol class="arabic simple">
+<li><p>The compresser classes (all <a class="reference internal" href="#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCompresser</span></code></a> subclasses)</p></li>
+<li><p>The compresser registry.</p></li>
+</ol>
+<p>The compresser classes must provide a minimum signature defined in the the common base class: <a class="reference internal" href="#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCompresser</span></code></a>, and are in charge of opening, closing and getting the byte streams into which to write (or from which to read) the binary serialized representation of arbitrary python objects.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compress_pickle.compressers.registry.get_compresser" title="compress_pickle.compressers.registry.get_compresser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">registry.get_compresser</span></code></a>(compression)</p></td>
+<td><p>Get the compresser class registered with a given compression name.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#compress_pickle.compressers.registry.get_compresser_from_extension" title="compress_pickle.compressers.registry.get_compresser_from_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">registry.get_compresser_from_extension</span></code></a>(extension)</p></td>
+<td><p>Get the compresser class registered with a given file extension.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compress_pickle.compressers.registry.get_compression_from_extension" title="compress_pickle.compressers.registry.get_compression_from_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">registry.get_compression_from_extension</span></code></a>(…)</p></td>
+<td><p>Get the compression name registered with a given file extension.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#compress_pickle.compressers.registry.register_compresser" title="compress_pickle.compressers.registry.register_compresser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">registry.register_compresser</span></code></a>(compression, …)</p></td>
+<td><p>Register a compression method, along with its compresser class, extensions and modes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compress_pickle.compressers.registry.get_compression_write_mode" title="compress_pickle.compressers.registry.get_compression_write_mode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">registry.get_compression_write_mode</span></code></a>(compression)</p></td>
+<td><p>Get the compression’s default mode for openning the file buffer for writing.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#compress_pickle.compressers.registry.get_compression_read_mode" title="compress_pickle.compressers.registry.get_compression_read_mode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">registry.get_compression_read_mode</span></code></a>(compression)</p></td>
+<td><p>Get the compression’s default mode for openning the file buffer for reading.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compress_pickle.compressers.registry.add_compression_alias" title="compress_pickle.compressers.registry.add_compression_alias"><code class="xref py py-obj docutils literal notranslate"><span class="pre">registry.add_compression_alias</span></code></a>(alias, …)</p></td>
+<td><p>Add an alias for an already registered compression.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#compress_pickle.compressers.registry.get_known_compressions" title="compress_pickle.compressers.registry.get_known_compressions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">registry.get_known_compressions</span></code></a>()</p></td>
+<td><p>Get a list of known compression protocols</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compress_pickle.compressers.registry.validate_compression" title="compress_pickle.compressers.registry.validate_compression"><code class="xref py py-obj docutils literal notranslate"><span class="pre">registry.validate_compression</span></code></a>(compression[, …])</p></td>
+<td><p>Check if the supplied <code class="docutils literal notranslate"><span class="pre">compression</span></code> protocol is supported.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#compress_pickle.compressers.registry.get_default_compression_mapping" title="compress_pickle.compressers.registry.get_default_compression_mapping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">registry.get_default_compression_mapping</span></code></a>()</p></td>
+<td><p>Get a mapping from known compression protocols to the default filename extensions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compress_pickle.compressers.registry.list_registered_compressers" title="compress_pickle.compressers.registry.list_registered_compressers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">registry.list_registered_compressers</span></code></a>()</p></td>
+<td><p>Get the list of registered compresser classes.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">base.BaseCompresser</span></code></a>(path, bytes, …)</p></td>
+<td><p>Compresser abstract base class.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compress_pickle.compressers.no_compression.NoCompresser" title="compress_pickle.compressers.no_compression.NoCompresser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">no_compression.NoCompresser</span></code></a>(path, bytes, …)</p></td>
+<td><p>Compresser class that represents a simple uncompressed file object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#compress_pickle.compressers.gzip.GzipCompresser" title="compress_pickle.compressers.gzip.GzipCompresser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gzip.GzipCompresser</span></code></a>(path, bytes, …)</p></td>
+<td><p>Compresser class that wraps the gzip compression package.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compress_pickle.compressers.bz2.Bz2Compresser" title="compress_pickle.compressers.bz2.Bz2Compresser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bz2.Bz2Compresser</span></code></a>(path, bytes, os.PathLike, …)</p></td>
+<td><p>Compresser class that wraps the bz2 compression package.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#compress_pickle.compressers.lzma.LzmaCompresser" title="compress_pickle.compressers.lzma.LzmaCompresser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lzma.LzmaCompresser</span></code></a>(path, bytes, …)</p></td>
+<td><p>Compresser class that wraps the lzma compression package.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compress_pickle.compressers.zipfile.ZipfileCompresser" title="compress_pickle.compressers.zipfile.ZipfileCompresser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zipfile.ZipfileCompresser</span></code></a>(path, bytes, …)</p></td>
+<td><p>Compresser class that wraps the zipfile compression package.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#compress_pickle.compressers.lz4.Lz4Compresser" title="compress_pickle.compressers.lz4.Lz4Compresser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lz4.Lz4Compresser</span></code></a>(path, bytes, os.PathLike, …)</p></td>
+<td><p>Compresser class that wraps the lz4 compression package.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="module-compress_pickle.compressers.registry">
+<span id="registry"></span><h2>Registry<a class="headerlink" href="#module-compress_pickle.compressers.registry" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="compress_pickle.compressers.registry.add_compression_alias">
+<code class="sig-prename descclassname"><span class="pre">compress_pickle.compressers.registry.</span></code><code class="sig-name descname"><span class="pre">add_compression_alias</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alias</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/registry.py#L238-L272"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.registry.add_compression_alias" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an alias for an already registered compression.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alias</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The alias to register</p></li>
+<li><p><strong>compression</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – The compression name that must already be registered.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – If the supplied <code class="docutils literal notranslate"><span class="pre">compression</span></code> is not known or if the supplied <code class="docutils literal notranslate"><span class="pre">alias</span></code>
+    is already contained in the registry.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="compress_pickle.compressers.registry.get_compresser">
+<code class="sig-prename descclassname"><span class="pre">compress_pickle.compressers.registry.</span></code><code class="sig-name descname"><span class="pre">get_compresser</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><span class="pre">compress_pickle.compressers.base.BaseCompresser</span></a><span class="p"><span class="pre">]</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/registry.py#L32-L57"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.registry.get_compresser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the compresser class registered with a given compression name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>compression</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – The compression name.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – If the supplied <code class="docutils literal notranslate"><span class="pre">compression</span></code> has not been registered.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The compresser class associated to the <code class="docutils literal notranslate"><span class="pre">compression</span></code> name.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Type[<a class="reference internal" href="#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser">BaseCompresser</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="compress_pickle.compressers.registry.get_compresser_from_extension">
+<code class="sig-prename descclassname"><span class="pre">compress_pickle.compressers.registry.</span></code><code class="sig-name descname"><span class="pre">get_compresser_from_extension</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extension</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><span class="pre">compress_pickle.compressers.base.BaseCompresser</span></a><span class="p"><span class="pre">]</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/registry.py#L59-L81"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.registry.get_compresser_from_extension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the compresser class registered with a given file extension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>extension</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The file extension, for example “.zip”.
+Note that the dot characters will be striped from the left of any supplied extension
+before the lookup it. This means that “.zip” and “zip” will be considered equivalent
+extensions.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – If the supplied <code class="docutils literal notranslate"><span class="pre">extension</span></code> has not been registered.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The compresser class associated to the extension.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Type[<a class="reference internal" href="#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser">BaseCompresser</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="compress_pickle.compressers.registry.get_compression_from_extension">
+<code class="sig-prename descclassname"><span class="pre">compress_pickle.compressers.registry.</span></code><code class="sig-name descname"><span class="pre">get_compression_from_extension</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extension</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/registry.py#L83-L111"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.registry.get_compression_from_extension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the compression name registered with a given file extension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>extension</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The file extension, for example “.zip”.
+Note that the dot characters will be striped from the left of any supplied extension
+before the lookup it. This means that “.zip” and “zip” will be considered equivalent
+extensions.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – If the supplied <code class="docutils literal notranslate"><span class="pre">extension</span></code> has not been registered.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The compression name associated to the extension.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="compress_pickle.compressers.registry.get_compression_read_mode">
+<code class="sig-prename descclassname"><span class="pre">compress_pickle.compressers.registry.</span></code><code class="sig-name descname"><span class="pre">get_compression_read_mode</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/registry.py#L210-L236"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.registry.get_compression_read_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the compression’s default mode for openning the file buffer for reading.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>compression</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – The compression name.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>compression_read_mode</strong> – The default read mode of the given <code class="docutils literal notranslate"><span class="pre">compression</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – If the default write mode of the supplied <code class="docutils literal notranslate"><span class="pre">compression</span></code> is not known.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="compress_pickle.compressers.registry.get_compression_write_mode">
+<code class="sig-prename descclassname"><span class="pre">compress_pickle.compressers.registry.</span></code><code class="sig-name descname"><span class="pre">get_compression_write_mode</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/registry.py#L182-L208"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.registry.get_compression_write_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the compression’s default mode for openning the file buffer for writing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>compression</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – The compression name.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>compression_write_mode</strong> – The default write mode of the given <code class="docutils literal notranslate"><span class="pre">compression</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – If the default write mode of the supplied <code class="docutils literal notranslate"><span class="pre">compression</span></code> is not known.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="compress_pickle.compressers.registry.get_default_compression_mapping">
+<code class="sig-prename descclassname"><span class="pre">compress_pickle.compressers.registry.</span></code><code class="sig-name descname"><span class="pre">get_default_compression_mapping</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/registry.py#L343-L365"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.registry.get_default_compression_mapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a mapping from known compression protocols to the default filename extensions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>compression_map</strong> – Dictionary that maps known compression protocol names to their default
+file extension.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Dict[Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>], <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="compress_pickle.compressers.registry.get_known_compressions">
+<code class="sig-prename descclassname"><span class="pre">compress_pickle.compressers.registry.</span></code><code class="sig-name descname"><span class="pre">get_known_compressions</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/registry.py#L301-L309"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.registry.get_known_compressions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of known compression protocols</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>compressions</strong> – List of known compression protocol names.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>List[Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="compress_pickle.compressers.registry.get_registered_extensions">
+<code class="sig-prename descclassname"><span class="pre">compress_pickle.compressers.registry.</span></code><code class="sig-name descname"><span class="pre">get_registered_extensions</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/registry.py#L290-L298"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.registry.get_registered_extensions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a copy of the mapping between file extensions and registered compressers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The mapping between file extensions and registered compressers.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>, Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="compress_pickle.compressers.registry.list_registered_compressers">
+<code class="sig-prename descclassname"><span class="pre">compress_pickle.compressers.registry.</span></code><code class="sig-name descname"><span class="pre">list_registered_compressers</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><span class="pre">compress_pickle.compressers.base.BaseCompresser</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/registry.py#L368-L376"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.registry.list_registered_compressers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the list of registered compresser classes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The list of registered compresser classes.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>List[Type[<a class="reference internal" href="#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser">BaseCompresser</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="compress_pickle.compressers.registry.register_compresser">
+<code class="sig-prename descclassname"><span class="pre">compress_pickle.compressers.registry.</span></code><code class="sig-name descname"><span class="pre">register_compresser</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compresser</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><span class="pre">compress_pickle.compressers.base.BaseCompresser</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extensions</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_write_mode</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'wb'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_read_mode</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'rb'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/registry.py#L113-L180"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.registry.register_compresser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a compression method, along with its compresser class, extensions and modes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>compression</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – The compression name that will be registered.</p></li>
+<li><p><strong>compresser</strong> (<em>Type</em><em>[</em><a class="reference internal" href="#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><em>BaseCompresser</em></a><em>]</em>) – The compresser class. This should be a <a class="reference internal" href="#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCompresser</span></code></a>
+subclass.</p></li>
+<li><p><strong>extensions</strong> (<em>Sequence</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – A sequence of file name extensions (e.g. [“.zip”]) that will be registered to the
+supplied compression. These extensions will be used to infer the compression method to
+use from a file name. The first entry in the <code class="docutils literal notranslate"><span class="pre">extensions</span></code> sequence will be used as
+the compression’s default extension name. For example, if <code class="docutils literal notranslate"><span class="pre">extensions</span> <span class="pre">=</span> <span class="pre">[&quot;bz2&quot;,</span> <span class="pre">&quot;bz&quot;]</span></code>
+both the extensions <code class="docutils literal notranslate"><span class="pre">&quot;bz2&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;bz&quot;</span></code> will be registered to the <code class="docutils literal notranslate"><span class="pre">compression</span></code>,
+but <code class="docutils literal notranslate"><span class="pre">&quot;bz2&quot;</span></code> will be taken as the compression’s default extension.
+Note that the dot characters will be striped from the left of any supplied extension
+before registering it. This means that “.zip” and “zip” will be considered equivalent
+extensions.</p></li>
+<li><p><strong>default_write_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The write mode with which to open the file object stream by default.</p></li>
+<li><p><strong>default_read_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The read mode with which to open the file object stream by default.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – If the supplied <code class="docutils literal notranslate"><span class="pre">compression</span></code> is already contained in the registry or if any of the
+    supplied extensions is already registered.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.9)"><strong>TypeError</strong></a> – If the supplied compresser is not a <a class="reference internal" href="#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCompresser</span></code></a>
+    subclass.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="compress_pickle.compressers.registry.validate_compression">
+<code class="sig-prename descclassname"><span class="pre">compress_pickle.compressers.registry.</span></code><code class="sig-name descname"><span class="pre">validate_compression</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infer_is_valid</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><span class="pre">bool</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/registry.py#L312-L340"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.registry.validate_compression" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the supplied <code class="docutils literal notranslate"><span class="pre">compression</span></code> protocol is supported.</p>
+<p>If it is not supported, a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> is raised.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>compression</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – A compression protocol. To see the known compression protocolos, use
+<a class="reference internal" href="#compress_pickle.compressers.registry.get_known_compressions" title="compress_pickle.compressers.registry.get_known_compressions"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_known_compressions()</span></code></a></p></li>
+<li><p><strong>infer_is_valid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">compression=&quot;infer&quot;</span></code> is considered a valid compression
+protocol. If <code class="docutils literal notranslate"><span class="pre">False</span></code>, it is not accepted as a valid compression
+protocol.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – If the supplied <code class="docutils literal notranslate"><span class="pre">compression</span></code> is not supported.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="id1">
+<h2>Compressers<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="compress_pickle.compressers.base.BaseCompresser">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">compress_pickle.compressers.base.</span></code><code class="sig-name descname"><span class="pre">BaseCompresser</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.9)"><span class="pre">os.PathLike</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/base.py#L10-L62"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.base.BaseCompresser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compresser abstract base class.</p>
+<p>This class is in charge of handing the binary stream where the pickled python objects must
+be written to (or read from). During an instance’s initialization, the binary stream must
+be opened based on a supplied <code class="docutils literal notranslate"><span class="pre">path</span></code> parameter and <code class="docutils literal notranslate"><span class="pre">mode</span></code>. This stream is nothing more than
+a python “file-like” object that is in charge of actually writting and reading the binary
+contents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>Union</em><em>[</em><em>PathType</em><em>, </em><em>IO</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><em>bytes</em></a><em>]</em><em>]</em>) – A PathType object (<code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes</span></code>, <code class="docutils literal notranslate"><span class="pre">os.PathType</span></code>) or a file-like
+object (e.g. <code class="docutils literal notranslate"><span class="pre">io.BaseIO</span></code> instances). The path that will be used to open the
+input/output binary stream.</p></li>
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Mode with which to open the file buffer.</p></li>
+<li><p><strong>kwargs</strong> – Any other key word arguments that can be handled by the specific binary stream opener.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="compress_pickle.compressers.base.BaseCompresser.close">
+<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">close</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/base.py#L40-L51"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.base.BaseCompresser.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the input/output binary stream.</p>
+<p>This closes the input/output stream that is created during the <code class="docutils literal notranslate"><span class="pre">__init__</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>kwargs</strong> – Any other key word arguments that can be handled by the specific binary stream closer.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="compress_pickle.compressers.base.BaseCompresser.get_stream">
+<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">get_stream</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/base.py#L53-L62"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.base.BaseCompresser.get_stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input/output binary stream (i.e. a file-like object).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The input/output binary stream where the pickled objects are written to or read from.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>IO[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)">bytes</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="compress_pickle.compressers.no_compression.NoCompresser">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">compress_pickle.compressers.no_compression.</span></code><code class="sig-name descname"><span class="pre">NoCompresser</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.9)"><span class="pre">os.PathLike</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/no_compression.py#L7-L46"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.no_compression.NoCompresser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compresser class that represents a simple uncompressed file object.</p>
+<p>This class either simply calls <code class="docutils literal notranslate"><span class="pre">open</span></code> on the supplied <code class="docutils literal notranslate"><span class="pre">path</span></code> or uses the <code class="docutils literal notranslate"><span class="pre">path</span></code> as
+the binary input/output stream.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>Union</em><em>[</em><em>PathType</em><em>, </em><em>IO</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><em>bytes</em></a><em>]</em><em>]</em>) – A PathType object (<code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes</span></code>, <code class="docutils literal notranslate"><span class="pre">os.PathType</span></code>) or a file-like
+object (e.g. <code class="docutils literal notranslate"><span class="pre">io.BaseIO</span></code> instances). The path that will be used to open the
+input/output binary stream.</p></li>
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Mode with which to open the file buffer.</p></li>
+<li><p><strong>kwargs</strong> – Any other key word arguments that are passed to <a class="reference external" href="https://docs.python.org/3/library/functions.html#open" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">open()</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="compress_pickle.compressers.no_compression.NoCompresser.close">
+<code class="sig-name descname"><span class="pre">close</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/no_compression.py#L35-L43"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.no_compression.NoCompresser.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the input/output stream if necessary.</p>
+<p>This will only close the stream if the <code class="docutils literal notranslate"><span class="pre">path</span></code> argument passed during construction was a
+<code class="docutils literal notranslate"><span class="pre">PathType</span></code> (<code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes</span></code>, <code class="docutils literal notranslate"><span class="pre">os.PathType</span></code>). Otherwise, this method doesn’t do
+anything.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="compress_pickle.compressers.no_compression.NoCompresser.get_stream">
+<code class="sig-name descname"><span class="pre">get_stream</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/no_compression.py#L45-L46"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.no_compression.NoCompresser.get_stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input/output binary stream (i.e. a file-like object).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The input/output binary stream where the pickled objects are written to or read from.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>IO[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)">bytes</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="compress_pickle.compressers.gzip.GzipCompresser">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">compress_pickle.compressers.gzip.</span></code><code class="sig-name descname"><span class="pre">GzipCompresser</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.9)"><span class="pre">os.PathLike</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/gzip.py#L8-L36"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.gzip.GzipCompresser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compresser class that wraps the gzip compression package.</p>
+<p>This class relies on the <a class="reference external" href="https://docs.python.org/3/library/gzip.html#module-gzip" title="(in Python v3.9)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gzip</span></code></a> module to open the input/output binary stream where the
+pickled python objects will be written to (or read from). During an instance’s initialization,
+the binary stream is opened using <code class="docutils literal notranslate"><span class="pre">gzip.open(path,</span> <span class="pre">mode=mode,</span> <span class="pre">**kwargs)</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>Union</em><em>[</em><em>PathType</em><em>, </em><em>IO</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><em>bytes</em></a><em>]</em><em>]</em>) – A PathType object (<code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes</span></code>, <code class="docutils literal notranslate"><span class="pre">os.PathType</span></code>) or a file-like
+object (e.g. <code class="docutils literal notranslate"><span class="pre">io.BaseIO</span></code> instances). The path that will be used to open the
+input/output binary stream.</p></li>
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Mode with which to open the file buffer.</p></li>
+<li><p><strong>kwargs</strong> – Any other key word arguments that are passed to <a class="reference external" href="https://docs.python.org/3/library/gzip.html#gzip.open" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">gzip.open()</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="compress_pickle.compressers.gzip.GzipCompresser.close">
+<code class="sig-name descname"><span class="pre">close</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/gzip.py#L32-L33"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.gzip.GzipCompresser.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the input/output binary stream.</p>
+<p>This closes the input/output stream that is created during the <code class="docutils literal notranslate"><span class="pre">__init__</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>kwargs</strong> – Any other key word arguments that can be handled by the specific binary stream closer.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="compress_pickle.compressers.gzip.GzipCompresser.get_stream">
+<code class="sig-name descname"><span class="pre">get_stream</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/gzip.py#L35-L36"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.gzip.GzipCompresser.get_stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input/output binary stream (i.e. a file-like object).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The input/output binary stream where the pickled objects are written to or read from.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>IO[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)">bytes</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="compress_pickle.compressers.bz2.Bz2Compresser">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">compress_pickle.compressers.bz2.</span></code><code class="sig-name descname"><span class="pre">Bz2Compresser</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.9)"><span class="pre">os.PathLike</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/bz2.py#L8-L36"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.bz2.Bz2Compresser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compresser class that wraps the bz2 compression package.</p>
+<p>This class relies on the <a class="reference external" href="https://docs.python.org/3/library/bz2.html#module-bz2" title="(in Python v3.9)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bz2</span></code></a> module to open the input/output binary stream where the
+pickled python objects will be written to (or read from). During an instance’s initialization,
+the binary stream is opened using <code class="docutils literal notranslate"><span class="pre">bz2.open(path,</span> <span class="pre">mode=mode,</span> <span class="pre">**kwargs)</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>Union</em><em>[</em><em>PathType</em><em>, </em><em>IO</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><em>bytes</em></a><em>]</em><em>]</em>) – A PathType object (<code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes</span></code>, <code class="docutils literal notranslate"><span class="pre">os.PathType</span></code>) or a file-like
+object (e.g. <code class="docutils literal notranslate"><span class="pre">io.BaseIO</span></code> instances). The path that will be used to open the
+input/output binary stream.</p></li>
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Mode with which to open the file buffer.</p></li>
+<li><p><strong>kwargs</strong> – Any other key word arguments that are passed to <a class="reference external" href="https://docs.python.org/3/library/bz2.html#bz2.open" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">bz2.open()</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="compress_pickle.compressers.bz2.Bz2Compresser.close">
+<code class="sig-name descname"><span class="pre">close</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/bz2.py#L32-L33"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.bz2.Bz2Compresser.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the input/output binary stream.</p>
+<p>This closes the input/output stream that is created during the <code class="docutils literal notranslate"><span class="pre">__init__</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>kwargs</strong> – Any other key word arguments that can be handled by the specific binary stream closer.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="compress_pickle.compressers.bz2.Bz2Compresser.get_stream">
+<code class="sig-name descname"><span class="pre">get_stream</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/bz2.py#L35-L36"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.bz2.Bz2Compresser.get_stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input/output binary stream (i.e. a file-like object).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The input/output binary stream where the pickled objects are written to or read from.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>IO[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)">bytes</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="compress_pickle.compressers.lzma.LzmaCompresser">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">compress_pickle.compressers.lzma.</span></code><code class="sig-name descname"><span class="pre">LzmaCompresser</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.9)"><span class="pre">os.PathLike</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/lzma.py#L8-L36"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.lzma.LzmaCompresser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compresser class that wraps the lzma compression package.</p>
+<p>This class relies on the <a class="reference external" href="https://docs.python.org/3/library/lzma.html#module-lzma" title="(in Python v3.9)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lzma</span></code></a> module to open the input/output binary stream where the
+pickled python objects will be written to (or read from). During an instance’s initialization,
+the binary stream is opened using <code class="docutils literal notranslate"><span class="pre">lzma.open(path,</span> <span class="pre">mode=mode,</span> <span class="pre">**kwargs)</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>Union</em><em>[</em><em>PathType</em><em>, </em><em>IO</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><em>bytes</em></a><em>]</em><em>]</em>) – A PathType object (<code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes</span></code>, <code class="docutils literal notranslate"><span class="pre">os.PathType</span></code>) or a file-like
+object (e.g. <code class="docutils literal notranslate"><span class="pre">io.BaseIO</span></code> instances). The path that will be used to open the
+input/output binary stream.</p></li>
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Mode with which to open the file buffer.</p></li>
+<li><p><strong>kwargs</strong> – Any other key word arguments that are passed to <a class="reference external" href="https://docs.python.org/3/library/lzma.html#lzma.open" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">lzma.open()</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="compress_pickle.compressers.lzma.LzmaCompresser.close">
+<code class="sig-name descname"><span class="pre">close</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/lzma.py#L32-L33"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.lzma.LzmaCompresser.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the input/output binary stream.</p>
+<p>This closes the input/output stream that is created during the <code class="docutils literal notranslate"><span class="pre">__init__</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>kwargs</strong> – Any other key word arguments that can be handled by the specific binary stream closer.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="compress_pickle.compressers.lzma.LzmaCompresser.get_stream">
+<code class="sig-name descname"><span class="pre">get_stream</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/lzma.py#L35-L36"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.lzma.LzmaCompresser.get_stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input/output binary stream (i.e. a file-like object).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The input/output binary stream where the pickled objects are written to or read from.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>IO[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)">bytes</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="compress_pickle.compressers.zipfile.ZipfileCompresser">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">compress_pickle.compressers.zipfile.</span></code><code class="sig-name descname"><span class="pre">ZipfileCompresser</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.9)"><span class="pre">os.PathLike</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arcname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pwd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zipfile_compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/zipfile.py#L9-L81"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.zipfile.ZipfileCompresser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compresser class that wraps the zipfile compression package.</p>
+<p>This class relies on the <a class="reference external" href="https://docs.python.org/3/library/zipfile.html#module-zipfile" title="(in Python v3.9)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">zipfile</span></code></a> module to open the input/output binary stream where the
+pickled python objects will be written to (or read from).
+During an instance’s initialization, a <a class="reference external" href="https://docs.python.org/3/library/zipfile.html#zipfile.ZipFile" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">zipfile.ZipFile</span></code></a> instance is created around
+the supplied <code class="docutils literal notranslate"><span class="pre">path</span></code>. The opened <code class="docutils literal notranslate"><span class="pre">ZipFile</span></code> is called the archive and works as a kind
+directory, that can hold other directories or files. These are called members of the archive.
+The <code class="docutils literal notranslate"><span class="pre">ZipfileCompresser</span></code> creates the input/output stream by opening a member file in the
+opened <code class="docutils literal notranslate"><span class="pre">ZipFile</span></code> archive. The name of the archive member can be chosen with the <code class="docutils literal notranslate"><span class="pre">arcname</span></code>
+argument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>Union</em><em>[</em><em>PathType</em><em>, </em><em>IO</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><em>bytes</em></a><em>]</em><em>]</em>) – A PathType object (<code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes</span></code>, <code class="docutils literal notranslate"><span class="pre">os.PathType</span></code>) or a file-like
+object (e.g. <code class="docutils literal notranslate"><span class="pre">io.BaseIO</span></code> instances). The path that will be used to open the
+<code class="docutils literal notranslate"><span class="pre">zipfile.Zipfile</span></code> object. The input/output binary stream is then opened from the
+aforementioned object as <code class="docutils literal notranslate"><span class="pre">zipfile.Zipfile(*).open(arcname,</span> <span class="pre">mode)</span></code>.</p></li>
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Mode with which to open the <code class="docutils literal notranslate"><span class="pre">Zipfile</span></code> (and also the archive member that is used as the
+input/output binary stream).</p></li>
+<li><p><strong>arcname</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – The name of the archive member of the opened <code class="docutils literal notranslate"><span class="pre">zipfile.Zipfile</span></code> that will be used as
+the binary input/output stream.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the <code class="docutils literal notranslate"><span class="pre">arcname</span></code> is assumed to be the basename of <code class="docutils literal notranslate"><span class="pre">path</span></code> (when <code class="docutils literal notranslate"><span class="pre">path</span></code>
+is path-like), <code class="docutils literal notranslate"><span class="pre">path.name</span></code> (when <code class="docutils literal notranslate"><span class="pre">path</span></code> is file-like and it has a name attribute) or
+“default” otherwise.</p></li>
+<li><p><strong>pwd</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – The password used to decrypt encrypted ZIP files.</p></li>
+<li><p><strong>zipfile_compression</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – If not <code class="docutils literal notranslate"><span class="pre">None</span></code>, it is passed as the <code class="docutils literal notranslate"><span class="pre">compression</span></code> keyword argument to
+<code class="docutils literal notranslate"><span class="pre">zipfile.Zipfile(...)</span></code>.</p></li>
+<li><p><strong>kwargs</strong> – Any other key word arguments that are passed to <code class="docutils literal notranslate"><span class="pre">zipfile.ZipFile</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="compress_pickle.compressers.zipfile.ZipfileCompresser.close">
+<code class="sig-name descname"><span class="pre">close</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/zipfile.py#L71-L78"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.zipfile.ZipfileCompresser.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the input/output binary stream and the <code class="docutils literal notranslate"><span class="pre">ZipFile</span></code>.</p>
+<p>This closes the <code class="docutils literal notranslate"><span class="pre">zipfile.ZipFile</span></code> instance and archive member file-objects that
+are created during the <code class="docutils literal notranslate"><span class="pre">__init__</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="compress_pickle.compressers.zipfile.ZipfileCompresser.get_stream">
+<code class="sig-name descname"><span class="pre">get_stream</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/zipfile.py#L80-L81"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.zipfile.ZipfileCompresser.get_stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input/output binary stream (i.e. a file-like object).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The input/output binary stream where the pickled objects are written to or read from.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>IO[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)">bytes</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="compress_pickle.compressers.lz4.Lz4Compresser">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">compress_pickle.compressers.lz4.</span></code><code class="sig-name descname"><span class="pre">Lz4Compresser</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.9)"><span class="pre">os.PathLike</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/lz4.py#L7-L42"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.lz4.Lz4Compresser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compresser class that wraps the lz4 compression package.</p>
+<p>This class relies on the <a class="reference external" href="https://python-lz4.readthedocs.io/en/stable/lz4.html#module-lz4" title="(in python-lz4 v3.1.3)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lz4</span></code></a> module to open the input/output binary stream where the
+pickled python objects will be written to (or read from). During an instance’s initialization,
+the binary stream is opened using <code class="docutils literal notranslate"><span class="pre">lz4.frame.open(path,</span> <span class="pre">mode=mode,</span> <span class="pre">**kwargs)</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>Union</em><em>[</em><em>PathType</em><em>, </em><em>IO</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><em>bytes</em></a><em>]</em><em>]</em>) – A PathType object (<code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes</span></code>, <code class="docutils literal notranslate"><span class="pre">os.PathType</span></code>) or a file-like
+object (e.g. <code class="docutils literal notranslate"><span class="pre">io.BaseIO</span></code> instances). The path that will be used to open the
+input/output binary stream.</p></li>
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Mode with which to open the file buffer.</p></li>
+<li><p><strong>kwargs</strong> – Any other key word arguments that are passed to <a class="reference external" href="https://python-lz4.readthedocs.io/en/stable/lz4.frame.html#lz4.frame.open" title="(in python-lz4 v3.1.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">lz4.frame.open()</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="compress_pickle.compressers.lz4.Lz4Compresser.close">
+<code class="sig-name descname"><span class="pre">close</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/lz4.py#L38-L39"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.lz4.Lz4Compresser.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the input/output binary stream.</p>
+<p>This closes the input/output stream that is created during the <code class="docutils literal notranslate"><span class="pre">__init__</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>kwargs</strong> – Any other key word arguments that can be handled by the specific binary stream closer.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="compress_pickle.compressers.lz4.Lz4Compresser.get_stream">
+<code class="sig-name descname"><span class="pre">get_stream</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compressers/lz4.py#L41-L42"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compressers.lz4.Lz4Compresser.get_stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input/output binary stream (i.e. a file-like object).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The input/output binary stream where the pickled objects are written to or read from.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>IO[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)">bytes</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<ul class="simple">
+<li><p><a class="reference internal" href="../genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="../py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="../search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="sphinx-toc sphinxlocaltoc">
+    <h3><a href="../index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">compressers</span></code></a><ul>
+<li><a class="reference internal" href="#module-compress_pickle.compressers.registry">Registry</a></li>
+<li><a class="reference internal" href="#id1">Compressers</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="io.html"
+                          title="Previous page">&larr; <code class="docutils literal notranslate"><span class="pre">io</span></code></a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="picklers.html"
+                          title="Next page">&rarr; <code class="docutils literal notranslate"><span class="pre">picklers</span></code></a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/compressers.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="picklers.html" title="picklers"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="io.html" title="io"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">compress_pickle 2.0.0 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../api.html" >API Reference</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">compressers</span></code></a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019-2021, Luciano Paz.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

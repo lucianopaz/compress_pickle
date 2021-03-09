@@ -1,8 +1,3 @@
-.. compress_pickle documentation master file, created by
-   sphinx-quickstart on Tue May 14 15:39:26 2019.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Welcome to compress_pickle's documentation!
 *******************************************
 
@@ -37,7 +32,7 @@ Supported compression protocols:
 * `zipfile <https://docs.python.org/3/library/zipfile.html>`_
 
 
-Furthermore, ``compress_pickle`` supports the `lz4 <https://pypi.org/project/lz4/>` compression protocol, that isn't part of the standard python compression packages. This is provided as an optional extra requirement that can be installed as:
+Furthermore, ``compress_pickle`` supports the `lz4 <https://pypi.org/project/lz4/>`_ compression protocol, that isn't part of the standard python compression packages. This is provided as an optional extra requirement that can be installed as:
 
 .. code-block:: bash
 

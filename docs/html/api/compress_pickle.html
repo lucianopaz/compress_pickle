@@ -6,17 +6,16 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>compress_pickle &#8212; compress_pickle 1.2.0 documentation</title>
-    <link rel="stylesheet" href="../_static/cloud.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>compress_pickle &#8212; compress_pickle 2.0.0 documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/cloud.css" type="text/css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
     
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
 
     
     
@@ -36,7 +35,7 @@
 
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="utils" href="utils.html" />
+    <link rel="next" title="io" href="io.html" />
     <link rel="prev" title="API Reference" href="../api.html" /> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
   </head><body>
@@ -52,12 +51,12 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
         <li class="right" >
-          <a href="utils.html" title="utils"
+          <a href="io.html" title="io"
              accesskey="N">next</a> &nbsp; &nbsp;</li>
         <li class="right" >
           <a href="../api.html" title="API Reference"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="../index.html">compress_pickle 1.2.0 documentation</a> &#187;</li>
+    <li><a href="../index.html">compress_pickle 2.0.0 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="../api.html" accesskey="U">API Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">compress_pickle</span></code></a></li> 
@@ -79,225 +78,241 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#compress_pickle.compress_pickle.dump" title="compress_pickle.compress_pickle.dump"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dump</span></code></a>(obj, path[, compression, mode, …])</p></td>
-<td><p>Dump the contents of an object to disk, to the supplied path, using a given compression protocol.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compress_pickle.compress_pickle.dump" title="compress_pickle.compress_pickle.dump"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dump</span></code></a>(obj, path[, compression, …])</p></td>
+<td><p>Serialize an object and write it to a file-like object.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#compress_pickle.compress_pickle.dumps" title="compress_pickle.compress_pickle.dumps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dumps</span></code></a>(obj[, compression, protocol, …])</p></td>
-<td><p>Dump the contents of an object to a byte string, using a given compression protocol.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#compress_pickle.compress_pickle.dumps" title="compress_pickle.compress_pickle.dumps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dumps</span></code></a>(obj, compression[, pickler_method, …])</p></td>
+<td><p>Serialize an object and return its binary representation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#compress_pickle.compress_pickle.load" title="compress_pickle.compress_pickle.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(path[, compression, mode, fix_imports, …])</p></td>
-<td><p>Load an object from a file stored in disk, given compression protocol.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compress_pickle.compress_pickle.load" title="compress_pickle.compress_pickle.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(path[, compression, pickler_method, …])</p></td>
+<td><p>Load an object from its serialized binary representation stored in a file-like object.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#compress_pickle.compress_pickle.loads" title="compress_pickle.compress_pickle.loads"><code class="xref py py-obj docutils literal notranslate"><span class="pre">loads</span></code></a>(data, compression[, fix_imports, …])</p></td>
-<td><p>Load an object from an input stream, uncompressing the contents with the given a compression protocol.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#compress_pickle.compress_pickle.loads" title="compress_pickle.compress_pickle.loads"><code class="xref py py-obj docutils literal notranslate"><span class="pre">loads</span></code></a>(data, compression[, pickler_method, …])</p></td>
+<td><p>Load an object from its serialized binary representation.</p></td>
 </tr>
 </tbody>
 </table>
 <span class="target" id="module-compress_pickle.compress_pickle"></span><p>A thin wrapper of standard <code class="docutils literal notranslate"><span class="pre">pickle</span></code> with standard compression libraries</p>
 <dl class="py function">
 <dt id="compress_pickle.compress_pickle.dump">
-<code class="sig-prename descclassname">compress_pickle.compress_pickle.</code><code class="sig-name descname">dump</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span></em>, <em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>bytes<span class="p">, </span>os.PathLike<span class="p">, </span>IO<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">compression</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'infer'</span></em>, <em class="sig-param"><span class="n">mode</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">protocol</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">fix_imports</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">buffer_callback</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Callable<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">unhandled_extensions</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'raise'</span></em>, <em class="sig-param"><span class="n">set_default_extension</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">optimize</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compress_pickle.py#L22-L155"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.dump" title="Permalink to this definition">¶</a></dt>
-<dd><p>Dump the contents of an object to disk, to the supplied path, using a
-given compression protocol.
-For example, if <code class="docutils literal notranslate"><span class="pre">gzip</span></code> compression is specified, the file buffer is
-opened as <code class="docutils literal notranslate"><span class="pre">gzip.open</span></code> and the desired content is dumped into the buffer
-using a normal <code class="docutils literal notranslate"><span class="pre">pickle.dump</span></code> call.</p>
+<code class="sig-prename descclassname"><span class="pre">compress_pickle.compress_pickle.</span></code><code class="sig-name descname"><span class="pre">dump</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.9)"><span class="pre">os.PathLike</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'infer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickler_method</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'pickle'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickler_kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_default_extension</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><span class="pre">bool</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compress_pickle.py#L21-L113"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compress_pickle.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serialize an object and write it to a file-like object.</p>
+<p>It is possible to specify a desired serialization method and a compression protocol to use.
+For example, if <code class="docutils literal notranslate"><span class="pre">gzip</span></code> compression is specified, the object is serialized using the standard
+<a class="reference external" href="https://docs.python.org/3/library/pickle.html#pickle.dump" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pickle.dump()</span></code></a> and compressed using gzip.</p>
+<p>Behind the scenes, this function only instantiates
+<a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCompresser</span></code></a> and
+<a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasePicklerIO</span></code></a> instances depending on the supplied
+names, and then calls <a class="reference internal" href="io.html#compress_pickle.io.base.compress_and_pickle" title="compress_pickle.io.base.compress_and_pickle"><code class="xref py py-func docutils literal notranslate"><span class="pre">compress_and_pickle()</span></code></a> with them.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>obj</strong> (<em>Any</em>) – The object that will be saved to disk</p></li>
-<li><p><strong>path</strong> (<em>Union</em><em>[</em><em>PathType</em><em>, </em><em>FileType</em><em>]</em>) – A path-like object (<code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes</span></code>, <code class="docutils literal notranslate"><span class="pre">os.PathType</span></code>) or a file-like
-object (<code class="docutils literal notranslate"><span class="pre">io.BaseIO</span></code> instances). The path to which to dump the <code class="docutils literal notranslate"><span class="pre">obj</span></code>.</p></li>
-<li><p><strong>compression</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – The compression protocol to use. By default, the compression is
-inferred from the path’s extension. To see available compression
-protocols refer to
-<a class="reference internal" href="utils.html#compress_pickle.utils.get_known_compressions" title="compress_pickle.utils.get_known_compressions"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_known_compressions()</span></code></a>.</p></li>
-<li><p><strong>mode</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Mode with which to open the file buffer. The default changes according
-to the compression protocol. Refer to
-<a class="reference internal" href="utils.html#compress_pickle.utils.get_compression_write_mode" title="compress_pickle.utils.get_compression_write_mode"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_compression_write_mode()</span></code></a> to
-see the defaults.</p></li>
-<li><p><strong>protocol</strong> (<em>int</em>) – Pickle protocol to use</p></li>
-<li><p><strong>fix_imports</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">fix_imports</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> and <code class="docutils literal notranslate"><span class="pre">protocol</span></code> is less than 3, pickle
-will try to map the new Python 3 names to the old module names used
-in Python 2, so that the pickle data stream is readable with Python 2.</p></li>
-<li><p><strong>buffer_callback</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>]</em>) – Only used in python 3.8. Tells pickle how to serialize buffers.
-Refer to the standard <code class="docutils literal notranslate"><span class="pre">pickle</span></code> documentation for details.</p></li>
-<li><p><strong>set_default_extension</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the default extension given the provided compression
-protocol is set to the supplied <code class="docutils literal notranslate"><span class="pre">path</span></code>. Refer to
-<a class="reference internal" href="utils.html#compress_pickle.utils.set_default_extensions" title="compress_pickle.utils.set_default_extensions"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_default_extensions()</span></code></a> for
-more information.</p></li>
-<li><p><strong>unhandled_extensions</strong> (<em>str</em>) – Specify what to do if the extension is not understood when inferring
-the compression protocol from the provided path. Can be “ignore” (use
-“.pkl”), “warn” (issue warning and use “.pkl”) or “raise” (raise a
-ValueError).</p></li>
-<li><p><strong>optimize</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the pickled data is optimized using <code class="docutils literal notranslate"><span class="pre">pickletools.optimize</span></code>
-before writing it to the <code class="docutils literal notranslate"><span class="pre">path</span></code>. This may lead end files that have
-smaller in size, but this also means that the uncompressed pickled
-data will first be loaded completely in memory to optimize it and
-finally write it to the <code class="docutils literal notranslate"><span class="pre">path</span></code>. Meaning it can produce a
-<code class="docutils literal notranslate"><span class="pre">MemoryError</span></code>.</p></li>
-<li><p><strong>kwargs</strong> – Any extra keyword arguments are passed to the compressed file opening
-protocol. The only exception is the <code class="docutils literal notranslate"><span class="pre">compression</span></code> kwarg of the
-<code class="docutils literal notranslate"><span class="pre">zipfile</span></code> protocol. This kwarg is called <code class="docutils literal notranslate"><span class="pre">zipfile_compression</span></code>.</p></li>
+<li><p><strong>obj</strong> (<em>Any</em>) – The object that will be serialized</p></li>
+<li><p><strong>path</strong> (<em>Union</em><em>[</em><em>PathType</em><em>, </em><em>FileType</em><em>]</em>) – A path-like object (<code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes</span></code>, <code class="docutils literal notranslate"><span class="pre">os.PathType</span></code>) or a file-like object
+(<code class="docutils literal notranslate"><span class="pre">io.BaseIO</span></code> instances). The path to which to dump the <code class="docutils literal notranslate"><span class="pre">obj</span></code>.</p></li>
+<li><p><strong>compression</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – The compression protocol to use. By default, the compression is inferred from the path’s
+extension. This compression name passed to
+<a class="reference internal" href="compressers.html#compress_pickle.compressers.registry.get_compresser" title="compress_pickle.compressers.registry.get_compresser"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_compresser()</span></code></a> to create a
+<a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCompresser</span></code></a> instance. This instance will be
+used to create a file-like object onto which to write the serialized binary representation
+of <code class="docutils literal notranslate"><span class="pre">obj</span></code>.
+To see available compression protocols refer to
+<a class="reference internal" href="compressers.html#compress_pickle.compressers.registry.get_known_compressions" title="compress_pickle.compressers.registry.get_known_compressions"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_known_compressions()</span></code></a>.</p></li>
+<li><p><strong>pickler_method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the serialization method to use. This method name is passed to
+<a class="reference internal" href="picklers.html#compress_pickle.picklers.registry.get_pickler" title="compress_pickle.picklers.registry.get_pickler"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_pickler()</span></code></a> to create a
+<a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasePicklerIO</span></code></a> instance. The default method is
+<code class="docutils literal notranslate"><span class="pre">&quot;pickle&quot;</span></code>, which means that a <a class="reference internal" href="picklers.html#compress_pickle.picklers.pickle.BuiltinPicklerIO" title="compress_pickle.picklers.pickle.BuiltinPicklerIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BuiltinPicklerIO</span></code></a>
+will be created by default, and its
+<a class="reference internal" href="picklers.html#compress_pickle.picklers.pickle.BuiltinPicklerIO.dump" title="compress_pickle.picklers.pickle.BuiltinPicklerIO.dump"><code class="xref py py-meth docutils literal notranslate"><span class="pre">dump()</span></code></a> will be used for
+serializing the <code class="docutils literal notranslate"><span class="pre">obj</span></code>.
+Refer to <a class="reference internal" href="picklers.html#compress_pickle.picklers.registry.get_known_picklers" title="compress_pickle.picklers.registry.get_known_picklers"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_known_picklers()</span></code></a> to see the available
+serialization methods.</p></li>
+<li><p><strong>pickler_kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>Any</em><em>]</em><em>]</em>) – An optional dictionary of keyword arguments to pass to
+<a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO.dump" title="compress_pickle.picklers.base.BasePicklerIO.dump"><code class="xref py py-meth docutils literal notranslate"><span class="pre">dump()</span></code></a> when <code class="docutils literal notranslate"><span class="pre">obj</span></code> is serialized. For
+example, this could be <code class="docutils literal notranslate"><span class="pre">{&quot;protocol&quot;:</span> <span class="pre">-1,</span> <span class="pre">&quot;fix_imports&quot;:</span> <span class="pre">True}</span></code> when the default
+<code class="docutils literal notranslate"><span class="pre">&quot;pickle&quot;</span></code> serialization method is used.</p></li>
+<li><p><strong>mode</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – Mode with which to open the file buffer. The default changes according to the compression
+protocol. Refer to <a class="reference internal" href="compressers.html#compress_pickle.compressers.registry.get_compression_write_mode" title="compress_pickle.compressers.registry.get_compression_write_mode"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_compression_write_mode()</span></code></a>
+to see the defaults.</p></li>
+<li><p><strong>set_default_extension</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the default extension given the provided compression protocol is set to the
+supplied <code class="docutils literal notranslate"><span class="pre">path</span></code>. Refer to
+<a class="reference internal" href="compressers.html#compress_pickle.compressers.registry.get_default_compression_mapping" title="compress_pickle.compressers.registry.get_default_compression_mapping"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_default_compression_mapping()</span></code></a> for the
+default extension registered to each compression method.</p></li>
+<li><p><strong>kwargs</strong> – Any extra keyword arguments are passed to
+<a class="reference internal" href="utils.html#compress_pickle.utils.instantiate_compresser" title="compress_pickle.utils.instantiate_compresser"><code class="xref py py-func docutils literal notranslate"><span class="pre">compress_pickle.utils.instantiate_compresser()</span></code></a>, which in turn creates the
+compresser instance that will be used.</p></li>
 </ul>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>To see the mapping between known compression protocols and filename
-extensions, call the function
-<a class="reference internal" href="utils.html#compress_pickle.utils.get_default_compression_mapping" title="compress_pickle.utils.get_default_compression_mapping"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_default_compression_mapping()</span></code></a>.
-If the supplied <code class="docutils literal notranslate"><span class="pre">path</span></code> is a file-like object, <code class="docutils literal notranslate"><span class="pre">load</span></code> does not close it
-before exiting. The users must handle the closing on their own. If the
-supplied <code class="docutils literal notranslate"><span class="pre">path</span></code> is a path-like object, <code class="docutils literal notranslate"><span class="pre">load</span></code> opens and then closes
-the file automatically</p>
+<p>If the supplied <code class="docutils literal notranslate"><span class="pre">path</span></code> is a file-like object, <code class="docutils literal notranslate"><span class="pre">dump</span></code> does not close it before exiting.
+The users must handle the closing on their own. If the supplied <code class="docutils literal notranslate"><span class="pre">path</span></code> is a path-like object,
+<code class="docutils literal notranslate"><span class="pre">dump</span></code> opens and then closes the file after the writting process finishes.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="compress_pickle.compress_pickle.dumps">
-<code class="sig-prename descclassname">compress_pickle.compress_pickle.</code><code class="sig-name descname">dumps</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span></em>, <em class="sig-param"><span class="n">compression</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'infer'</span></em>, <em class="sig-param"><span class="n">protocol</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">fix_imports</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">buffer_callback</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Callable<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">optimize</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; bytes<a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compress_pickle.py#L158-L219"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.dumps" title="Permalink to this definition">¶</a></dt>
-<dd><p>Dump the contents of an object to a byte string, using a
-given compression protocol.
-For example, if <code class="docutils literal notranslate"><span class="pre">gzip</span></code> compression is specified, the file buffer is
-opened as <code class="docutils literal notranslate"><span class="pre">gzip.open</span></code> and the desired content is dumped into the buffer
-using a normal <code class="docutils literal notranslate"><span class="pre">pickle.dump</span></code> call.</p>
+<code class="sig-prename descclassname"><span class="pre">compress_pickle.compress_pickle.</span></code><code class="sig-name descname"><span class="pre">dumps</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickler_method</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'pickle'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickler_kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compress_pickle.py#L116-L182"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compress_pickle.dumps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serialize an object and return its binary representation.</p>
+<p>It is possible to specify a desired serialization method and a compression protocol to use.
+For example, if <code class="docutils literal notranslate"><span class="pre">gzip</span></code> compression is specified, the serialized object is compressed using
+gzip.</p>
+<p>Behind the scenes, this function only instantiates
+<a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCompresser</span></code></a> around a <code class="docutils literal notranslate"><span class="pre">io.BinaryIO</span></code> and
+<a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasePicklerIO</span></code></a> instances depending on the supplied
+names, and then calls <a class="reference internal" href="io.html#compress_pickle.io.base.compress_and_pickle" title="compress_pickle.io.base.compress_and_pickle"><code class="xref py py-func docutils literal notranslate"><span class="pre">compress_and_pickle()</span></code></a> with them. The
+contents of the <code class="docutils literal notranslate"><span class="pre">io.BinaryIO</span></code> are then returned.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>obj</strong> (<em>Any</em>) – The object that will be saved to disk</p></li>
-<li><p><strong>compression</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – The compression protocol to use. By default, the compression is
-inferred from the path’s extension. To see available compression
-protocols refer to
-<a class="reference internal" href="utils.html#compress_pickle.utils.get_known_compressions" title="compress_pickle.utils.get_known_compressions"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_known_compressions()</span></code></a>.</p></li>
-<li><p><strong>protocol</strong> (<em>int</em>) – Pickle protocol to use</p></li>
-<li><p><strong>fix_imports</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">fix_imports</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> and <code class="docutils literal notranslate"><span class="pre">protocol</span></code> is less than 3, pickle
-will try to map the new Python 3 names to the old module names used
-in Python 2, so that the pickle data stream is readable with Python 2.</p></li>
-<li><p><strong>buffer_callback</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>]</em>) – Only used in python 3.8. Tells pickle how to serialize buffers.
-Refer to the standard <code class="docutils literal notranslate"><span class="pre">pickle</span></code> documentation for details.</p></li>
-<li><p><strong>optimize</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the pickled data is optimized using <code class="docutils literal notranslate"><span class="pre">pickletools.optimize</span></code>
-before compressing it. This will produce a final byte array that has a
-smaller or equal size than the <code class="docutils literal notranslate"><span class="pre">optimze=False</span></code> case.</p></li>
-<li><p><strong>kwargs</strong> – Any extra keyword arguments are passed to the compressed file opening
-protocol. The only exception is the <code class="docutils literal notranslate"><span class="pre">compression</span></code> kwarg of the
-<code class="docutils literal notranslate"><span class="pre">zipfile</span></code> protocol. This kwarg is called <code class="docutils literal notranslate"><span class="pre">zipfile_compression</span></code>.</p></li>
+<li><p><strong>obj</strong> (<em>Any</em>) – The object that will be serialized.</p></li>
+<li><p><strong>compression</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – The compression protocol to use. By default, the compression is inferred from the path’s
+extension. This compression name passed to
+<a class="reference internal" href="compressers.html#compress_pickle.compressers.registry.get_compresser" title="compress_pickle.compressers.registry.get_compresser"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_compresser()</span></code></a> to create a
+<a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCompresser</span></code></a> instance. This instance will be
+used to create a file-like object onto which to write the serialized binary representation
+of <code class="docutils literal notranslate"><span class="pre">obj</span></code>.
+To see available compression protocols refer to
+<a class="reference internal" href="compressers.html#compress_pickle.compressers.registry.get_known_compressions" title="compress_pickle.compressers.registry.get_known_compressions"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_known_compressions()</span></code></a>.</p></li>
+<li><p><strong>pickler_method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the serialization method to use. This method name is passed to
+<a class="reference internal" href="picklers.html#compress_pickle.picklers.registry.get_pickler" title="compress_pickle.picklers.registry.get_pickler"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_pickler()</span></code></a> to create a
+<a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasePicklerIO</span></code></a> instance. The default method is
+<code class="docutils literal notranslate"><span class="pre">&quot;pickle&quot;</span></code>, which means that a <a class="reference internal" href="picklers.html#compress_pickle.picklers.pickle.BuiltinPicklerIO" title="compress_pickle.picklers.pickle.BuiltinPicklerIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BuiltinPicklerIO</span></code></a>
+will be created by default, and its
+<a class="reference internal" href="picklers.html#compress_pickle.picklers.pickle.BuiltinPicklerIO.dump" title="compress_pickle.picklers.pickle.BuiltinPicklerIO.dump"><code class="xref py py-meth docutils literal notranslate"><span class="pre">dump()</span></code></a> will be used for
+serializing the <code class="docutils literal notranslate"><span class="pre">obj</span></code>.
+Refer to <a class="reference internal" href="picklers.html#compress_pickle.picklers.registry.get_known_picklers" title="compress_pickle.picklers.registry.get_known_picklers"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_known_picklers()</span></code></a> to see the available
+serialization methods.</p></li>
+<li><p><strong>pickler_kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>Any</em><em>]</em><em>]</em>) – An optional dictionary of keyword arguments to pass to
+<a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO.dump" title="compress_pickle.picklers.base.BasePicklerIO.dump"><code class="xref py py-meth docutils literal notranslate"><span class="pre">dump()</span></code></a> when <code class="docutils literal notranslate"><span class="pre">obj</span></code> is serialized. For
+example, this could be <code class="docutils literal notranslate"><span class="pre">{&quot;protocol&quot;:</span> <span class="pre">-1,</span> <span class="pre">&quot;fix_imports&quot;:</span> <span class="pre">True}</span></code> when the default
+<code class="docutils literal notranslate"><span class="pre">&quot;pickle&quot;</span></code> serialization method is used.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>blob</strong> (<em>bytes</em>)</p></li>
-<li><p>The resulting bytes of the pickled and compressed <code class="docutils literal notranslate"><span class="pre">obj</span></code>.</p></li>
-</ul>
-</p>
+<dd class="field-even"><p>The resulting bytes of the serialized <code class="docutils literal notranslate"><span class="pre">obj</span></code> after being compressed.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)">bytes</a></p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">compression</span></code> argument is mandatory because it cannot be inferred.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="compress_pickle.compress_pickle.load">
-<code class="sig-prename descclassname">compress_pickle.compress_pickle.</code><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>bytes<span class="p">, </span>os.PathLike<span class="p">, </span>IO<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">compression</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'infer'</span></em>, <em class="sig-param"><span class="n">mode</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fix_imports</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">encoding</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'ASCII'</span></em>, <em class="sig-param"><span class="n">errors</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'strict'</span></em>, <em class="sig-param"><span class="n">buffers</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Iterable<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">arcname</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">set_default_extension</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">unhandled_extensions</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'raise'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; Any<a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compress_pickle.py#L222-L346"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.load" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load an object from a file stored in disk, given compression protocol.
-For example, if <code class="docutils literal notranslate"><span class="pre">gzip</span></code> compression is specified, the file buffer is opened
-as <code class="docutils literal notranslate"><span class="pre">gzip.open</span></code> and the desired content is loaded from the open buffer
-using a normal <code class="docutils literal notranslate"><span class="pre">pickle.load</span></code> call.</p>
+<code class="sig-prename descclassname"><span class="pre">compress_pickle.compress_pickle.</span></code><code class="sig-name descname"><span class="pre">load</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.9)"><span class="pre">os.PathLike</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'infer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickler_method</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'pickle'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickler_kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_default_extension</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><span class="pre">bool</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compress_pickle.py#L185-L279"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compress_pickle.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load an object from its serialized binary representation stored in a file-like object.</p>
+<p>It is possible to specify a desired serialization method and a compression protocol to use.
+For example, if <code class="docutils literal notranslate"><span class="pre">gzip</span></code> compression is specified, the contents of the supplied file-like
+object are uncompressed using gzip and then loaded using standard <a class="reference external" href="https://docs.python.org/3/library/pickle.html#pickle.load" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pickle.load()</span></code></a>.</p>
+<p>Behind the scenes, this function only instantiates
+<a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCompresser</span></code></a> and
+<a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasePicklerIO</span></code></a> instances depending on the supplied
+names, and then calls <a class="reference internal" href="io.html#compress_pickle.io.base.uncompress_and_unpickle" title="compress_pickle.io.base.uncompress_and_unpickle"><code class="xref py py-func docutils literal notranslate"><span class="pre">uncompress_and_unpickle()</span></code></a> with them.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>Union</em><em>[</em><em>PathType</em><em>, </em><em>FileType</em><em>]</em>) – A path-like object (<code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes</span></code>, <code class="docutils literal notranslate"><span class="pre">os.PathType</span></code>) or a file-like
-object (<code class="docutils literal notranslate"><span class="pre">io.BaseIO</span></code> instances). The path from which to load the <code class="docutils literal notranslate"><span class="pre">obj</span></code>.</p></li>
-<li><p><strong>compression</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – The compression protocol to use. By default, the compression is
-inferred from the path’s extension. To see available compression
-protocols refer to
-<a class="reference internal" href="utils.html#compress_pickle.utils.get_known_compressions" title="compress_pickle.utils.get_known_compressions"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_known_compressions()</span></code></a>.</p></li>
-<li><p><strong>mode</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Mode with which to open the file buffer. The default changes according
-to the compression protocol. Refer to
-<a class="reference internal" href="utils.html#compress_pickle.utils.get_compression_read_mode" title="compress_pickle.utils.get_compression_read_mode"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_compression_read_mode()</span></code></a> to
-see the defaults.</p></li>
-<li><p><strong>fix_imports</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">fix_imports</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> and <code class="docutils literal notranslate"><span class="pre">protocol</span></code> is less than 3, pickle
-will try to map the new Python 3 names to the old module names used
-in Python 2, so that the pickle data stream is readable with Python 2.</p></li>
-<li><p><strong>encoding</strong> (<em>str</em>) – Tells pickle how to decode 8-bit string instances pickled by Python 2.
-Refer to the standard <code class="docutils literal notranslate"><span class="pre">pickle</span></code> documentation for details.</p></li>
-<li><p><strong>errors</strong> (<em>str</em>) – Tells pickle how to decode 8-bit string instances pickled by Python 2.
-Refer to the standard <code class="docutils literal notranslate"><span class="pre">pickle</span></code> documentation for details.</p></li>
-<li><p><strong>buffers</strong> (<em>Optional</em><em>[</em><em>Iterable</em><em>]</em>) – Only used in python 3.8. Provides pickle with the buffers from which
-to read out of band buffer views.
-Refer to the standard <code class="docutils literal notranslate"><span class="pre">pickle</span></code> documentation for details.</p></li>
-<li><p><strong>arcname</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Only necessary if <code class="docutils literal notranslate"><span class="pre">compression=&quot;zipfile&quot;</span></code>. It is the name of the file
-contained in the zip archive which must be read and decompressed.
-If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the <code class="docutils literal notranslate"><span class="pre">arcname</span></code> is assumed to be <code class="docutils literal notranslate"><span class="pre">path</span></code> (when <code class="docutils literal notranslate"><span class="pre">path</span></code>
-is path-like), <code class="docutils literal notranslate"><span class="pre">path.name</span></code> (when <code class="docutils literal notranslate"><span class="pre">path</span></code> is file-like and it has a
-name attribute) or “default” when <code class="docutils literal notranslate"><span class="pre">path</span></code> has no <code class="docutils literal notranslate"><span class="pre">name</span></code> attribute.</p></li>
-<li><p><strong>set_default_extension</strong> (<em>bool</em>) – If <cite>True</cite>, the default extension given the provided compression
-protocol is set to the supplied <cite>path</cite>. Refer to
-<a class="reference internal" href="utils.html#compress_pickle.utils.set_default_extensions" title="compress_pickle.utils.set_default_extensions"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_default_extensions()</span></code></a> for
-more information.</p></li>
-<li><p><strong>unhandled_extensions</strong> (<em>str</em>) – Specify what to do if the extension is not understood when inferring
-the compression protocol from the provided path. Can be “ignore” (use
-“.pkl”), “warn” (issue warning and use “.pkl”) or “raise” (raise a
-ValueError).</p></li>
-<li><p><strong>kwargs</strong> – Any extra keyword arguments are passed to the compressed file opening
-protocol. The only exception is the <code class="docutils literal notranslate"><span class="pre">compression</span></code> kwarg of the
-<code class="docutils literal notranslate"><span class="pre">zipfile</span></code> protocol. This kwarg is called <code class="docutils literal notranslate"><span class="pre">zipfile_compression</span></code>.</p></li>
+<li><p><strong>path</strong> (<em>Union</em><em>[</em><em>PathType</em><em>, </em><em>FileType</em><em>]</em>) – A path-like object (<code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes</span></code>, <code class="docutils literal notranslate"><span class="pre">os.PathType</span></code>) or a file-like object
+(<code class="docutils literal notranslate"><span class="pre">io.BaseIO</span></code> instances). The path to which to dump the <code class="docutils literal notranslate"><span class="pre">obj</span></code>.</p></li>
+<li><p><strong>compression</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – The compression protocol to use. By default, the compression is inferred from the path’s
+extension. This compression name passed to
+<a class="reference internal" href="compressers.html#compress_pickle.compressers.registry.get_compresser" title="compress_pickle.compressers.registry.get_compresser"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_compresser()</span></code></a> to create a
+<a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCompresser</span></code></a> instance. This instance will be
+used to open a file-like object from which to read the serialized binary representation
+of <code class="docutils literal notranslate"><span class="pre">obj</span></code>.
+To see available compression protocols refer to
+<a class="reference internal" href="compressers.html#compress_pickle.compressers.registry.get_known_compressions" title="compress_pickle.compressers.registry.get_known_compressions"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_known_compressions()</span></code></a>.</p></li>
+<li><p><strong>pickler_method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the serialization method to use. This method name is passed to
+<a class="reference internal" href="picklers.html#compress_pickle.picklers.registry.get_pickler" title="compress_pickle.picklers.registry.get_pickler"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_pickler()</span></code></a> to create a
+<a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasePicklerIO</span></code></a> instance. The default method is
+<code class="docutils literal notranslate"><span class="pre">&quot;pickle&quot;</span></code>, which means that a <a class="reference internal" href="picklers.html#compress_pickle.picklers.pickle.BuiltinPicklerIO" title="compress_pickle.picklers.pickle.BuiltinPicklerIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BuiltinPicklerIO</span></code></a>
+will be created by default, and its
+<a class="reference internal" href="picklers.html#compress_pickle.picklers.pickle.BuiltinPicklerIO.load" title="compress_pickle.picklers.pickle.BuiltinPicklerIO.load"><code class="xref py py-meth docutils literal notranslate"><span class="pre">load()</span></code></a> will be used for
+unserializing the <code class="docutils literal notranslate"><span class="pre">obj</span></code>.
+Refer to <a class="reference internal" href="picklers.html#compress_pickle.picklers.registry.get_known_picklers" title="compress_pickle.picklers.registry.get_known_picklers"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_known_picklers()</span></code></a> to see the available
+serialization methods.</p></li>
+<li><p><strong>pickler_kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>Any</em><em>]</em><em>]</em>) – An optional dictionary of keyword arguments to pass to
+<a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO.load" title="compress_pickle.picklers.base.BasePicklerIO.load"><code class="xref py py-meth docutils literal notranslate"><span class="pre">load()</span></code></a> when the <code class="docutils literal notranslate"><span class="pre">obj</span></code> is loaded. For
+example, this could be <code class="docutils literal notranslate"><span class="pre">{&quot;fix_imports&quot;:</span> <span class="pre">True}</span></code> when the default <code class="docutils literal notranslate"><span class="pre">&quot;pickle&quot;</span></code>
+serialization method is used.</p></li>
+<li><p><strong>mode</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – Mode with which to open the file buffer. The default changes according to the compression
+protocol. Refer to <a class="reference internal" href="compressers.html#compress_pickle.compressers.registry.get_compression_read_mode" title="compress_pickle.compressers.registry.get_compression_read_mode"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_compression_read_mode()</span></code></a>
+to see the defaults.</p></li>
+<li><p><strong>set_default_extension</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the default extension given the provided compression protocol is set to the
+supplied <code class="docutils literal notranslate"><span class="pre">path</span></code>. Refer to
+<a class="reference internal" href="compressers.html#compress_pickle.compressers.registry.get_default_compression_mapping" title="compress_pickle.compressers.registry.get_default_compression_mapping"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_default_compression_mapping()</span></code></a> for the
+default extension registered to each compression method.</p></li>
+<li><p><strong>kwargs</strong> – Any extra keyword arguments are passed to
+<a class="reference internal" href="utils.html#compress_pickle.utils.instantiate_compresser" title="compress_pickle.utils.instantiate_compresser"><code class="xref py py-func docutils literal notranslate"><span class="pre">compress_pickle.utils.instantiate_compresser()</span></code></a>, which in turn creates the
+compresser instance that will be used.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>The unpickled object</strong></p>
+<dd class="field-even"><p><strong>obj</strong> – The object that is loaded from its compressed binary representation.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Any</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>To see the mapping between known compression protocols and filename
-extensions, call the function
-<a class="reference internal" href="utils.html#compress_pickle.utils.get_default_compression_mapping" title="compress_pickle.utils.get_default_compression_mapping"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_default_compression_mapping()</span></code></a>.
-If the supplied <code class="docutils literal notranslate"><span class="pre">path</span></code> is a file-like object, <code class="docutils literal notranslate"><span class="pre">load</span></code> does not close it
-before exiting. The users must handle the closing on their own. If the
-supplied <code class="docutils literal notranslate"><span class="pre">path</span></code> is a path-like object, <code class="docutils literal notranslate"><span class="pre">load</span></code> opens and then closes
-the file automatically.</p>
+<p>If the supplied <code class="docutils literal notranslate"><span class="pre">path</span></code> is a file-like object, <code class="docutils literal notranslate"><span class="pre">load</span></code> does not close it before exiting.
+The users must handle the closing on their own. If the supplied <code class="docutils literal notranslate"><span class="pre">path</span></code> is a path-like object,
+<code class="docutils literal notranslate"><span class="pre">load</span></code> opens and then closes the file after the writting process finishes.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="compress_pickle.compress_pickle.loads">
-<code class="sig-prename descclassname">compress_pickle.compress_pickle.</code><code class="sig-name descname">loads</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">bytes</span></em>, <em class="sig-param"><span class="n">compression</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">fix_imports</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">encoding</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'ASCII'</span></em>, <em class="sig-param"><span class="n">errors</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'strict'</span></em>, <em class="sig-param"><span class="n">buffers</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Iterable<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">arcname</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; Any<a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compress_pickle.py#L349-L416"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compress_pickle.compress_pickle.loads" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load an object from an input stream, uncompressing the contents with
-the given a compression protocol.</p>
+<code class="sig-prename descclassname"><span class="pre">compress_pickle.compress_pickle.</span></code><code class="sig-name descname"><span class="pre">loads</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickler_method</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'pickle'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickler_kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/compress_pickle.py#L282-L350"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.compress_pickle.loads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load an object from its serialized binary representation.</p>
+<p>It is possible to specify a desired serialization method and a compression protocol to use.
+For example, if <code class="docutils literal notranslate"><span class="pre">gzip</span></code> compression is specified, the supplied binary data is uncompressed with
+gzip and then loaded using standard <a class="reference external" href="https://docs.python.org/3/library/pickle.html#pickle.load" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pickle.load()</span></code></a>.</p>
+<p>Behind the scenes, this function only instantiates
+<a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCompresser</span></code></a> around a <code class="docutils literal notranslate"><span class="pre">io.BinaryIO(data)</span></code> stream
+and <a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasePicklerIO</span></code></a> instances depending on the supplied
+names, and then calls <a class="reference internal" href="io.html#compress_pickle.io.base.uncompress_and_unpickle" title="compress_pickle.io.base.uncompress_and_unpickle"><code class="xref py py-func docutils literal notranslate"><span class="pre">uncompress_and_unpickle()</span></code></a> with them.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>bytes</em>) – The bytes that contain the object to load from</p></li>
-<li><p><strong>compression</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – The compression protocol to use. To see available compression
-protocols refer to
-<a class="reference internal" href="utils.html#compress_pickle.utils.get_known_compressions" title="compress_pickle.utils.get_known_compressions"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_known_compressions()</span></code></a>.</p></li>
-<li><p><strong>fix_imports</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">fix_imports</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> and <code class="docutils literal notranslate"><span class="pre">protocol</span></code> is less than 3, pickle
-will try to map the new Python 3 names to the old module names used
-in Python 2, so that the pickle data stream is readable with Python 2.</p></li>
-<li><p><strong>encoding</strong> (<em>str</em>) – Tells pickle how to decode 8-bit string instances pickled by Python 2.
-Refer to the standard <code class="docutils literal notranslate"><span class="pre">pickle</span></code> documentation for details.</p></li>
-<li><p><strong>errors</strong> (<em>str</em>) – Tells pickle how to decode 8-bit string instances pickled by Python 2.
-Refer to the standard <code class="docutils literal notranslate"><span class="pre">pickle</span></code> documentation for details.</p></li>
-<li><p><strong>buffers</strong> (<em>Optional</em><em>[</em><em>Iterable</em><em>]</em>) – Only used in python 3.8. Provides pickle with the buffers from which
-to read out of band buffer views.
-Refer to the standard <code class="docutils literal notranslate"><span class="pre">pickle</span></code> documentation for details.</p></li>
-<li><p><strong>arcname</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Only necessary if <code class="docutils literal notranslate"><span class="pre">compression=&quot;zipfile&quot;</span></code>. It is the name of the file
-contained in the zip archive which must be read and decompressed.
-If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the <code class="docutils literal notranslate"><span class="pre">arcname</span></code> is assumed to be “default”.</p></li>
-<li><p><strong>kwargs</strong> – Any extra keyword arguments are passed to the compressed file opening
-protocol. The only exception is the <code class="docutils literal notranslate"><span class="pre">compression</span></code> kwarg of the
-<code class="docutils literal notranslate"><span class="pre">zipfile</span></code> protocol. This kwarg is called <code class="docutils literal notranslate"><span class="pre">zipfile_compression</span></code>.</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><em>bytes</em></a>) – The bytes that contain the compressed serialized binary representation of the object that
+must be loaded.</p></li>
+<li><p><strong>compression</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – The compression protocol to use. By default, the compression is inferred from the path’s
+extension. This compression name passed to
+<a class="reference internal" href="compressers.html#compress_pickle.compressers.registry.get_compresser" title="compress_pickle.compressers.registry.get_compresser"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_compresser()</span></code></a> to create a
+<a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCompresser</span></code></a> instance. This instance will be
+used to open a file-like object from which to read the serialized binary representation
+of <code class="docutils literal notranslate"><span class="pre">obj</span></code>.
+To see available compression protocols refer to
+<a class="reference internal" href="compressers.html#compress_pickle.compressers.registry.get_known_compressions" title="compress_pickle.compressers.registry.get_known_compressions"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_known_compressions()</span></code></a>.</p></li>
+<li><p><strong>pickler_method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the serialization method to use. This method name is passed to
+<a class="reference internal" href="picklers.html#compress_pickle.picklers.registry.get_pickler" title="compress_pickle.picklers.registry.get_pickler"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_pickler()</span></code></a> to create a
+<a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasePicklerIO</span></code></a> instance. The default method is
+<code class="docutils literal notranslate"><span class="pre">&quot;pickle&quot;</span></code>, which means that a <a class="reference internal" href="picklers.html#compress_pickle.picklers.pickle.BuiltinPicklerIO" title="compress_pickle.picklers.pickle.BuiltinPicklerIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BuiltinPicklerIO</span></code></a>
+will be created by default, and its
+<a class="reference internal" href="picklers.html#compress_pickle.picklers.pickle.BuiltinPicklerIO.load" title="compress_pickle.picklers.pickle.BuiltinPicklerIO.load"><code class="xref py py-meth docutils literal notranslate"><span class="pre">load()</span></code></a> will be used for
+unserializing the <code class="docutils literal notranslate"><span class="pre">obj</span></code>.
+Refer to <a class="reference internal" href="picklers.html#compress_pickle.picklers.registry.get_known_picklers" title="compress_pickle.picklers.registry.get_known_picklers"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_known_picklers()</span></code></a> to see the available
+serialization methods.</p></li>
+<li><p><strong>pickler_kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>Any</em><em>]</em><em>]</em>) – An optional dictionary of keyword arguments to pass to
+<a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO.load" title="compress_pickle.picklers.base.BasePicklerIO.load"><code class="xref py py-meth docutils literal notranslate"><span class="pre">load()</span></code></a> when the <code class="docutils literal notranslate"><span class="pre">obj</span></code> is loaded. For
+example, this could be <code class="docutils literal notranslate"><span class="pre">{&quot;fix_imports&quot;:</span> <span class="pre">True}</span></code> when the default <code class="docutils literal notranslate"><span class="pre">&quot;pickle&quot;</span></code>
+serialization method is used.</p></li>
+<li><p><strong>kwargs</strong> – Any extra keyword arguments are passed to
+<a class="reference internal" href="utils.html#compress_pickle.utils.instantiate_compresser" title="compress_pickle.utils.instantiate_compresser"><code class="xref py py-func docutils literal notranslate"><span class="pre">compress_pickle.utils.instantiate_compresser()</span></code></a>, which in turn creates the
+compresser instance that will be used.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>obj</strong> (<em>Any</em>)</p></li>
-<li><p><em>The uncompressed and unpickled object.</em></p></li>
-</ul>
-</p>
+<dd class="field-even"><p><strong>obj</strong> – The object that is loaded from its compressed binary representation.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Any</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>The compression is a mandatory argument and it cannot be inferred from the
-input stream parameter.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">compression</span></code> argument is mandatory because it cannot be inferred.</p>
 </dd></dl>
 
 <ul class="simple">
@@ -321,8 +336,8 @@ input stream parameter.</p>
   </div>
   <div class="sphinxnext">
     <h4>Next page</h4>
-    <p class="topless"><a href="utils.html"
-                          title="Next page">&rarr; <code class="docutils literal notranslate"><span class="pre">utils</span></code></a></p>
+    <p class="topless"><a href="io.html"
+                          title="Next page">&rarr; <code class="docutils literal notranslate"><span class="pre">io</span></code></a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -374,12 +389,12 @@ input stream parameter.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
         <li class="right" >
-          <a href="utils.html" title="utils"
+          <a href="io.html" title="io"
              >next</a> &nbsp; &nbsp;</li>
         <li class="right" >
           <a href="../api.html" title="API Reference"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="../index.html">compress_pickle 1.2.0 documentation</a> &#187;</li>
+    <li><a href="../index.html">compress_pickle 2.0.0 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="../api.html" >API Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">compress_pickle</span></code></a></li> 
@@ -388,8 +403,8 @@ input stream parameter.</p>
     </div>
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2019, Luciano Paz.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.2.
+        &#169; Copyright 2019-2021, Luciano Paz.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>

@@ -1,0 +1,263 @@
+
+
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>io &#8212; compress_pickle 2.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/cloud.css" type="text/css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+
+    
+    
+     
+        <script src="../_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="../_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="../_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="compressers" href="compressers.html" />
+    <link rel="prev" title="compress_pickle" href="compress_pickle.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="compressers.html" title="compressers"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="compress_pickle.html" title="compress_pickle"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">compress_pickle 2.0.0 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../api.html" accesskey="U">API Reference</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">io</span></code></a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="io">
+<h1><code class="docutils literal notranslate"><span class="pre">io</span></code><a class="headerlink" href="#io" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">compress_pickle</span></code> is intended to be easily extensible. This means that it should be easy to add
+new compresser and picklerIO classes and customize the functionality of serializing and
+unserializing. For this reason, the two main core functions:
+<a class="reference internal" href="#compress_pickle.io.base.compress_and_pickle" title="compress_pickle.io.base.compress_and_pickle"><code class="xref py py-func docutils literal notranslate"><span class="pre">compress_pickle.io.base.compress_and_pickle()</span></code></a> and <a class="reference internal" href="#compress_pickle.io.base.uncompress_and_unpickle" title="compress_pickle.io.base.uncompress_and_unpickle"><code class="xref py py-func docutils literal notranslate"><span class="pre">compress_pickle.io.base.uncompress_and_unpickle()</span></code></a>
+are implemented using <a class="reference external" href="https://docs.python.org/3/library/functools.html#functools.singledispatch" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">functools.singledispatch()</span></code></a>. <code class="docutils literal notranslate"><span class="pre">compress_pickle</span></code> provides a base implementation
+of both functions that work with <a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><code class="xref py py-class docutils literal notranslate"><span class="pre">compress_pickle.compressers.base.BaseCompresser</span></code></a>, but you
+can easily register a custom way of handling a specific compresser by calling</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">compress_and_pickle</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">SomeClass</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">my_custom_implementation</span><span class="p">(</span><span class="n">compresser</span><span class="p">:</span> <span class="n">SomeClass</span><span class="p">,</span> <span class="n">pickler</span><span class="p">:</span> <span class="n">BasePicklerIO</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="c1"># do something special</span>
+</pre></div>
+</div>
+<p>Combining this, with the compresser and picklerIO registry capabilities, you will be able to create
+new custom compressers and serializers, register them and then use them with simple calls to
+<a class="reference internal" href="compress_pickle.html#compress_pickle.compress_pickle.dump" title="compress_pickle.compress_pickle.dump"><code class="xref py py-func docutils literal notranslate"><span class="pre">dump()</span></code></a> and <a class="reference internal" href="compress_pickle.html#compress_pickle.compress_pickle.load" title="compress_pickle.compress_pickle.load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a>.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compress_pickle.io.base.compress_and_pickle" title="compress_pickle.io.base.compress_and_pickle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">base.compress_and_pickle</span></code></a>()</p></td>
+<td><p>Take an object, serialize it and write it to a compresser’s stream.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#compress_pickle.io.base.uncompress_and_unpickle" title="compress_pickle.io.base.uncompress_and_unpickle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">base.uncompress_and_unpickle</span></code></a>()</p></td>
+<td><p>Load and uncompress an object from a compresser’s stream.</p></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-compress_pickle.io.base"></span><dl class="py function">
+<dt id="compress_pickle.io.base.compress_and_pickle">
+<code class="sig-prename descclassname"><span class="pre">compress_pickle.io.base.</span></code><code class="sig-name descname"><span class="pre">compress_and_pickle</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compresser</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickler</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><span class="pre">compress_pickle.picklers.base.BasePicklerIO</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/../../functools.py#L10-L45"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.io.base.compress_and_pickle" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="sig-prename descclassname"><span class="pre">compress_pickle.io.base.</span></code><code class="sig-name descname"><span class="pre">compress_and_pickle</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compresser</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><span class="pre">compress_pickle.compressers.base.BaseCompresser</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickler</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><span class="pre">compress_pickle.picklers.base.BasePicklerIO</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Take an object, serialize it and write it to a compresser’s stream.</p>
+<p>This is the main serialization function. It works as a singledispatch function, and its
+implementation is dependent on the type of the supplied <code class="docutils literal notranslate"><span class="pre">compresser</span></code>. The default
+implementation only supports <a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCompresser</span></code></a>
+instances.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">compresser</span></code> is used to get the stream onto which to write the serialized <code class="docutils literal notranslate"><span class="pre">obj</span></code>.
+The <code class="docutils literal notranslate"><span class="pre">pickler</span></code> instance is the object that is responsible for <cite>dumping</cite> the <code class="docutils literal notranslate"><span class="pre">obj</span></code> to the
+compresser’s stream.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>compresser</strong> (<a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><em>BaseCompresser</em></a>) – The compresser instance that provides the file-like object onto which the <code class="docutils literal notranslate"><span class="pre">obj</span></code> must be
+written.</p></li>
+<li><p><strong>pickler</strong> (<a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><em>BasePicklerIO</em></a>) – The object that is responsible for serializing the <code class="docutils literal notranslate"><span class="pre">obj</span></code> and writting its binary
+representation into the file-like stream provided by the <code class="docutils literal notranslate"><span class="pre">compresser</span></code>.</p></li>
+<li><p><strong>obj</strong> (<em>Any</em>) – The object that you wish to serialize, compress and write.</p></li>
+<li><p><strong>**kwargs</strong> – Any extra keyword arguments are passed to the pickler’s <code class="docutils literal notranslate"><span class="pre">dump</span></code> method.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.9)"><strong>NotImplementedError</strong></a> – If the <code class="docutils literal notranslate"><span class="pre">compresser</span></code> is not an instance of
+    <a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCompresser</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="compress_pickle.io.base.uncompress_and_unpickle">
+<code class="sig-prename descclassname"><span class="pre">compress_pickle.io.base.</span></code><code class="sig-name descname"><span class="pre">uncompress_and_unpickle</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compresser</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickler</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><span class="pre">compress_pickle.picklers.base.BasePicklerIO</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/../../functools.py#L55-L92"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.io.base.uncompress_and_unpickle" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="sig-prename descclassname"><span class="pre">compress_pickle.io.base.</span></code><code class="sig-name descname"><span class="pre">uncompress_and_unpickle</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compresser</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><span class="pre">compress_pickle.compressers.base.BaseCompresser</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickler</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><span class="pre">compress_pickle.picklers.base.BasePicklerIO</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span></dt>
+<dd><p>Load and uncompress an object from a compresser’s stream.</p>
+<p>This is the main loading function. It works as a singledispatch function, and its
+implementation is dependent on the type of the supplied <code class="docutils literal notranslate"><span class="pre">compresser</span></code>. The default
+implementation only supports <a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCompresser</span></code></a>
+instances.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">compresser</span></code> is used to get the stream from which to load the serialized <code class="docutils literal notranslate"><span class="pre">obj</span></code>.
+The <code class="docutils literal notranslate"><span class="pre">pickler</span></code> instance is the object that is responsible for <cite>loading</cite> the <code class="docutils literal notranslate"><span class="pre">obj</span></code> from the
+compresser’s stream.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>compresser</strong> (<a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><em>BaseCompresser</em></a>) – The compresser instance that provides the file-like object from which to load the <code class="docutils literal notranslate"><span class="pre">obj</span></code>.</p></li>
+<li><p><strong>pickler</strong> (<a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><em>BasePicklerIO</em></a>) – The object that is responsible for reading the contents of the file-like stream taken from
+the <code class="docutils literal notranslate"><span class="pre">compresser</span></code> and loading the serialized object</p></li>
+<li><p><strong>**kwargs</strong> – Any extra keyword arguments are passed to the pickler’s <code class="docutils literal notranslate"><span class="pre">load</span></code> method.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The resulting uncompressed and unserialized object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.9)"><strong>NotImplementedError</strong></a> – If the <code class="docutils literal notranslate"><span class="pre">compresser</span></code> is not an instance of
+    <a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCompresser</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<ul class="simple">
+<li><p><a class="reference internal" href="../genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="../py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="../search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="compress_pickle.html"
+                          title="Previous page">&larr; <code class="docutils literal notranslate"><span class="pre">compress_pickle</span></code></a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="compressers.html"
+                          title="Next page">&rarr; <code class="docutils literal notranslate"><span class="pre">compressers</span></code></a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/io.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="compressers.html" title="compressers"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="compress_pickle.html" title="compress_pickle"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">compress_pickle 2.0.0 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../api.html" >API Reference</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">io</span></code></a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019-2021, Luciano Paz.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>
