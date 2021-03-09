@@ -6,6 +6,24 @@ from .registry import register_compresser
 
 
 class Bz2Compresser(BaseCompresser):
+    """Compresser class that wraps the bz2 compression package.
+
+    This class relies on the :mod:`bz2` module to open the input/output binary stream where the
+    pickled python objects will be written to (or read from). During an instance's initialization,
+    the binary stream is opened using ``bz2.open(path, mode=mode, **kwargs)``.
+
+    Parameters
+    ----------
+    path : Union[PathType, IO[bytes]]
+        A PathType object (``str``, ``bytes``, ``os.PathType``) or a file-like
+        object (e.g. ``io.BaseIO`` instances). The path that will be used to open the
+        input/output binary stream.
+    mode : str
+        Mode with which to open the file buffer.
+    kwargs
+        Any other key word arguments that are passed to :func:`bz2.open`.
+    """
+
     def __init__(self, path: Union[PathType, IO[bytes]], mode: str, **kwargs):
         if not isinstance(path, PATH_TYPES + (IOBase,)):
             raise TypeError(f"Unhandled path type {type(path)}")

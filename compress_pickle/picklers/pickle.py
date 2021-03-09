@@ -8,6 +8,8 @@ __all__ = ["BuiltinPicklerIO"]
 
 
 class BuiltinPicklerIO(BasePicklerIO):
+    """A PicklerIO class that wraps standard :func:`pickle.dump` and :func:`pickle.load`."""
+
     def dump(self, obj: Any, stream: IO[bytes], **kwargs):
         pickle.dump(obj, stream, **kwargs)
 

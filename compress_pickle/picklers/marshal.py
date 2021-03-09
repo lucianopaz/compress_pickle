@@ -8,6 +8,8 @@ __all__ = ["MarshalPicklerIO"]
 
 
 class MarshalPicklerIO(BasePicklerIO):
+    """A PicklerIO class that wraps standard :func:`marshal.dump` and :func:`marshal.load`."""
+
     def dump(self, obj: Any, stream: IO[bytes], **kwargs):
         args = kwargs.pop("version", tuple())
         args += tuple(kwargs.values())

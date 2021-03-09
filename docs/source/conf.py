@@ -21,7 +21,7 @@ import cloud_sptheme as csp
 # -- Project information -----------------------------------------------------
 
 project = 'compress_pickle'
-copyright = '2019, Luciano Paz'
+copyright = '2019-2021, Luciano Paz'
 author = 'Luciano Paz'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -203,7 +203,11 @@ def linkcode_resolve(domain, info):
     )
 
 
-intersphinx_mapping = {'python': ('https://docs.python.org/3', None)}
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3', None),
+    'lz4': ('https://python-lz4.readthedocs.io/en/stable', None),
+    'dill': ('https://dill.readthedocs.io/en/stable', None),
+}
 
 nitpick_ignore = [
     ('py:class', 'os.PathLike'),

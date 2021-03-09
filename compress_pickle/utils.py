@@ -63,6 +63,49 @@ def instantiate_compresser(
     set_default_extension: bool = True,
     **kwargs,
 ) -> BaseCompresser:
+    """Initialize the compresser instance for the supplied path and compression.
+
+    Initiate a :class:`compress_pickle.compressers.base.BaseCompresser` instance based on the
+    supplied (or inferred) ``compression`` method. This instance will open a file like object
+    with supplied ``mode``, using the provided ``path``. Furthermore, when the ``path`` is not
+    a binary stream, this function can also potentially set the path's extension to the default
+    extension registered to the used compression method.
+
+    Parameters
+    ----------
+    compression : Optional[str]
+        The compression method name. Refer to
+        :func:`~compress_pickle.compressers.registry.get_known_compressions` for a list of the
+        known compression methods. If ``"infer"``, the compression method is inferred from the
+        ``path`` extension (only possible if ``path`` is a ``PathType``). Refer to
+        :func:`~compress_pickle.compressers.registry.get_registered_extensions` for the mapping
+        between extensions and compression methods.
+    path : Union[PathType, FileType]
+        A path-like object (``str``, ``bytes``, ``os.PathType``) or a file-like
+        object (``io.BaseIO`` instances) that will be passed to the
+        :class:`compress_pickle.compressers.base.BaseCompresser` class.
+    mode : str
+        Mode with which to open the file-like stream. Only used if the ``path`` is a
+        ``PathType``. If "read", the default read mode is automatically assigned by
+        :func:`~compress_pickle.compressers.registry.get_compression_read_mode` based on the used
+        compression method. If "write", the default write mode is automatically assigned from
+        :func:`~compress_pickle.compressers.registry.get_compression_write_mode` based on the used
+        compression method.
+    set_default_extension : bool
+        If ``True``, the default extension given the provided compression protocol is set to the
+        supplied ``path``. Refer to
+        :func:`~compress_pickle.compressers.registry.get_default_compression_mapping` for the
+        default extension registered to each compression method.
+    **kwargs
+        Any extra keyword arguments are passed to the
+        :meth:`compress_pickle.compressers.base.BaseCompresser.__init__`.
+
+    Returns
+    -------
+    BaseCompresser
+        The compresser instance that will be used to create the byte stream from which a
+        :class:`compress_pickle.picklers.base.BasePicklerIO` will read or write serialized objects.
+    """
     if isinstance(path, PATH_TYPES):
         _path = _stringyfy_path(path)
     if compression == "infer":

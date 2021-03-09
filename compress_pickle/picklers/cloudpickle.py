@@ -14,6 +14,8 @@ __all__ = ["CloudPicklerIO"]
 
 
 class CloudPicklerIO(BasePicklerIO):
+    """A PicklerIO class that wraps :func:`cloudpickle.dump` and :func:`cloudpickle.load`."""
+
     def __init__(self):
         if not _cloudpickle_available:
             raise RuntimeError(

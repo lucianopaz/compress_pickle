@@ -14,6 +14,8 @@ __all__ = ["DillPicklerIO"]
 
 
 class DillPicklerIO(BasePicklerIO):
+    """A PicklerIO class that wraps :func:`dill.dump` and :func:`dill.load`."""
+
     def __init__(self):
         if not _dill_available:
             raise RuntimeError(
