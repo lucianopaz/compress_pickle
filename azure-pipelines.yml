@@ -24,6 +24,12 @@ stages:
           test.unittest: True
           test.style: True
           test.docs: True
+        Python39:
+          python.version: '3.9'
+          imageName: 'ubuntu-latest'
+          test.unittest: True
+          test.style: True
+          test.docs: True
         Python37-Windows:
           python.version: '3.7'
           imageName: 'windows-latest'
@@ -45,10 +51,7 @@ stages:
     - bash: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        if [[ $(test.style) = "True" ]] || [[ $(test.docs) = "True" ]]
-        then
-          python -m pip install -r requirements-dev.txt
-        fi
+        python -m pip install -r requirements-dev.txt
         python -m pip install .[full]
       displayName: 'Install dependencies'
 
