@@ -51,6 +51,7 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.napoleon',
     'sphinx.ext.autosummary',
+    'sphinx.ext.intersphinx',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -210,9 +211,8 @@ intersphinx_mapping = {
 }
 
 nitpick_ignore = [
-    ('py:class', 'os.PathLike'),
+    ('py:class', 'zipfile.ZipFile'),
     ('py:class', 'IO'),
     ('py:class', 'PathType'),
     ('py:class', 'FileType'),
-    ('py:class', 'zipfile.ZipFile'),
 ]

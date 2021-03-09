@@ -98,7 +98,7 @@ def instantiate_compresser(
         default extension registered to each compression method.
     **kwargs
         Any extra keyword arguments are passed to the
-        :meth:`compress_pickle.compressers.base.BaseCompresser.__init__`.
+        :class:`compress_pickle.compressers.base.BaseCompresser` initialization.
 
     Returns
     -------

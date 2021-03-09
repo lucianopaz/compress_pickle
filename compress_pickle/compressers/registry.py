@@ -7,6 +7,7 @@ __all__ = [
     "get_compresser_from_extension",
     "get_compression_from_extension",
     "register_compresser",
+    "get_registered_extensions",
     "get_compression_write_mode",
     "get_compression_read_mode",
     "add_compression_alias",
