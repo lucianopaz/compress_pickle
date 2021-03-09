@@ -22,7 +22,10 @@ class BuiltinPicklerIO(BasePicklerIO):
         kwargs
             Any extra keyword arguments to pass to :func:`pickle.dump`.
         """
-        pickle.dump(obj, stream, **kwargs)
+        if kwargs.get("protocol", None) == 5:
+            stream.write(pickle.dumps(obj, **kwargs))
+        else:
+            pickle.dump(obj, stream, **kwargs)
 
     def load(self, stream: IO[bytes], **kwargs):
         """Load a serialized binary representation of an object from a stream.
