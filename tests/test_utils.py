@@ -2,7 +2,11 @@ import pytest
 import io
 from os.path import splitext
 from compress_pickle.compressers.registry import get_default_compression_mapping
-from compress_pickle.utils import _stringyfy_path, _infer_compression_from_path, _set_default_extension
+from compress_pickle.utils import (
+    _stringyfy_path,
+    _infer_compression_from_path,
+    _set_default_extension,
+)
 
 
 def test_stringify_path():
@@ -17,7 +21,10 @@ def test_set_default_extension(compressions):
     root = "somepath.someotherstuff"
     path = root + ".ext"
     new_path = _set_default_extension(path, compression=compressions)
-    assert splitext(new_path) == (root, "." + get_default_compression_mapping()[compressions])
+    assert splitext(new_path) == (
+        root,
+        "." + get_default_compression_mapping()[compressions],
+    )
 
 
 @pytest.mark.usefixtures("valid_extensions")
