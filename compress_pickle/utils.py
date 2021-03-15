@@ -135,4 +135,4 @@ def _infer_compression_from_path(path: PathType) -> Optional[str]:
 
 def _set_default_extension(path: PathType, compression: Optional[str]) -> str:
     root, current_ext = splitext(_stringyfy_path(path))
-    return root + get_default_compression_mapping()[compression]
+    return root + "." + get_default_compression_mapping()[compression]
