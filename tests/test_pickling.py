@@ -2,6 +2,7 @@ import pytest
 import os
 import warnings
 import zipfile
+import numpy as np
 from compress_pickle import (
     dump,
     dumps,
@@ -85,6 +86,18 @@ def test_dump_load(dump_load):
                 )
             with pytest.raises(expected_fail):
                 load(path, compression, set_default_extension=set_default_extension)
+
+
+@pytest.mark.usefixtures("tmpdir", "valid_extensions")
+def test_dump_load_context_manager(tmpdir, valid_extensions):
+    data = np.random.rand(100000)
+    path = os.path.join(str(tmpdir), f"test_blabla.{valid_extensions[0]}")
+
+    with open(path, 'wb') as f:
+        dump(data, f)
+
+    with open(path, 'rb') as f:
+        assert np.all(data == load(f))
 
 
 @pytest.mark.usefixtures("random_message", "compressions", "pickler_method")

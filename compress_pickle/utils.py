@@ -106,6 +106,7 @@ def instantiate_compresser(
         The compresser instance that will be used to create the byte stream from which a
         :class:`compress_pickle.picklers.base.BasePicklerIO` will read or write serialized objects.
     """
+    _path = getattr(path, "name", None)
     if isinstance(path, PATH_TYPES):
         _path = _stringyfy_path(path)
     if compression == "infer":
