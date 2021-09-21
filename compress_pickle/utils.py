@@ -105,10 +105,20 @@ def instantiate_compresser(
     BaseCompresser
         The compresser instance that will be used to create the byte stream from which a
         :class:`compress_pickle.picklers.base.BasePicklerIO` will read or write serialized objects.
+
+    Raises
+    ------
+    TypeError
+        If the supplied ``path`` is not a ``PATH_TYPES`` instance and the ``compression`` is "infer".
     """
     if isinstance(path, PATH_TYPES):
         _path = _stringyfy_path(path)
     if compression == "infer":
+        if not isinstance(path, PATH_TYPES):
+            raise TypeError(
+                f"Cannot infer the compression from a path that is not an instance of "
+                f"{PATH_TYPES}. Encountered {type(path)}"
+            )
         compression = _infer_compression_from_path(_path)
     compresser_class = get_compresser(compression)
     if set_default_extension and isinstance(path, PATH_TYPES):
