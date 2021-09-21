@@ -3,6 +3,13 @@ from typing import IO, Union
 from .base import BaseCompresser, PathType, PATH_TYPES
 from .registry import register_compresser
 
+try:
+    import lz4.frame
+
+    _lz4_available = True
+except ImportError:  # pragma: no cover
+    _lz4_available = False
+
 
 class Lz4Compresser(BaseCompresser):
     """Compresser class that wraps the lz4 compression package.
@@ -24,9 +31,7 @@ class Lz4Compresser(BaseCompresser):
     """
 
     def __init__(self, path: Union[PathType, IO[bytes]], mode: str, **kwargs):
-        try:
-            import lz4.frame
-        except ImportError:
+        if not _lz4_available:
             raise RuntimeError(
                 "The lz4 compression protocol requires the lz4 package to be installed. "
                 "Please pip install lz4 and retry."
@@ -42,10 +47,11 @@ class Lz4Compresser(BaseCompresser):
         return self._stream  # type: ignore
 
 
-register_compresser(
-    compression="lz4",
-    compresser=Lz4Compresser,
-    extensions=["lz4"],
-    default_write_mode="wb",
-    default_read_mode="rb",
-)
+if _lz4_available:
+    register_compresser(
+        compression="lz4",
+        compresser=Lz4Compresser,
+        extensions=["lz4"],
+        default_write_mode="wb",
+        default_read_mode="rb",
+    )
