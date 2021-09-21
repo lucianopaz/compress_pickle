@@ -6,13 +6,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>utils &#8212; compress_pickle 2.0.1 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/cloud.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
     
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
@@ -66,7 +67,7 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="utils">
+  <section id="utils">
 <h1><code class="docutils literal notranslate"><span class="pre">utils</span></code><a class="headerlink" href="#utils" title="Permalink to this headline">¶</a></h1>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -80,8 +81,8 @@
 </tbody>
 </table>
 <span class="target" id="module-compress_pickle.utils"></span><dl class="py function">
-<dt id="compress_pickle.utils.instantiate_compresser">
-<code class="sig-prename descclassname"><span class="pre">compress_pickle.utils.</span></code><code class="sig-name descname"><span class="pre">instantiate_compresser</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.9)"><span class="pre">os.PathLike</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_default_extension</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><span class="pre">bool</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><span class="pre">compress_pickle.compressers.base.BaseCompresser</span></a><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/utils.py#L59-L123"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.utils.instantiate_compresser" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compress_pickle.utils.instantiate_compresser">
+<span class="sig-prename descclassname"><span class="pre">compress_pickle.utils.</span></span><span class="sig-name descname"><span class="pre">instantiate_compresser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.9)"><span class="pre">os.PathLike</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_default_extension</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><span class="pre">bool</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><span class="pre">compress_pickle.compressers.base.BaseCompresser</span></a></span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/utils.py#L59-L133"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.utils.instantiate_compresser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the compresser instance for the supplied path and compression.</p>
 <p>Initiate a <a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><code class="xref py py-class docutils literal notranslate"><span class="pre">compress_pickle.compressers.base.BaseCompresser</span></code></a> instance based on the
 supplied (or inferred) <code class="docutils literal notranslate"><span class="pre">compression</span></code> method. This instance will open a file like object
@@ -121,6 +122,9 @@ default extension registered to each compression method.</p></li>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser">BaseCompresser</a></p>
 </dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.9)"><strong>TypeError</strong></a> – If the supplied <code class="docutils literal notranslate"><span class="pre">path</span></code> is not a <code class="docutils literal notranslate"><span class="pre">PATH_TYPES</span></code> instance and the <code class="docutils literal notranslate"><span class="pre">compression</span></code> is “infer”.</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -129,7 +133,7 @@ default extension registered to each compression method.</p></li>
 <li><p><a class="reference internal" href="../py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="../search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
-</div>
+</section>
 
 
             <div class="clearer"></div>
@@ -154,7 +158,7 @@ default extension registered to each compression method.</p></li>
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -205,7 +209,7 @@ default extension registered to each compression method.</p></li>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019-2021, Luciano Paz.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>

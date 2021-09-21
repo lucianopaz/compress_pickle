@@ -6,13 +6,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>io &#8212; compress_pickle 2.0.1 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/cloud.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
     
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
@@ -70,7 +71,7 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="io">
+  <section id="io">
 <h1><code class="docutils literal notranslate"><span class="pre">io</span></code><a class="headerlink" href="#io" title="Permalink to this headline">¶</a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">compress_pickle</span></code> is intended to be easily extensible. This means that it should be easy to add
 new compresser and picklerIO classes and customize the functionality of serializing and
@@ -93,19 +94,17 @@ new custom compressers and serializers, register them and then use them with sim
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#compress_pickle.io.base.compress_and_pickle" title="compress_pickle.io.base.compress_and_pickle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">base.compress_and_pickle</span></code></a>()</p></td>
-<td><p>Take an object, serialize it and write it to a compresser’s stream.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compress_pickle.io.base.compress_and_pickle" title="compress_pickle.io.base.compress_and_pickle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">base.compress_and_pickle</span></code></a>(compresser, ...)</p></td>
+<td><p>Take an object, serialize it and write it to a compresser's stream.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#compress_pickle.io.base.uncompress_and_unpickle" title="compress_pickle.io.base.uncompress_and_unpickle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">base.uncompress_and_unpickle</span></code></a>()</p></td>
-<td><p>Load and uncompress an object from a compresser’s stream.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#compress_pickle.io.base.uncompress_and_unpickle" title="compress_pickle.io.base.uncompress_and_unpickle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">base.uncompress_and_unpickle</span></code></a>(compresser, ...)</p></td>
+<td><p>Load and uncompress an object from a compresser's stream.</p></td>
 </tr>
 </tbody>
 </table>
 <span class="target" id="module-compress_pickle.io.base"></span><dl class="py function">
-<dt id="compress_pickle.io.base.compress_and_pickle">
-<code class="sig-prename descclassname"><span class="pre">compress_pickle.io.base.</span></code><code class="sig-name descname"><span class="pre">compress_and_pickle</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compresser</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickler</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><span class="pre">compress_pickle.picklers.base.BasePicklerIO</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/../../functools.py#L10-L45"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.io.base.compress_and_pickle" title="Permalink to this definition">¶</a></dt>
-<dt>
-<code class="sig-prename descclassname"><span class="pre">compress_pickle.io.base.</span></code><code class="sig-name descname"><span class="pre">compress_and_pickle</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compresser</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><span class="pre">compress_pickle.compressers.base.BaseCompresser</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickler</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><span class="pre">compress_pickle.picklers.base.BasePicklerIO</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span></dt>
+<dt class="sig sig-object py" id="compress_pickle.io.base.compress_and_pickle">
+<span class="sig-prename descclassname"><span class="pre">compress_pickle.io.base.</span></span><span class="sig-name descname"><span class="pre">compress_and_pickle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compresser</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickler</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><span class="pre">compress_pickle.picklers.base.BasePicklerIO</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/../../functools.py#L10-L45"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.io.base.compress_and_pickle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Take an object, serialize it and write it to a compresser’s stream.</p>
 <p>This is the main serialization function. It works as a singledispatch function, and its
 implementation is dependent on the type of the supplied <code class="docutils literal notranslate"><span class="pre">compresser</span></code>. The default
@@ -133,10 +132,8 @@ representation into the file-like stream provided by the <code class="docutils l
 </dd></dl>
 
 <dl class="py function">
-<dt id="compress_pickle.io.base.uncompress_and_unpickle">
-<code class="sig-prename descclassname"><span class="pre">compress_pickle.io.base.</span></code><code class="sig-name descname"><span class="pre">uncompress_and_unpickle</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compresser</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickler</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><span class="pre">compress_pickle.picklers.base.BasePicklerIO</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/../../functools.py#L55-L92"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.io.base.uncompress_and_unpickle" title="Permalink to this definition">¶</a></dt>
-<dt>
-<code class="sig-prename descclassname"><span class="pre">compress_pickle.io.base.</span></code><code class="sig-name descname"><span class="pre">uncompress_and_unpickle</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compresser</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="compressers.html#compress_pickle.compressers.base.BaseCompresser" title="compress_pickle.compressers.base.BaseCompresser"><span class="pre">compress_pickle.compressers.base.BaseCompresser</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickler</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><span class="pre">compress_pickle.picklers.base.BasePicklerIO</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span></dt>
+<dt class="sig sig-object py" id="compress_pickle.io.base.uncompress_and_unpickle">
+<span class="sig-prename descclassname"><span class="pre">compress_pickle.io.base.</span></span><span class="sig-name descname"><span class="pre">uncompress_and_unpickle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compresser</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickler</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="picklers.html#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><span class="pre">compress_pickle.picklers.base.BasePicklerIO</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/../../functools.py#L55-L92"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.io.base.uncompress_and_unpickle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load and uncompress an object from a compresser’s stream.</p>
 <p>This is the main loading function. It works as a singledispatch function, and its
 implementation is dependent on the type of the supplied <code class="docutils literal notranslate"><span class="pre">compresser</span></code>. The default
@@ -172,7 +169,7 @@ the <code class="docutils literal notranslate"><span class="pre">compresser</spa
 <li><p><a class="reference internal" href="../py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="../search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
-</div>
+</section>
 
 
             <div class="clearer"></div>
@@ -202,7 +199,7 @@ the <code class="docutils literal notranslate"><span class="pre">compresser</spa
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -256,7 +253,7 @@ the <code class="docutils literal notranslate"><span class="pre">compresser</spa
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019-2021, Luciano Paz.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>

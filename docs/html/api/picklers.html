@@ -6,13 +6,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>picklers &#8212; compress_pickle 2.0.1 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/cloud.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
     
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
@@ -70,7 +71,7 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="picklers">
+  <section id="picklers">
 <h1><code class="docutils literal notranslate"><span class="pre">picklers</span></code><a class="headerlink" href="#picklers" title="Permalink to this headline">¶</a></h1>
 <p>Has two main parts:</p>
 <ol class="arabic simple">
@@ -116,11 +117,11 @@
 </tr>
 </tbody>
 </table>
-<div class="section" id="module-compress_pickle.picklers.registry">
+<section id="module-compress_pickle.picklers.registry">
 <span id="registry"></span><h2>Registry<a class="headerlink" href="#module-compress_pickle.picklers.registry" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt id="compress_pickle.picklers.registry.get_known_picklers">
-<code class="sig-prename descclassname"><span class="pre">compress_pickle.picklers.registry.</span></code><code class="sig-name descname"><span class="pre">get_known_picklers</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/registry.py#L121-L129"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.registry.get_known_picklers" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compress_pickle.picklers.registry.get_known_picklers">
+<span class="sig-prename descclassname"><span class="pre">compress_pickle.picklers.registry.</span></span><span class="sig-name descname"><span class="pre">get_known_picklers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/registry.py#L121-L129"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.registry.get_known_picklers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a list of known pickle serialization methods.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -133,8 +134,8 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="compress_pickle.picklers.registry.get_pickler">
-<code class="sig-prename descclassname"><span class="pre">compress_pickle.picklers.registry.</span></code><code class="sig-name descname"><span class="pre">get_pickler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><span class="pre">compress_pickle.picklers.base.BasePicklerIO</span></a><span class="p"><span class="pre">]</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/registry.py#L17-L42"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.registry.get_pickler" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compress_pickle.picklers.registry.get_pickler">
+<span class="sig-prename descclassname"><span class="pre">compress_pickle.picklers.registry.</span></span><span class="sig-name descname"><span class="pre">get_pickler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><span class="pre">compress_pickle.picklers.base.BasePicklerIO</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/registry.py#L17-L42"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.registry.get_pickler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the PicklerIO class registered with a given pickler name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -153,8 +154,8 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="compress_pickle.picklers.registry.list_registered_picklers">
-<code class="sig-prename descclassname"><span class="pre">compress_pickle.picklers.registry.</span></code><code class="sig-name descname"><span class="pre">list_registered_picklers</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><span class="pre">compress_pickle.picklers.base.BasePicklerIO</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/registry.py#L132-L140"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.registry.list_registered_picklers" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compress_pickle.picklers.registry.list_registered_picklers">
+<span class="sig-prename descclassname"><span class="pre">compress_pickle.picklers.registry.</span></span><span class="sig-name descname"><span class="pre">list_registered_picklers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><span class="pre">compress_pickle.picklers.base.BasePicklerIO</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/registry.py#L132-L140"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.registry.list_registered_picklers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the list of registered PicklerIO classes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -167,8 +168,8 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="compress_pickle.picklers.registry.register_pickler">
-<code class="sig-prename descclassname"><span class="pre">compress_pickle.picklers.registry.</span></code><code class="sig-name descname"><span class="pre">register_pickler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickler</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><span class="pre">compress_pickle.picklers.base.BasePicklerIO</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/registry.py#L44-L81"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.registry.register_pickler" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compress_pickle.picklers.registry.register_pickler">
+<span class="sig-prename descclassname"><span class="pre">compress_pickle.picklers.registry.</span></span><span class="sig-name descname"><span class="pre">register_pickler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickler</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#compress_pickle.picklers.base.BasePicklerIO" title="compress_pickle.picklers.base.BasePicklerIO"><span class="pre">compress_pickle.picklers.base.BasePicklerIO</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/registry.py#L44-L81"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.registry.register_pickler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register a pickler handler.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -188,18 +189,18 @@ subclass.</p></li>
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="picklerio">
+</section>
+<section id="picklerio">
 <h2>PicklerIO<a class="headerlink" href="#picklerio" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="compress_pickle.picklers.base.BasePicklerIO">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">compress_pickle.picklers.base.</span></code><code class="sig-name descname"><span class="pre">BasePicklerIO</span></code><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/base.py#L8-L46"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.base.BasePicklerIO" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compress_pickle.picklers.base.BasePicklerIO">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">compress_pickle.picklers.base.</span></span><span class="sig-name descname"><span class="pre">BasePicklerIO</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/base.py#L8-L46"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.base.BasePicklerIO" title="Permalink to this definition">¶</a></dt>
 <dd><p>PicklerIO abstract base class.</p>
 <p>This class is in charge of writing and reading serialized python objects from a file-like
 binary stream.</p>
 <dl class="py method">
-<dt id="compress_pickle.picklers.base.BasePicklerIO.dump">
-<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">dump</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/base.py#L15-L28"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.base.BasePicklerIO.dump" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compress_pickle.picklers.base.BasePicklerIO.dump">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/base.py#L15-L28"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.base.BasePicklerIO.dump" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a serialized binary representation of an object to a stream.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -213,8 +214,8 @@ binary stream.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="compress_pickle.picklers.base.BasePicklerIO.load">
-<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">load</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/base.py#L30-L46"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.base.BasePicklerIO.load" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compress_pickle.picklers.base.BasePicklerIO.load">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/base.py#L30-L46"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.base.BasePicklerIO.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a serialized binary representation of an object from a stream.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -235,12 +236,12 @@ binary stream.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="compress_pickle.picklers.pickle.BuiltinPicklerIO">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">compress_pickle.picklers.pickle.</span></code><code class="sig-name descname"><span class="pre">BuiltinPicklerIO</span></code><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/pickle.py#L10-L45"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.pickle.BuiltinPicklerIO" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compress_pickle.picklers.pickle.BuiltinPicklerIO">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">compress_pickle.picklers.pickle.</span></span><span class="sig-name descname"><span class="pre">BuiltinPicklerIO</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/pickle.py#L10-L45"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.pickle.BuiltinPicklerIO" title="Permalink to this definition">¶</a></dt>
 <dd><p>A PicklerIO class that wraps standard <a class="reference external" href="https://docs.python.org/3/library/pickle.html#pickle.dump" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pickle.dump()</span></code></a> and <a class="reference external" href="https://docs.python.org/3/library/pickle.html#pickle.load" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pickle.load()</span></code></a>.</p>
 <dl class="py method">
-<dt id="compress_pickle.picklers.pickle.BuiltinPicklerIO.dump">
-<code class="sig-name descname"><span class="pre">dump</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/pickle.py#L13-L28"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.pickle.BuiltinPicklerIO.dump" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compress_pickle.picklers.pickle.BuiltinPicklerIO.dump">
+<span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/pickle.py#L13-L28"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.pickle.BuiltinPicklerIO.dump" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a serialized binary representation of an object to a stream.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -254,8 +255,8 @@ binary stream.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="compress_pickle.picklers.pickle.BuiltinPicklerIO.load">
-<code class="sig-name descname"><span class="pre">load</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/pickle.py#L30-L45"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.pickle.BuiltinPicklerIO.load" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compress_pickle.picklers.pickle.BuiltinPicklerIO.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/pickle.py#L30-L45"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.pickle.BuiltinPicklerIO.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a serialized binary representation of an object from a stream.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -276,12 +277,12 @@ binary stream.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="compress_pickle.picklers.optimized_pickle.OptimizedPicklerIO">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">compress_pickle.picklers.optimized_pickle.</span></code><code class="sig-name descname"><span class="pre">OptimizedPicklerIO</span></code><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/optimized_pickle.py#L11-L16"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.optimized_pickle.OptimizedPicklerIO" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compress_pickle.picklers.optimized_pickle.OptimizedPicklerIO">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">compress_pickle.picklers.optimized_pickle.</span></span><span class="sig-name descname"><span class="pre">OptimizedPicklerIO</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/optimized_pickle.py#L11-L16"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.optimized_pickle.OptimizedPicklerIO" title="Permalink to this definition">¶</a></dt>
 <dd><p>A PicklerIO class that combines <a class="reference external" href="https://docs.python.org/3/library/pickletools.html#pickletools.optimize" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pickletools.optimize()</span></code></a> and standard <a class="reference external" href="https://docs.python.org/3/library/pickle.html#pickle.dump" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pickle.dump()</span></code></a>.</p>
 <dl class="py method">
-<dt id="compress_pickle.picklers.optimized_pickle.OptimizedPicklerIO.dump">
-<code class="sig-name descname"><span class="pre">dump</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/optimized_pickle.py#L14-L16"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.optimized_pickle.OptimizedPicklerIO.dump" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compress_pickle.picklers.optimized_pickle.OptimizedPicklerIO.dump">
+<span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/optimized_pickle.py#L14-L16"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.optimized_pickle.OptimizedPicklerIO.dump" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a serialized binary representation of an object to a stream.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -297,12 +298,12 @@ binary stream.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="compress_pickle.picklers.marshal.MarshalPicklerIO">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">compress_pickle.picklers.marshal.</span></code><code class="sig-name descname"><span class="pre">MarshalPicklerIO</span></code><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/marshal.py#L10-L44"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.marshal.MarshalPicklerIO" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compress_pickle.picklers.marshal.MarshalPicklerIO">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">compress_pickle.picklers.marshal.</span></span><span class="sig-name descname"><span class="pre">MarshalPicklerIO</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/marshal.py#L10-L44"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.marshal.MarshalPicklerIO" title="Permalink to this definition">¶</a></dt>
 <dd><p>A PicklerIO class that wraps standard <a class="reference external" href="https://docs.python.org/3/library/marshal.html#marshal.dump" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">marshal.dump()</span></code></a> and <a class="reference external" href="https://docs.python.org/3/library/marshal.html#marshal.load" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">marshal.load()</span></code></a>.</p>
 <dl class="py method">
-<dt id="compress_pickle.picklers.marshal.MarshalPicklerIO.dump">
-<code class="sig-name descname"><span class="pre">dump</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/marshal.py#L13-L27"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.marshal.MarshalPicklerIO.dump" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compress_pickle.picklers.marshal.MarshalPicklerIO.dump">
+<span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/marshal.py#L13-L27"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.marshal.MarshalPicklerIO.dump" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a serialized binary representation of an object to a stream.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -316,8 +317,8 @@ binary stream.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="compress_pickle.picklers.marshal.MarshalPicklerIO.load">
-<code class="sig-name descname"><span class="pre">load</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/marshal.py#L29-L44"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.marshal.MarshalPicklerIO.load" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compress_pickle.picklers.marshal.MarshalPicklerIO.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/marshal.py#L29-L44"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.marshal.MarshalPicklerIO.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a serialized binary representation of an object from a stream.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -338,12 +339,12 @@ binary stream.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="compress_pickle.picklers.dill.DillPicklerIO">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">compress_pickle.picklers.dill.</span></code><code class="sig-name descname"><span class="pre">DillPicklerIO</span></code><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/dill.py#L16-L56"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.dill.DillPicklerIO" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compress_pickle.picklers.dill.DillPicklerIO">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">compress_pickle.picklers.dill.</span></span><span class="sig-name descname"><span class="pre">DillPicklerIO</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/dill.py#L16-L56"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.dill.DillPicklerIO" title="Permalink to this definition">¶</a></dt>
 <dd><p>A PicklerIO class that wraps <code class="docutils literal notranslate"><span class="pre">dill.dump</span></code> and <code class="docutils literal notranslate"><span class="pre">dill.load</span></code>.</p>
 <dl class="py method">
-<dt id="compress_pickle.picklers.dill.DillPicklerIO.dump">
-<code class="sig-name descname"><span class="pre">dump</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/dill.py#L27-L39"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.dill.DillPicklerIO.dump" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compress_pickle.picklers.dill.DillPicklerIO.dump">
+<span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/dill.py#L27-L39"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.dill.DillPicklerIO.dump" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a serialized binary representation of an object to a stream.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -357,8 +358,8 @@ binary stream.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="compress_pickle.picklers.dill.DillPicklerIO.load">
-<code class="sig-name descname"><span class="pre">load</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/dill.py#L41-L56"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.dill.DillPicklerIO.load" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compress_pickle.picklers.dill.DillPicklerIO.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/dill.py#L41-L56"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.dill.DillPicklerIO.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a serialized binary representation of an object from a stream.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -379,12 +380,12 @@ binary stream.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="compress_pickle.picklers.cloudpickle.CloudPicklerIO">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">compress_pickle.picklers.cloudpickle.</span></code><code class="sig-name descname"><span class="pre">CloudPicklerIO</span></code><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/cloudpickle.py#L16-L56"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.cloudpickle.CloudPicklerIO" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compress_pickle.picklers.cloudpickle.CloudPicklerIO">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">compress_pickle.picklers.cloudpickle.</span></span><span class="sig-name descname"><span class="pre">CloudPicklerIO</span></span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/cloudpickle.py#L16-L56"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.cloudpickle.CloudPicklerIO" title="Permalink to this definition">¶</a></dt>
 <dd><p>A PicklerIO class that wraps <code class="docutils literal notranslate"><span class="pre">cloudpickle.dump</span></code> and <code class="docutils literal notranslate"><span class="pre">cloudpickle.load</span></code>.</p>
 <dl class="py method">
-<dt id="compress_pickle.picklers.cloudpickle.CloudPicklerIO.dump">
-<code class="sig-name descname"><span class="pre">dump</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/cloudpickle.py#L27-L39"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.cloudpickle.CloudPicklerIO.dump" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compress_pickle.picklers.cloudpickle.CloudPicklerIO.dump">
+<span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/cloudpickle.py#L27-L39"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.cloudpickle.CloudPicklerIO.dump" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a serialized binary representation of an object to a stream.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -398,8 +399,8 @@ binary stream.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="compress_pickle.picklers.cloudpickle.CloudPicklerIO.load">
-<code class="sig-name descname"><span class="pre">load</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/cloudpickle.py#L41-L56"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.cloudpickle.CloudPicklerIO.load" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compress_pickle.picklers.cloudpickle.CloudPicklerIO.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lucianopaz/compress_pickle/blob/master/compress_pickle/picklers/cloudpickle.py#L41-L56"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compress_pickle.picklers.cloudpickle.CloudPicklerIO.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a serialized binary representation of an object from a stream.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -424,8 +425,8 @@ binary stream.</p>
 <li><p><a class="reference internal" href="../py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="../search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -465,7 +466,7 @@ binary stream.</p>
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -519,7 +520,7 @@ binary stream.</p>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019-2021, Luciano Paz.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>
