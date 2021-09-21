@@ -186,6 +186,29 @@
 </div>
 <p>For more information please refer to the <a class="reference internal" href="api.html"><span class="doc">API</span></a>.</p>
 </section>
+<section id="available-compression-and-pickling-protocols">
+<h1>Available compression and pickling protocols<a class="headerlink" href="#available-compression-and-pickling-protocols" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">compress_pickle</span></code> supports many compression protocols and pickling backends. To see the compression protocols and pickling backends that are available to you, try to run:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">compress_pickle</span> <span class="kn">import</span> <span class="n">get_known_picklers</span><span class="p">,</span> <span class="n">get_known_compressions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_known_picklers</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_known_compressions</span><span class="p">()</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+<p>These are the names of the available compression and pickling protocols. Furthermore, <code class="docutils literal notranslate"><span class="pre">compress_pickle</span></code> also registers a mapping between the known compressions, and the associated filename extensions. To see the mapping from known extensions to compression protocols run this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">compress_pickle</span> <span class="kn">import</span> <span class="n">get_registered_extensions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_registered_extensions</span><span class="p">()</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+<p>As a final comment, <code class="docutils literal notranslate"><span class="pre">compress_pickle</span></code> can also set the filename extension to the registerred default value. To see the mapping between compression protocols and the associated default filename extension run this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">compress_pickle</span> <span class="kn">import</span> <span class="n">get_default_compression_mapping</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_default_compression_mapping</span><span class="p">()</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+</section>
 <section id="acknowledgements">
 <h1>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h1>
 <p>Many the ideas used in this package were suggested on <a class="reference external" href="https://stackoverflow.com/questions/18474791/decreasing-the-size-of-cpickle-objects">stackoverflow</a>. However, I did not find any PyPI package that centralized their implementations, so I wrote this small package. Any suggestions or input is very welcome. Also, please <a class="reference external" href="https://github.com/lucianopaz/compress_pickle/issues/new">report any problems you may encounter</a>. <a class="reference external" href="https://github.com/lucianopaz/compress_pickle/pulls">Pull requests are more than welcome</a>.</p>
@@ -211,6 +234,7 @@
 <li><a class="reference internal" href="#">Welcome to compress_pickle’s documentation!</a></li>
 <li><a class="reference internal" href="#installation">Installation</a></li>
 <li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#available-compression-and-pickling-protocols">Available compression and pickling protocols</a></li>
 <li><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>

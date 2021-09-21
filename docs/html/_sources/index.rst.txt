@@ -149,6 +149,36 @@ We can check that the compressed files actually take up less disk space with sta
 
 For more information please refer to the :doc:`API <api>`.
 
+Available compression and pickling protocols
+********************************************
+
+``compress_pickle`` supports many compression protocols and pickling backends. To see the compression protocols and pickling backends that are available to you, try to run:
+
+.. code-block:: python
+
+    >>> from compress_pickle import get_known_picklers, get_known_compressions
+    >>> get_known_picklers()
+    ...
+    >>> get_known_compressions()
+    ...
+
+These are the names of the available compression and pickling protocols. Furthermore, ``compress_pickle`` also registers a mapping between the known compressions, and the associated filename extensions. To see the mapping from known extensions to compression protocols run this:
+
+.. code-block:: python
+
+    >>> from compress_pickle import get_registered_extensions
+    >>> get_registered_extensions()
+    ...
+
+As a final comment, ``compress_pickle`` can also set the filename extension to the registerred default value. To see the mapping between compression protocols and the associated default filename extension run this:
+
+.. code-block:: python
+
+    >>> from compress_pickle import get_default_compression_mapping
+    >>> get_default_compression_mapping()
+    ...
+
+
 Acknowledgements
 ****************
 
