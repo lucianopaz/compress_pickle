@@ -56,4 +56,5 @@ class CloudPicklerIO(BasePicklerIO):
         return cloudpickle.load(stream, **kwargs)
 
 
-register_pickler("cloudpickle", CloudPicklerIO)
+if _cloudpickle_available:
+    register_pickler("cloudpickle", CloudPicklerIO)

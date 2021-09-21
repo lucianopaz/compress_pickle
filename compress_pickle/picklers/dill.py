@@ -56,4 +56,5 @@ class DillPicklerIO(BasePicklerIO):
         return dill.load(stream, **kwargs)
 
 
-register_pickler("dill", DillPicklerIO)
+if _dill_available:
+    register_pickler("dill", DillPicklerIO)

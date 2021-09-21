@@ -229,10 +229,10 @@ def simple_dump_and_remove(random_message, compressions, pickler_method):
 
 @pytest.fixture(scope="function")
 def hijack_lz4():
-    old_lz4 = sys.modules["lz4"]
-    sys.modules["lz4"] = None
+    old_state = compress_pickle.compressers.lz4._lz4_available
+    compress_pickle.compressers.lz4._lz4_available = False
     yield
-    sys.modules["lz4"] = old_lz4
+    compress_pickle.compressers.lz4._lz4_available = old_state
 
 
 @pytest.fixture(scope="function")

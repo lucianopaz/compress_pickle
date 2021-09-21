@@ -53,7 +53,7 @@ class _compresser_registry:
         except Exception:
             raise ValueError(
                 f"Unknown compresser {compression}. "
-                "Available values are {list(cls._compresser_registry)}"
+                f"Available values are {list(cls._compresser_registry)}"
             )
 
     @classmethod
