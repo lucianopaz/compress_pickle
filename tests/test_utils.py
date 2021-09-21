@@ -6,6 +6,7 @@ from compress_pickle.utils import (
     _stringyfy_path,
     _infer_compression_from_path,
     _set_default_extension,
+    instantiate_compresser,
 )
 
 
@@ -52,6 +53,15 @@ def test_infer_compression_from_path_io_type():
     ):
         with io.BytesIO() as path:
             _infer_compression_from_path(path)
+
+
+def test_instantiate_compresser_cannot_infer_compression():
+    with pytest.raises(
+        TypeError,
+        match="Cannot infer the compression from a path that is not an instance of ",
+    ):
+        with io.BytesIO() as path:
+            instantiate_compresser(compression="infer", path=path, mode="rb")
 
 
 # def test_known_compressions():
