@@ -7,4 +7,4 @@ from .compressers.registry import (
 )
 from .picklers.registry import get_known_picklers
 
-__version__ = "2.0.1"
+__version__ = "2.1.0"
