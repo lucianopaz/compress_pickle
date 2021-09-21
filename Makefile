@@ -20,6 +20,7 @@ style:  # Check pylint code style
 	@printf "\033[1;34mPylint passes!\033[0m\n\n"
 
 black:  # Format code in-place using black.
+	isort compress_pickle/ tests/
 	black compress_pickle/ tests/
 
 mypy:  # Check type hints

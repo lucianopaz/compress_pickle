@@ -1,7 +1,8 @@
-from typing import Union, Optional, IO
 import codecs
 from os import PathLike
 from os.path import splitext
+from typing import IO, Optional, Union
+
 from .compressers import (
     BaseCompresser,
     get_compresser,
@@ -10,7 +11,6 @@ from .compressers import (
     get_compression_write_mode,
     get_default_compression_mapping,
 )
-
 
 PATH_TYPES = (str, bytes, PathLike)
 PathType = Union[str, bytes, PathLike]
@@ -77,7 +77,8 @@ def instantiate_compresser(
         The compression method name. Refer to
         :func:`~compress_pickle.compressers.registry.get_known_compressions` for a list of the
         known compression methods. If ``"infer"``, the compression method is inferred from the
-        ``path`` extension (only possible if ``path`` is a ``PathType``). Refer to
+        ``path`` extension. This can be done if ``path`` is a ``PathType`` instance, or if
+        ``path`` has a ``name`` attribute that is not ``None``. Refer to
         :func:`~compress_pickle.compressers.registry.get_registered_extensions` for the mapping
         between extensions and compression methods.
     path : Union[PathType, FileType]
@@ -113,8 +114,10 @@ def instantiate_compresser(
     """
     if isinstance(path, PATH_TYPES):
         _path = _stringyfy_path(path)
+    else:
+        _path = getattr(path, "name", None)
     if compression == "infer":
-        if not isinstance(path, PATH_TYPES):
+        if not isinstance(path, PATH_TYPES) and _path is None:
             raise TypeError(
                 f"Cannot infer the compression from a path that is not an instance of "
                 f"{PATH_TYPES}. Encountered {type(path)}"

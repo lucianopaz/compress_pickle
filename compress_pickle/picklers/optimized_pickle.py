@@ -1,9 +1,9 @@
-from typing import Any, IO
 import pickle
 import pickletools
+from typing import IO, Any
+
 from .pickle import BuiltinPicklerIO
 from .registry import register_pickler
-
 
 __all__ = ["OptimizedPicklerIO"]
 

@@ -1,13 +1,10 @@
-import pytest
 import os
 import warnings
 import zipfile
-from compress_pickle import (
-    dump,
-    dumps,
-    load,
-    loads,
-)
+
+import pytest
+
+from compress_pickle import dump, dumps, load, loads
 
 
 @pytest.mark.usefixtures("wrong_compressions")

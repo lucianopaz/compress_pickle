@@ -1,8 +1,8 @@
-from typing import Any, IO
 import pickle
+from typing import IO, Any
+
 from .base import BasePicklerIO
 from .registry import register_pickler
-
 
 __all__ = ["BuiltinPicklerIO"]
 

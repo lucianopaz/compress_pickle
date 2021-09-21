@@ -1,6 +1,5 @@
-from typing import IO, Any
 from abc import abstractmethod
-
+from typing import IO, Any
 
 __all__ = ["BasePicklerIO"]
 

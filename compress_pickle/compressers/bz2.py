@@ -1,7 +1,8 @@
+import bz2
 from io import IOBase
 from typing import IO, Union
-import bz2
-from .base import BaseCompresser, PathType, PATH_TYPES
+
+from .base import PATH_TYPES, BaseCompresser, PathType
 from .registry import register_compresser
 
 

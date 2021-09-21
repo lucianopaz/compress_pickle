@@ -1,8 +1,9 @@
-from os.path import basename
-from io import IOBase
-from typing import IO, Union
 import zipfile
-from .base import BaseCompresser, PathType, PATH_TYPES
+from io import IOBase
+from os.path import basename
+from typing import IO, Union
+
+from .base import PATH_TYPES, BaseCompresser, PathType
 from .registry import register_compresser
 
 

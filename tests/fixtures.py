@@ -1,18 +1,19 @@
-import pytest
-import os
-import io
-import sys
 import codecs
+import io
 import itertools
+import os
 import pathlib
+import sys
+
+import pytest
+
 import compress_pickle
 from compress_pickle.compressers import get_compression_write_mode
 from compress_pickle.utils import (
-    _stringyfy_path,
-    _set_default_extension,
     _infer_compression_from_path,
+    _set_default_extension,
+    _stringyfy_path,
 )
-
 
 COMPRESSION_NAMES = [None, "pickle", "gzip", "bz2", "lzma", "zipfile", "lz4"]
 UNHANDLED_COMPRESSIONS = ["gzip2", "tar", "zip", 3, [1, 3]]

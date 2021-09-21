@@ -1,6 +1,6 @@
 from typing import Dict, List, Type
-from .base import BasePicklerIO
 
+from .base import BasePicklerIO
 
 __all__ = [
     "get_pickler",

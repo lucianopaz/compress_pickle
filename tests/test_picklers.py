@@ -1,9 +1,11 @@
 import sys
-import pytest
+
 import numpy as np
-from compress_pickle.picklers.dill import DillPicklerIO
-from compress_pickle.picklers.cloudpickle import CloudPicklerIO
+import pytest
+
 from compress_pickle import dumps, loads
+from compress_pickle.picklers.cloudpickle import CloudPicklerIO
+from compress_pickle.picklers.dill import DillPicklerIO
 
 
 @pytest.mark.usefixtures("hijack_dill")

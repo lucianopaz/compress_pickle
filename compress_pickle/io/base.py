@@ -1,8 +1,8 @@
 from functools import singledispatch
 from typing import Any
+
 from ..compressers.base import BaseCompresser
 from ..picklers.base import BasePicklerIO
-
 
 __all__ = ["compress_and_pickle", "uncompress_and_unpickle"]
 

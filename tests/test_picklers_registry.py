@@ -1,13 +1,15 @@
 import re
+
 import pytest
+
 from compress_pickle.picklers.base import BasePicklerIO
 from compress_pickle.picklers.registry import (
-    get_pickler,
-    register_pickler,
-    get_known_picklers,
-    list_registered_picklers,
-    add_pickler_alias,
     _pickler_registry,
+    add_pickler_alias,
+    get_known_picklers,
+    get_pickler,
+    list_registered_picklers,
+    register_pickler,
 )
 
 

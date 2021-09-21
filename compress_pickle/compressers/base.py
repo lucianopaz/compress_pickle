@@ -1,7 +1,6 @@
-from typing import Union, IO
 from abc import abstractmethod
 from os import PathLike
-
+from typing import IO, Union
 
 PATH_TYPES = (str, bytes, PathLike)
 PathType = Union[str, bytes, PathLike]

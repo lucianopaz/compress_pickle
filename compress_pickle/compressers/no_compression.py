@@ -1,7 +1,8 @@
 from io import IOBase
 from typing import IO, Union
-from .base import BaseCompresser, PathType, PATH_TYPES
-from .registry import register_compresser, add_compression_alias
+
+from .base import PATH_TYPES, BaseCompresser, PathType
+from .registry import add_compression_alias, register_compresser
 
 
 class NoCompresser(BaseCompresser):

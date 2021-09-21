@@ -1,17 +1,19 @@
 import re
+
 import pytest
+
 from compress_pickle.compressers.base import BaseCompresser
 from compress_pickle.compressers.registry import (
+    _compresser_registry,
+    add_compression_alias,
     get_compresser,
     get_compresser_from_extension,
-    register_compresser,
-    get_compression_write_mode,
     get_compression_read_mode,
-    get_known_compressions,
-    validate_compression,
+    get_compression_write_mode,
     get_default_compression_mapping,
-    add_compression_alias,
-    _compresser_registry,
+    get_known_compressions,
+    register_compresser,
+    validate_compression,
 )
 
 

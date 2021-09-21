@@ -1,6 +1,6 @@
-from typing import Dict, Optional, Sequence, List, Type
-from .base import BaseCompresser
+from typing import Dict, List, Optional, Sequence, Type
 
+from .base import BaseCompresser
 
 __all__ = [
     "get_compresser",

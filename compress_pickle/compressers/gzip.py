@@ -1,7 +1,8 @@
+import gzip
 from io import IOBase
 from typing import IO, Union
-import gzip
-from .base import BaseCompresser, PathType, PATH_TYPES
+
+from .base import PATH_TYPES, BaseCompresser, PathType
 from .registry import register_compresser
 
 

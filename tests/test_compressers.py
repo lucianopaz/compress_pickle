@@ -1,6 +1,7 @@
 import pytest
-from compress_pickle.compressers.registry import list_registered_compressers
+
 from compress_pickle.compressers.lz4 import Lz4Compresser
+from compress_pickle.compressers.registry import list_registered_compressers
 
 
 def test_compressers_on_unhandled_path():

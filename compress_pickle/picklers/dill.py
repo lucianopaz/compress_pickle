@@ -1,4 +1,5 @@
-from typing import Any, IO
+from typing import IO, Any
+
 from .base import BasePicklerIO
 from .registry import register_pickler
 

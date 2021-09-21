@@ -4,11 +4,11 @@ A thin wrapper of standard ``pickle`` with standard compression libraries
 """
 import io
 import os
-from typing import Any, Union, Optional, IO, Dict
-from .picklers import get_pickler
-from .io import compress_and_pickle, uncompress_and_unpickle
-from .utils import instantiate_compresser
+from typing import IO, Any, Dict, Optional, Union
 
+from .io import compress_and_pickle, uncompress_and_unpickle
+from .picklers import get_pickler
+from .utils import instantiate_compresser
 
 __all__ = ["dump", "load", "dumps", "loads"]
 
