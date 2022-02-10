@@ -27,7 +27,7 @@ class JSONPicklerIO(BasePicklerIO):
         kwargs
             Any extra keyword arguments to pass to `json.dump <https://docs.python.org/3/library/json.html#json.dump>`_.
         """
-        utf8_stream = io.TextIOWrapper(stream, 'utf-8')
+        utf8_stream = io.TextIOWrapper(stream, "utf-8")
         json.dump(obj, utf8_stream, **kwargs)
         # prevent closing of underlying stream by TextIOWrapper.__del__
         utf8_stream.detach()
@@ -47,7 +47,7 @@ class JSONPicklerIO(BasePicklerIO):
         obj : Any
             The python object that was loaded.
         """
-        utf8_stream = io.TextIOWrapper(stream, 'utf-8')
+        utf8_stream = io.TextIOWrapper(stream, "utf-8")
         obj = json.load(utf8_stream, **kwargs)
         # prevent closing of underlying stream by TextIOWrapper.__del__
         utf8_stream.detach()
