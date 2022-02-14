@@ -3,6 +3,8 @@ import io
 import itertools
 import os
 import pathlib
+import random
+import string
 import sys
 
 import pytest
@@ -17,7 +19,7 @@ from compress_pickle.utils import (
 
 COMPRESSION_NAMES = [None, "pickle", "gzip", "bz2", "lzma", "zipfile", "lz4"]
 UNHANDLED_COMPRESSIONS = ["gzip2", "tar", "zip", 3, [1, 3]]
-PICKLER_NAMES = ["pickle", "optimized_pickle", "marshal", "dill", "cloudpickle"]
+PICKLER_NAMES = ["pickle", "optimized_pickle", "marshal", "dill", "cloudpickle", "json"]
 UNHANDLED_PICKLERS = [None, "tar", "zip", 3, [1, 3]]
 VALID_EXTENSIONS = [
     ("pkl", None),
@@ -37,7 +39,7 @@ FILENAMES = [
         ["test_blabla_{}"],
         [e[0] for e in VALID_EXTENSIONS] + INVALID_EXTENSIONS,
         [str, lambda x: bytes(x, "utf-8"), pathlib.Path],
-    )
+        )
 ]
 UNHANDLED_EXTENSIONS = ["ignore", "warn", "raise"]
 FILE_COMPRESSIONS = COMPRESSION_NAMES + ["infer"]
@@ -47,15 +49,15 @@ FILE_TYPES = ["file", io.BytesIO, io.BufferedWriter, io.BufferedReader]
 @pytest.fixture(scope="function")
 def random_message():
     message = (
-        b"I am the hidden bytes message and I will be dumped with pickle "
-        + b"and compressed with standard libraries. I am very long just to "
-        + b"ensure that my compressed form takes up less bytes than my "
-        + b"uncompressed representation. I will end with 8 random bytes to "
-        + b"randomize the message between function calls. I will also include "
-        + b"a big redundancy string to ensure a smaller compressed size: "
-        + b"a" * 50
-        + os.urandom(8)
-    )
+        "I am the hidden message and I will be dumped with pickle or json "
+        + "and compressed with standard libraries. I am very long just to "
+        + "ensure that my compressed form takes up less bytes than my "
+        + "uncompressed representation. I will end with 12 random chars to "
+        + "randomize the message between function calls. I will also include "
+        + "a big redundancy string to ensure a smaller compressed size: "
+        + "a" * 50
+        + "".join(random.choices(string.printable, k=12))
+        )
     return message
 
 
@@ -129,7 +131,7 @@ def compressions_to_validate(request):
     params=zip(
         itertools.product(PICKLER_NAMES, [True]),
         itertools.product(UNHANDLED_PICKLERS, [False]),
-    ),
+        ),
     ids=str,
 )
 def picklers_to_validate(request):
@@ -215,7 +217,7 @@ def dump_load(file, random_message, file_compressions, set_default_extension):
         set_default_extension,
         expected_file,
         expected_fail,
-    )
+        )
     if expected_file is not None:
         print(file, file_compressions, set_default_extension, expected_file)
         os.remove(expected_file)
