@@ -28,7 +28,7 @@ class Bz2Compresser(BaseCompresser):
     def __init__(self, path: Union[PathType, IO[bytes]], mode: str, **kwargs):
         if not isinstance(path, PATH_TYPES + (IOBase,)):
             raise TypeError(f"Unhandled path type {type(path)}")
-        self._stream = bz2.open(path, mode=mode, **kwargs)
+        self._stream = bz2.open(path, mode=mode, **kwargs)  # type: ignore
 
     def close(self):
         self._stream.close()

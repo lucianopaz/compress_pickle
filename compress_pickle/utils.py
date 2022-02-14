@@ -22,7 +22,7 @@ __all__ = [
 ]
 
 
-def _stringyfy_path(path: PathType) -> str:
+def _stringyfy_path(path: Optional[PathType]) -> str:
     """Convert a path that is a PATH_TYPES instance to a string.
 
     Parameters
@@ -113,9 +113,10 @@ def instantiate_compresser(
         If the supplied ``path`` is not a ``PATH_TYPES`` instance and the ``compression`` is "infer".
     """
     if isinstance(path, PATH_TYPES):
-        _path = _stringyfy_path(path)
+        _path: Optional[PathType] = _stringyfy_path(path)
     else:
-        _path = getattr(path, "name", None)
+        file_path = getattr(path, "name", None)
+        _path = file_path if isinstance(file_path, PATH_TYPES) else None
     if compression == "infer":
         if not isinstance(path, PATH_TYPES) and _path is None:
             raise TypeError(
@@ -131,12 +132,12 @@ def instantiate_compresser(
     elif mode == "read":
         mode = get_compression_read_mode(compression)
     compresser = compresser_class(
-        _path if isinstance(path, PATH_TYPES) else path, mode=mode, **kwargs
+        _path if isinstance(path, PATH_TYPES) else path, mode=mode, **kwargs  # type: ignore
     )
     return compresser
 
 
-def _infer_compression_from_path(path: PathType) -> Optional[str]:
+def _infer_compression_from_path(path: Optional[PathType]) -> Optional[str]:
     if not isinstance(path, PATH_TYPES):
         raise TypeError(
             f"Cannot infer the compression from a path that is not an instance of "
@@ -146,6 +147,6 @@ def _infer_compression_from_path(path: PathType) -> Optional[str]:
     return get_compression_from_extension(extension)
 
 
-def _set_default_extension(path: PathType, compression: Optional[str]) -> str:
+def _set_default_extension(path: Optional[PathType], compression: Optional[str]) -> str:
     root, current_ext = splitext(_stringyfy_path(path))
     return root + "." + get_default_compression_mapping()[compression]
