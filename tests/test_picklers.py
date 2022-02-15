@@ -42,3 +42,18 @@ def test_pickle_dump_protocol_5(compressions):
         pickler_method="pickle",
     )
     assert np.all(out == obj)
+
+
+@pytest.mark.usefixtures("compressions")
+def test_json_dump_protocol(compressions):
+    obj = {'test_data': list(range(100)), 'fish': False, 'null': None}
+    out = loads(
+        dumps(
+            obj=obj,
+            compression=compressions,
+            pickler_method="json",
+        ),
+        compression=compressions,
+        pickler_method="json",
+    )
+    assert np.all(out == obj)
