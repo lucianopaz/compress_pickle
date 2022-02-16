@@ -37,8 +37,8 @@ class _pickler_registry:
             return cls._pickler_registry[name]
         except Exception:
             raise ValueError(
-                f"Unknown pickler {name}. "
-                "Available values are {list(cls._pickler_registry)}"
+                f"Unknown pickler {repr(name)}. "
+                f"Available values are {list(cls._pickler_registry)}"
             )
 
     @classmethod
@@ -67,7 +67,7 @@ class _pickler_registry:
         """
         if name in cls._pickler_registry:
             raise ValueError(
-                f"A pickler with name {name} is already registered. "
+                f"A pickler with name {repr(name)} is already registered. "
                 "Please choose a different name."
             )
         try:
@@ -99,12 +99,12 @@ class _pickler_registry:
         """
         if alias in cls._pickler_registry:
             raise ValueError(
-                f"The alias {alias} is already registered, please choose a different alias."
+                f"The alias {repr(alias)} is already registered, please choose a different alias."
             )
         if pickler not in cls._pickler_registry:
             raise ValueError(
                 "Unknown pickler name {}. Available values are: {}".format(
-                    pickler, list(cls._pickler_registry)
+                    repr(pickler), list(cls._pickler_registry)
                 )
             )
         cls._pickler_registry[alias] = cls._pickler_registry[pickler]

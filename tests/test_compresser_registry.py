@@ -28,7 +28,7 @@ def test_compresser_registry():
             pass
 
         with pytest.raises(
-            ValueError, match=f"Unknown compresser {name}. Available values are "
+            ValueError, match=f"Unknown compresser {name!r}. Available values are "
         ):
             get_compresser(name)
         register_compresser(
@@ -51,7 +51,7 @@ def test_compresser_registry():
             register_compresser("mock2", proxy, extensions=["mock"])
         with pytest.raises(
             ValueError,
-            match=f"A compresser with name {name} is already registered. Please choose a ",
+            match=f"A compresser with name {name!r} is already registered. Please choose a ",
         ):
             register_compresser(name, proxy, extensions)
     finally:
@@ -72,7 +72,7 @@ def test_validate_compression(compressions_to_validate):
     if expected_fail:
         with pytest.raises(
             ValueError,
-            match=re.escape(f"Unknown compression {compression}. Available values are"),
+            match=re.escape(f"Unknown compression {compression!r}. Available values are"),
         ):
             validate_compression(compression, infer_is_valid=infer_is_valid)
     else:
@@ -117,7 +117,7 @@ def test_aliasing():
         pass
 
     with pytest.raises(
-        ValueError, match=f"Unknown compression {name}. Available values are:"
+        ValueError, match=f"Unknown compression {name!r}. Available values are:"
     ):
         add_compression_alias(
             alias,
@@ -142,7 +142,7 @@ def test_aliasing():
         assert _compresser_registry._compression_aliases[alias] == name
 
         with pytest.raises(
-            ValueError, match=f"The alias {alias} is already registered"
+            ValueError, match=f"The alias {alias!r} is already registered"
         ):
             add_compression_alias(
                 alias,

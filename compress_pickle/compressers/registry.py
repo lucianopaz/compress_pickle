@@ -52,7 +52,7 @@ class _compresser_registry:
             return cls._compresser_registry[compression]
         except Exception:
             raise ValueError(
-                f"Unknown compresser {compression}. "
+                f"Unknown compresser {repr(compression)}. "
                 f"Available values are {list(cls._compresser_registry)}"
             )
 
@@ -106,7 +106,7 @@ class _compresser_registry:
             return cls._compression_extension_map[extension.lstrip(".")]
         except Exception:
             raise ValueError(
-                f"Unregistered extension {extension}. "
+                f"Unregistered extension {repr(extension)}. "
                 f"Registered extensions are {list(cls._compression_extension_map)}"
             )
 
@@ -154,7 +154,7 @@ class _compresser_registry:
         """
         if compression in cls._compresser_registry:
             raise ValueError(
-                f"A compresser with name {compression} is already registered. "
+                f"A compresser with name {repr(compression)} is already registered. "
                 "Please choose a different name."
             )
         try:
@@ -169,9 +169,9 @@ class _compresser_registry:
         for ext in extensions:
             if ext in cls._compression_extension_map:
                 raise ValueError(
-                    f"Tried to register the extension {ext} to compresser {compression}, but it "
+                    f"Tried to register the extension {repr(ext)} to compresser {compression}, but it "
                     "is already registered in favour of compresser "
-                    f"{cls._compression_extension_map[ext]}. Please use a different extension "
+                    f"{repr(cls._compression_extension_map[ext])}. Please use a different extension "
                     "instead."
                 )
         cls._compresser_registry[compression] = compresser
@@ -181,7 +181,7 @@ class _compresser_registry:
 
     @classmethod
     def get_compression_write_mode(cls, compression: Optional[str]) -> str:
-        """Get the compression's default mode for openning the file buffer for writing.
+        """Get the compression's default mode for opening the file buffer for writing.
 
         Parameters
         ----------
@@ -203,13 +203,13 @@ class _compresser_registry:
         except Exception:  # pragma: no cover
             raise ValueError(
                 "Unknown compression {}. Available values are: {}".format(
-                    compression, list(cls._compresser_default_write_modes)
+                    repr(compression), list(cls._compresser_default_write_modes)
                 )
             )
 
     @classmethod
     def get_compression_read_mode(cls, compression: Optional[str]) -> str:
-        """Get the compression's default mode for openning the file buffer for reading.
+        """Get the compression's default mode for opening the file buffer for reading.
 
         Parameters
         ----------
@@ -231,7 +231,7 @@ class _compresser_registry:
         except Exception:  # pragma: no cover
             raise ValueError(
                 "Unknown compression {}. Available values are: {}".format(
-                    compression, list(cls._compresser_default_read_modes)
+                    repr(compression), list(cls._compresser_default_read_modes)
                 )
             )
 
@@ -254,12 +254,12 @@ class _compresser_registry:
         """
         if alias in cls._compresser_registry:
             raise ValueError(
-                f"The alias {alias} is already registered, please choose a different alias."
+                f"The alias {repr(alias)} is already registered, please choose a different alias."
             )
         if compression not in cls._compresser_registry:
             raise ValueError(
                 "Unknown compression {}. Available values are: {}".format(
-                    compression, list(cls._compresser_registry)
+                    repr(compression), list(cls._compresser_registry)
                 )
             )
         cls._compresser_registry[alias] = cls._compresser_registry[compression]
@@ -335,7 +335,7 @@ def validate_compression(compression: Optional[str], infer_is_valid: bool = True
         return True
     raise ValueError(
         "Unknown compression {}. Available values are: {}".format(
-            compression, get_known_compressions()
+            repr(compression), get_known_compressions()
         )
     )
 

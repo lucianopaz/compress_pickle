@@ -21,7 +21,7 @@ def test_compresser_registry():
             pass
 
         with pytest.raises(
-            ValueError, match=f"Unknown pickler {name}. Available values are "
+            ValueError, match=f"Unknown pickler {name!r}. Available values are "
         ):
             get_pickler(name)
         register_pickler(
@@ -31,7 +31,7 @@ def test_compresser_registry():
         assert get_pickler(name) is proxy
         with pytest.raises(
             ValueError,
-            match=f"A pickler with name {name} is already registered. Please choose a ",
+            match=f"A pickler with name {name!r} is already registered. Please choose a ",
         ):
             register_pickler(name, proxy)
     finally:
@@ -48,7 +48,7 @@ def test_validate_picklers(picklers_to_validate):
     if expected_fail:
         with pytest.raises(
             ValueError,
-            match=re.escape(f"Unknown pickler {name}. Available values are"),
+            match=re.escape(f"Unknown pickler {name!r}. Available values are"),
         ):
             get_pickler(name)
     else:
@@ -59,7 +59,7 @@ def test_register_wrong_type():
     pickler = object
     with pytest.raises(
         TypeError,
-        match=re.escape(f"The supplied pickler {pickler} is not a derived from "),
+        match=re.escape(f"The supplied pickler {pickler!r} is not a derived from "),
     ):
         register_pickler(
             name="mock_pickler",
@@ -75,7 +75,7 @@ def test_aliasing():
         pass
 
     with pytest.raises(
-        ValueError, match=f"Unknown pickler name {name}. Available values are:"
+        ValueError, match=f"Unknown pickler name {name!r}. Available values are:"
     ):
         add_pickler_alias(
             alias,
@@ -95,7 +95,7 @@ def test_aliasing():
         assert _pickler_registry._pickler_aliases[alias] == name
 
         with pytest.raises(
-            ValueError, match=f"The alias {alias} is already registered"
+            ValueError, match=f"The alias {alias!r} is already registered"
         ):
             add_pickler_alias(
                 alias,

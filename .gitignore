@@ -2,6 +2,7 @@
 environment.yml
 testing-report.html
 pip-wheel-metadata/*
+.gitignore.local
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
